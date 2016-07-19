@@ -1,12 +1,30 @@
 {
-  "name": "yojuego",
+  "name": "com.ffpsoft.yojuego",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "events": "^1.1.1",
+    "flux": "^2.1.1",
+    "keymirror": "^0.1.1",
+    "object-assign": "^4.1.0",
     "react": "15.2.1",
-    "react-native": "^0.29.2"
-  }
+    "react-native": "^0.29.2",
+    "sync-queue": "0.0.2"
+  },
+  "description": "YoJuego!",
+  "main": "index.android.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FFPSoft/com.ffpsoft.yojuego.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FFPSoft/com.ffpsoft.yojuego/issues"
+  },
+  "homepage": "https://github.com/FFPSoft/com.ffpsoft.yojuego"
 }
