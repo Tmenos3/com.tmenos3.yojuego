@@ -1,10 +1,15 @@
 class FutbolPlayer {
-  constructor(aName) {
+  constructor(aName, aCity) {
     this.name = aName;
+    this.city = aCity;
   }
 
   getName(){
     return this.name;
+  }
+
+  getCity(){
+    return this.city;
   }
 }
 
