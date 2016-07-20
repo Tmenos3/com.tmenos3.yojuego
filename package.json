@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "test": "jest"
   },
   "dependencies": {
     "events": "^1.1.1",
@@ -16,7 +16,9 @@
   },
   "description": "YoJuego!",
   "main": "index.android.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "jest-cli": "^13.2.3"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/FFPSoft/com.ffpsoft.yojuego.git"
