@@ -6,15 +6,15 @@
     "test": "jest"
   },
   "jest": {
-      "testFileExtensions": [
-          "es6",
-          "js"
-      ],
-      "moduleFileExtensions": [
-          "js",
-          "json",
-          "es6"
-      ]
+    "testFileExtensions": [
+      "es6",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "es6"
+    ]
   },
   "dependencies": {
     "events": "^1.1.1",
@@ -28,6 +28,7 @@
   "description": "YoJuego!",
   "main": "index.android.js",
   "devDependencies": {
+    "babel-polyfill": "^6.9.1",
     "jest-cli": "^13.2.3"
   },
   "repository": {

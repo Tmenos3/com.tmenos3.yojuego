@@ -1,17 +1,19 @@
-import FutbolPlayer from '../src/model/FutbolPlayer';
-
-jest.dontmock('../src/model/FutbolPlayer');
+jest.unmock('../src/model/FutbolPlayer');
 
 describe('FutbolPlayer', () => {
-  it('create a FutbolPlayer with a name', () => {
+  it('can get the name', () => {
     const name = "aName";
-    const fp = new FutbolPlayer(name);
+    const fp = require('../src/model/FutbolPlayer');
+    fp.name = name;
+
     expect(fp.getName()).toBe(name);
   });
 
-  it('create a FutbolPlayer with a city', () => {
+  it('can get the city', () => {
     const city = "aCity";
-    const fp = new FutbolPlayer("aName", city);
+    const fp = require('../src/model/FutbolPlayer');
+    fp.city = city;
+
     expect(fp.getCity()).toBe(city);
   });
 });

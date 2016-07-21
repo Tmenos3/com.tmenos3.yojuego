@@ -1,16 +1,11 @@
-class FutbolPlayer {
-  constructor(aName, aCity) {
-    this.name = aName;
-    this.city = aCity;
-  }
-
+var futbolPlayer = {
+  
   getName(){
     return this.name;
-  }
-
+  },
   getCity(){
     return this.city;
   }
 }
 
-module.exports = FutbolPlayer;
+module.exports = futbolPlayer;
