@@ -9,7 +9,8 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
 
 class yojuego extends Component {
@@ -25,6 +26,14 @@ class yojuego extends Component {
         <Text style={styles.instructions}>
           Shake or press menu button for dev menu
         </Text>
+        <Text style={styles.instructions}>
+          prueba
+        </Text>
+        /*
+        <Button style={styles.Button}
+               styleDisabled={{color: 'red'}}>
+          Press Me!
+        </Button>*/
       </View>
     );
   }
@@ -47,6 +56,10 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  button: {
+    fontSize: 20,
+    color: 'green'
+  }
 });
 
 AppRegistry.registerComponent('yojuego', () => yojuego);
