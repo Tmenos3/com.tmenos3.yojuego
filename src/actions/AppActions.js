@@ -27,6 +27,22 @@ var AppActions = {
       payload: token
     });
   }
+
+  triggerButtonPressedAction: function(opacity){
+    Dispatcher.handleViewAction({
+      actionType: AppConstants.DEMO_BUTTON_PRESSED,
+      payload: opacity
+    });
+
+    AppActions.SetButtonPressedOpacity(opacity);
+  }
+
+  SetButtonPressedOpacity: function(opacity) {
+    Dispatcher.handleServerAction({
+      actionType: AppConstants.DEMO_BUTTON_PRESSED,
+      payload: opacity
+    });
+  }
 };
 
 module.exports = AppActions;

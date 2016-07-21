@@ -1,17 +1,17 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
   Text,
   View,
-  Button
+  Platform,
+  TouchableHighlight,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  Image
 } from 'react-native';
+
+var Dispatcher = require('./src/dispatcher/Dispatcher');
 
 class yojuego extends Component {
   render() {
@@ -29,13 +29,29 @@ class yojuego extends Component {
         <Text style={styles.instructions}>
           prueba
         </Text>
-        /*
-        <Button style={styles.Button}
-               styleDisabled={{color: 'red'}}>
-          Press Me!
-        </Button>*/
+        <TouchableOpacity
+          onPress = {this._onPressButton.bind(this)}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>
+              Press me!
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
+  }
+
+  triggerButtonPressedAction: function(opacity) {
+    Dispatcher.handleViewAction({
+      actionType: AppConstants.DEMO_BUTTON_PRESSED,
+      payload: opacity
+    });
+  }
+
+  _onPressButton() {
+    this.setState({opacity: 0.5});
+    alert('Action: Button Pressed');
+    triggerButtonPressedAction(0.5);
   }
 }
 
@@ -44,21 +60,33 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
+    margin: 10
   },
   instructions: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
+    marginBottom: 5
   },
   button: {
-    fontSize: 20,
-    color: 'green'
+    width: 120,
+    height: 120,
+    top: 0,
+    alignSelf: 'center',
+    borderRadius: 10,
+    borderColor: '#da766b',
+    backgroundColor: '#e01a3c',
+    borderWidth: 5,
+    justifyContent: 'center',
+    flex: 1,
+    borderStyle: 'dotted',
+  },
+  buttonText: {
+    textAlign: 'center',
   }
 });
 

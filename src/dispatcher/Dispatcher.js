@@ -1,7 +1,7 @@
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('object-assign');
 var Queue = require('sync-queue');
-var LogHelper = require('../utilities/LogHelper');
+var LogHelper = require('../services/LogHelper');
 
 var queue = new Queue();
 var AppDispatcher = assign(new Dispatcher(), {

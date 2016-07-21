@@ -6,5 +6,6 @@ module.exports = keyMirror({
   APP_CHANGE_ORIENTATION: null,
   APP_LOCK_TO_LANDSCAPE: null,
   APP_LOCK_TO_PORTRAIT: null,
-  APP_UNLOCK_ALL_ORIENTATIONS: null
+  APP_UNLOCK_ALL_ORIENTATIONS: null,
+  DEMO_BUTTON_PRESSED: null,
 });

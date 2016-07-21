@@ -6,6 +6,7 @@ var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = 'change';
 
 var _appToken = '';
+var _opacity = 1;
 var _scope = 'com.competir.aula365.mobile';
 var _clientId = 'o1rk9uqwr4GW4EKzjdojtnRgWpaoIyO';
 var _clientSecret = 'ZjQptLcgHlefbEekrk0cepL4gXWP5DNj6y2CQJVzxWa55snbuXUT0iyJYuaiVBRs';
@@ -32,6 +33,11 @@ var AppStore = assign({}, EventEmitter.prototype, {
   getClientSecret: function() {
     return _clientSecret;
   }
+
+  triggerButtonPressedAction: function() {
+    alert('Store: retrieving information');
+    return _opacity; //Return the desired opacity
+  }
 });
 
 AppStore.dispatchToken = AppDispatcher.register(function(action) {
@@ -43,6 +49,11 @@ AppStore.dispatchToken = AppDispatcher.register(function(action) {
 
     case AppConstants.APP_SET_TOKEN:
     _appToken = action.payload;
+    AppStore.emitChange();
+    break;
+
+    case AppConstants.DEMO_BUTTON_PRESSED:
+    _opacity = action.payload;
     AppStore.emitChange();
     break;
   }
