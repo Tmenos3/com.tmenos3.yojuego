@@ -1,47 +1,26 @@
-var ApiService = require('../services/ApiService');
+import {ToastAndroid} from 'react-native';
+
+// var ApiService = require('../services/ApiService');
 var AppConstants = require('../constants/AppConstants');
 var Dispatcher = require('../dispatcher/Dispatcher');
-var LogHelper = require('../utilities/LogHelper');
+// var LogHelper = require('../utilities/LogHelper');
 
 var AppActions = {
-  getAppToken: function() {
+  initializeApp: function() {
     Dispatcher.handleViewAction({
-      actionType: AppConstants.APP_GET_TOKEN
+      actionType: AppConstants.INIT_APP
     });
 
-    ApiService.getAppToken(AppStore.getScope(), AppStore.getClientId(), AppStore.getClientSecret())
-    .then((response) => {
-      LogHelper.log("App TOKEN", response.Key);
-      AppActions.setAppToken(response.Key);
-    }, (cause) => {
-      LogHelper.warning("AppActions.getAppToken(rejected)", cause);
-    })
-    .catch((error) => {
-      LogHelper.error("AppActions.getAppToken(catch)", error);
-    });
+    setTimeout(() => {AppActions.setSession();}, 3000);
   },
 
-  setAppToken: function(token) {
-    Dispatcher.handleServerAction({
-      actionType: AppConstants.APP_SET_TOKEN,
-      payload: token
-    });
-  }
-
-  triggerButtonPressedAction: function(opacity){
+  setSession(session){
     Dispatcher.handleViewAction({
-      actionType: AppConstants.DEMO_BUTTON_PRESSED,
-      payload: opacity
+      actionType: AppConstants.SET_SESSION,
+      payload: session
     });
 
-    AppActions.SetButtonPressedOpacity(opacity);
-  }
-
-  SetButtonPressedOpacity: function(opacity) {
-    Dispatcher.handleServerAction({
-      actionType: AppConstants.DEMO_BUTTON_PRESSED,
-      payload: opacity
-    });
+    ToastAndroid.show('set session', ToastAndroid.SHORT)
   }
 };
 
