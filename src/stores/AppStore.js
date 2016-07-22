@@ -19,6 +19,9 @@ var AppStore = assign({}, EventEmitter.prototype, {
   },
   isInitilizing(){
     return _isInitializing;
+  },
+  getSession(){
+    return _session;
   }
 });
 
@@ -32,6 +35,7 @@ AppStore.dispatchToken = AppDispatcher.register(function(action) {
 
     case AppConstants.SET_SESSION:
     _isInitializing = false;
+    _session = action.payload;
     AppStore.emitChange();
     break;
   }

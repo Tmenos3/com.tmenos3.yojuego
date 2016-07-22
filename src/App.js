@@ -10,6 +10,15 @@ var AppActions = require('./actions/AppActions');
 var AppStore = require('./stores/AppStore');
 
 class App extends Component{
+  constructor(){
+    super()
+    this._onAppChange = this._onAppChange.bind(this);
+    this.state = {
+      isInicilaizing: false,
+      hasSession: false,
+    };
+  }
+
   componentDidMount() {
     // QuestionStore.addChangeListener(this._onChange);
     // VideoStore.addChangeListener(this._onChange);
@@ -26,10 +35,11 @@ class App extends Component{
   }
 
   _onAppChange() {
-    // if (AppStore.getAppToken()) {
-    //   VideoActions.loadVideos();
-    //   QuestionActions.loadQuestions();
-    // }
+    var session = AppStore.getSession();
+    this.setState({
+      isInicilaizing: AppStore.isInitilizing(),
+      hasSession: session !== undefined,
+    });
   }
 
   _onChange() {
@@ -40,9 +50,21 @@ class App extends Component{
   }
 
   render(){
-    return (
-      <Splash/>
-    );
+    if (this.state.isInitilizing){
+      return (
+        <Splash/>
+      );
+    }
+    else if (this.state.hasSession) {
+      return (
+        <Splash/>
+      );
+    }
+    else {
+      return (
+        <Splash/>
+      );
+    }
   }
 }
 
