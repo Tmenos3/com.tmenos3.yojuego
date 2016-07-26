@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 var Splash = require('./components/Splash');
+var SignIn = require('./components/SignIn');
 var AppActions = require('./actions/AppActions');
 var AppStore = require('./stores/AppStore');
 
@@ -62,7 +63,7 @@ class App extends Component{
     }
     else {
       return (
-        <Splash/>
+        <SignIn/>
       );
     }
   }
