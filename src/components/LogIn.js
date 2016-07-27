@@ -8,7 +8,7 @@ import {
   View,
   StyleSheet} from 'react-native';
 
-class SignIn extends Component {
+class LogIn extends Component {
   render() {
     var TouchableElement = TouchableHighlight;
     if (Platform.OS === 'android') {
@@ -46,7 +46,7 @@ class SignIn extends Component {
 var styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "white",
     justifyContent: 'center'
   },
   text: {
@@ -82,4 +82,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = SignIn;
+module.exports = LogIn;

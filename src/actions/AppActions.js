@@ -12,13 +12,15 @@ var AppActions = {
       actionType: AppConstants.INIT_APP
     });
 
-      AppActions.setSession();
+    setTimeout(() => {
+      AppActions.setSession(null);
 
       if (isLoggedIn ){
         AppActions.setInitialProfile();
       }else{
         AppActions.setLogIn();
       };
+    }, 3000);
   },
 
   setSession(session){
@@ -42,7 +44,7 @@ var AppActions = {
   setLogIn(){
     Dispatcher.handleViewAction({
       actionType: AppConstants.SET_LOG_IN,
-      //payload: session
+      payload: null
     });
 
     setTimeout(() => {ToastAndroid.show('Set log in', ToastAndroid.SHORT);}, 1500);

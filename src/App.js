@@ -5,10 +5,12 @@ import {
   StyleSheet
 } from 'react-native';
 
-var Splash = require('./components/Splash');
-var SignIn = require('./components/SignIn');
+var NavigationConstants = require('./constants/NavigationConstants');
+var RouteConstants = require('./constants/RouteConstants');
 var AppActions = require('./actions/AppActions');
 var AppStore = require('./stores/AppStore');
+var NavigationsActions = require('./actions/NavigationsActions');
+var AppNavigator = require('./components/AppNavigator');
 
 class App extends Component{
   constructor(){
@@ -37,10 +39,12 @@ class App extends Component{
 
   _onAppChange() {
     var session = AppStore.getSession();
-    this.setState({
-      isInicilaizing: AppStore.isInitilizing(),
-      hasSession: session !== undefined,
-    });
+    if(session === null){
+      NavigationsActions.addRoute({
+        id: RouteConstants.ROUTE_LOGIN,
+        data: null
+      });
+    }
   }
 
   _onChange() {
@@ -51,21 +55,9 @@ class App extends Component{
   }
 
   render(){
-    if (this.state.isInitilizing){
-      return (
-        <Splash/>
-      );
-    }
-    else if (this.state.hasSession) {
-      return (
-        <Splash/>
-      );
-    }
-    else {
-      return (
-        <SignIn/>
-      );
-    }
+    return (
+      <AppNavigator initialRoute={{id: RouteConstants.ROUTE_SPLASH, data: null}}/>
+    );
   }
 }
 

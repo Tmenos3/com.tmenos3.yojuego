@@ -38,16 +38,6 @@ AppStore.dispatchToken = AppDispatcher.register(function(action) {
     _session = action.payload;
     AppStore.emitChange();
     break;
-
-    case AppConstants.SET_LOG_IN:
-    _isInitializing = false;
-    AppStore.emitChange();
-    break;
-
-    case AppConstants.SET_INITIAL_PROFILE:
-    _isInitializing = false;
-    AppStore.emitChange();
-    break;
   }
 });
 
