@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navigator } from 'react-native';
 var NavigationStore = require('../stores/NavigationStore');
 var RouteConstants = require('../constants/RouteConstants');
+var NavigationConstants = require('../constants/NavigationConstants');
 var Splash = require('./Splash');
 var LogIn = require('./LogIn');
 
@@ -13,7 +14,14 @@ class AppNavigator extends Component {
   }
 
   _onNavigationStoreChange() {
-    _navigator.push({id: RouteConstants.ROUTE_LOGIN, data: null});
+    switch (NavigationStore.getCurrentAction()) {
+      case NavigationConstants.ADD_ROUTE:
+        _navigator.push(NavigationStore.getCurrentRoute());
+      break;
+      case NavigationConstants.REPLACE_ROUTE:
+        _navigator.replace(NavigationStore.getCurrentRoute());
+      break;
+    }
   }
 
   render() {
@@ -28,7 +36,9 @@ class AppNavigator extends Component {
   }
 
   _setNavigator(navigatorInstance){
-    _navigator = navigatorInstance;
+    if (_navigator == undefined || _navigator == null) {
+      _navigator = navigatorInstance;
+    }
   }
 
   _renderComponent(route, navigator){

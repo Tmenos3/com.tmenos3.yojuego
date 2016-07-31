@@ -3,6 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var AppDispatcher = require('../dispatcher/Dispatcher');
 var NavigationConstants = require('../constants/NavigationConstants');
 var _currentRoute = {id: null, data: null};
+var _currentAction;
 var CHANGE_EVENT = 'change';
 
 var NavigationStore = assign({}, EventEmitter.prototype, {
@@ -18,6 +19,9 @@ var NavigationStore = assign({}, EventEmitter.prototype, {
   getCurrentRoute: function(){
     return _currentRoute;
   },
+  getCurrentAction: function(){
+    return _currentAction;
+  }
 });
 
 NavigationStore.dispatchToken = AppDispatcher.register(function(action) {
@@ -26,6 +30,14 @@ NavigationStore.dispatchToken = AppDispatcher.register(function(action) {
     case NavigationConstants.ADD_ROUTE:
     _currentRoute.id = action.data.id;
     _currentRoute.data = action.data.data;
+    _currentAction = NavigationConstants.ADD_ROUTE;
+    NavigationStore.emitChange();
+    break;
+
+    case NavigationConstants.REPLACE_ROUTE:
+    _currentRoute.id = action.data.id;
+    _currentRoute.data = action.data.data;
+    _currentAction = NavigationConstants.REPLACE_ROUTE;
     NavigationStore.emitChange();
     break;
   }

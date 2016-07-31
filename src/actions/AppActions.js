@@ -29,7 +29,7 @@ var AppActions = {
       payload: session
     });
 
-    setTimeout(() => {ToastAndroid.show('Set session', ToastAndroid.SHORT);}, 1500);
+    //setTimeout(() => {ToastAndroid.show('Set session', ToastAndroid.SHORT);}, 1500);
   },
 
   setInitialProfile(){
@@ -38,7 +38,7 @@ var AppActions = {
       //payload: session
     });
 
-    setTimeout(() => {ToastAndroid.show('Set initial profile', ToastAndroid.SHORT);}, 1500);
+    //setTimeout(() => {ToastAndroid.show('Set initial profile', ToastAndroid.SHORT);}, 1500);
   },
 
   setLogIn(){
@@ -47,7 +47,7 @@ var AppActions = {
       payload: null
     });
 
-    setTimeout(() => {ToastAndroid.show('Set log in', ToastAndroid.SHORT);}, 1500);
+    //setTimeout(() => {ToastAndroid.show('Set log in', ToastAndroid.SHORT);}, 1500);
   },
 };
 

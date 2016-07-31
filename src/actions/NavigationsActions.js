@@ -7,7 +7,15 @@ var NavigationsActions = {
       actionType: NavigationConstants.ADD_ROUTE,
       data: route
     });
+  },
+  replaceRoute: function(route) {
+    Dispatcher.handleViewAction({
+      actionType: NavigationConstants.REPLACE_ROUTE,
+      data: route
+    });
   }
 }
+
+
 
 module.exports = NavigationsActions;
