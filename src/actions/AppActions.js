@@ -7,7 +7,7 @@ var Dispatcher = require('../dispatcher/Dispatcher');
 var isLoggedIn = false;
 
 var AppActions = {
-  initializeApp: function() {
+  initializeApp: function () {
     Dispatcher.handleViewAction({
       actionType: AppConstants.INIT_APP
     });
@@ -15,39 +15,33 @@ var AppActions = {
     setTimeout(() => {
       AppActions.setSession(null);
 
-      if (isLoggedIn ){
+      if (isLoggedIn) {
         AppActions.setInitialProfile();
-      }else{
+      } else {
         AppActions.setLogIn();
       };
     }, 3000);
   },
 
-  setSession(session){
+  setSession(session) {
     Dispatcher.handleViewAction({
       actionType: AppConstants.SET_SESSION,
       payload: session
     });
-
-    //setTimeout(() => {ToastAndroid.show('Set session', ToastAndroid.SHORT);}, 1500);
   },
 
-  setInitialProfile(){
+  setInitialProfile() {
     Dispatcher.handleViewAction({
       actionType: AppConstants.SET_INITIAL_PROFILE,
       //payload: session
     });
-
-    //setTimeout(() => {ToastAndroid.show('Set initial profile', ToastAndroid.SHORT);}, 1500);
   },
 
-  setLogIn(){
+  setLogIn() {
     Dispatcher.handleViewAction({
       actionType: AppConstants.SET_LOG_IN,
       payload: null
     });
-
-    //setTimeout(() => {ToastAndroid.show('Set log in', ToastAndroid.SHORT);}, 1500);
   },
 };
 

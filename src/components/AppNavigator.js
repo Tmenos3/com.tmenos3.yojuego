@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Navigator } from 'react-native';
-var NavigationStore = require('../stores/NavigationStore');
-var RouteConstants = require('../constants/RouteConstants');
-var NavigationConstants = require('../constants/NavigationConstants');
-var Splash = require('./Splash');
-var LogIn = require('./LogIn');
+import NavigationStore from '../stores/NavigationStore';
+import RouteConstants from '../constants/RouteConstants';
+import NavigationConstants from '../constants/NavigationConstants';
+import Splash from './Splash';
+import LogIn from './LogIn';
+import FacebookLogIn from './auth/FacebookLogIn';
 
 var _navigator;
 
@@ -16,11 +17,17 @@ class AppNavigator extends Component {
   _onNavigationStoreChange() {
     switch (NavigationStore.getCurrentAction()) {
       case NavigationConstants.ADD_ROUTE:
-        _navigator.push(NavigationStore.getCurrentRoute());
-      break;
+        _navigator.push({
+          id: NavigationStore.getCurrentRoute().id,
+          payload: NavigationStore.getCurrentRoute().data
+        });
+        break;
       case NavigationConstants.REPLACE_ROUTE:
-        _navigator.replace(NavigationStore.getCurrentRoute());
-      break;
+        _navigator.replace({
+          id: NavigationStore.getCurrentRoute().id,
+          payload: NavigationStore.getCurrentRoute().data
+        });
+        break;
     }
   }
 
@@ -30,29 +37,31 @@ class AppNavigator extends Component {
         initialRoute = {this.props.initialRoute}
         ref = {this._setNavigator}
         renderScene = {this._renderComponent}
-        style = {{flex: 1}}
-      />
+        style = {{ flex: 1 }}
+        />
     );
   }
 
-  _setNavigator(navigatorInstance){
+  _setNavigator(navigatorInstance) {
     if (_navigator == undefined || _navigator == null) {
       _navigator = navigatorInstance;
     }
   }
 
-  _renderComponent(route, navigator){
+  _renderComponent(route, navigator) {
     switch (route.id) {
       case RouteConstants.ROUTE_SPLASH:
         return (
           <Splash/>
         );
-        break;
       case RouteConstants.ROUTE_LOGIN:
         return (
           <LogIn/>
         );
-        break;
+      case RouteConstants.ROUTE_FACEBOOK_LOGIN:
+        return (
+          <FacebookLogIn/>
+        );
     }
   }
 }

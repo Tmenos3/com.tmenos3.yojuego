@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import {AppRegistry} from 'react-native';
+import {
+  AppRegistry,
+  View
+} from 'react-native';
+import App from './src/App';
 
-var App = require('./src/App');
-
-class yojuego extends Component {
+class YoJuego extends Component {
   render() {
     return (
-      <App/>
+      <View style={{ paddingTop: 20, flex: 1 }}>
+        <App/>
+      </View> 
     );
   }
 }
 
-AppRegistry.registerComponent('yojuego', () => yojuego);
+AppRegistry.registerComponent('YoJuego', () => YoJuego);

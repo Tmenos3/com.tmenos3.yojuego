@@ -5,7 +5,7 @@ var LogHelper = require('../services/LogHelper');
 
 var queue = new Queue();
 var AppDispatcher = assign(new Dispatcher(), {
-  handleViewAction: function(action) {
+  handleViewAction: function (action) {
     action.source = 'VIEW_ACTION';
     LogHelper.log("ACTION (user)", {
       'action': action.actionType,
@@ -17,7 +17,7 @@ var AppDispatcher = assign(new Dispatcher(), {
     });
   },
 
-  handleServerAction: function(action) {
+  handleServerAction: function (action) {
     action.source = 'SERVER_ACTION';
     LogHelper.log("ACTION (server)", {
       'action': action.actionType,

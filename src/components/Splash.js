@@ -6,14 +6,14 @@ class Splash extends Component {
     return (
       <View style={styles.background}>
         <Text style={styles.text}>
-          Splash done!!
+          YoJuego!! ;)
         </Text>
       </View>
     );
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: "black",

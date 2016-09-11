@@ -12,15 +12,15 @@ var ApiService = {
       method: 'post',
       body: JSON.stringify(form)
     })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return response.json()
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   getInitialContent: function (token) {
@@ -31,18 +31,18 @@ var ApiService = {
       BASEURL + "app/initial?token=" + token,
       { headers: _headers }
     )
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   getVideos: function (token, skip, take) {
@@ -50,18 +50,18 @@ var ApiService = {
     _headers.append('Authorization', token);
     var url = "videos?skip=" + skip + "&take=" + take;
     return fetch(BASEURL + url, { headers: _headers })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   searchVideos: function (token, terms, skip, take) {
@@ -69,18 +69,18 @@ var ApiService = {
     _headers.append('Authorization', token);
     var url = "videos/search?terms=" + terms + "&skip=" + skip + "&take=" + take;
     return fetch(BASEURL + url, { headers: _headers })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   getVideo: function (token, id) {
@@ -88,18 +88,18 @@ var ApiService = {
     _headers.append('Authorization', token);
 
     return fetch(BASEURL + "videos/" + id, { headers: _headers })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   getQuestions: function (token, fromId, take) {
@@ -108,18 +108,18 @@ var ApiService = {
     var url = "questions";
     url += "?fromId=" + fromId + "&take=" + take;
     return fetch(BASEURL + url, { headers: _headers })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   searchQuestions: function (token, terms, skip, take) {
@@ -127,18 +127,18 @@ var ApiService = {
     _headers.append('Authorization', token);
     var url = "questions/search?terms=" + terms + "&skip=" + skip + "&take=" + take;
     return fetch(BASEURL + url, { headers: _headers })
-    .then((response) => {
-      if (response) {
+      .then((response) => {
+        if (response) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   getQuestion: function (token, id) {
@@ -146,18 +146,18 @@ var ApiService = {
     _headers.append('Authorization', token);
 
     return fetch(BASEURL + "questions/" + id, { headers: _headers })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   updateQuestion: function (token, from) {
@@ -165,19 +165,19 @@ var ApiService = {
     _headers.append('Authorization', token);
 
     fetch(BASEURL + "questions/update?from=" + from,
-    { headers: _headers })
-    .then((response) => {
-      if (response) {
+      { headers: _headers })
+      .then((response) => {
+        if (response) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   submitAnswer: function (token, questionId, answer) {
@@ -192,18 +192,18 @@ var ApiService = {
       method: 'post',
       body: JSON.stringify(form)
     })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   submitComment: function (token, videoId, comment) {
@@ -217,18 +217,18 @@ var ApiService = {
       method: 'post',
       body: JSON.stringify(form)
     })
-    .then((response) => {
-      if (response.ok) {
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.response;
+            });
+        }
         return response.json()
-        .then((responseData) => {
-          return responseData.response;
-        });
-      }
-      return response.json()
-      .then((error) => {
-        return Promise.reject(error);
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
-    });
   },
 
   signUp: function (username, password, name, gender, birthdate, email, motive, outhclient) {
@@ -253,24 +253,24 @@ var ApiService = {
       method: 'post',
       body: JSON.stringify(form)
     })
-    .then((response) => {
-      if (response.ok) {
-        return response.json()
-        .then((response) => {
-          return Promise.resolve({
-            'data' : {
-              token: response.token,
-              username: response.user.username,
-              premium: response.user.membership
-            }
-          });
-        });
-      }
-      return response.json()
       .then((response) => {
-        return Promise.reject(response);
+        if (response.ok) {
+          return response.json()
+            .then((response) => {
+              return Promise.resolve({
+                'data': {
+                  token: response.token,
+                  username: response.user.username,
+                  premium: response.user.membership
+                }
+              });
+            });
+        }
+        return response.json()
+          .then((response) => {
+            return Promise.reject(response);
+          });
       });
-    });
   },
 
   logIn: function (username, password) {
@@ -287,25 +287,25 @@ var ApiService = {
       method: 'post',
       body: JSON.stringify(form)
     })
-    .then((response) => {
-      if (response.ok) {
-        return response.json()
-        .then((response) => {
-          return Promise.resolve({
-            token: response.response.token,
-            username: response.response.user.username,
-            premium: response.response.user.membership
-          });
-        });
-      }
-      return response.json()
       .then((response) => {
-        return Promise.reject(response);
+        if (response.ok) {
+          return response.json()
+            .then((response) => {
+              return Promise.resolve({
+                token: response.response.token,
+                username: response.response.user.username,
+                premium: response.response.user.membership
+              });
+            });
+        }
+        return response.json()
+          .then((response) => {
+            return Promise.reject(response);
+          });
       });
-    });
   },
 
-  submitComunityQuestion: function(token, title, description, subject) {
+  submitComunityQuestion: function (token, title, description, subject) {
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
 
@@ -324,9 +324,9 @@ var ApiService = {
         return response.json();
       }
       return response.json()
-      .then((response) => {
-        return Promise.reject(response);
-      });
+        .then((response) => {
+          return Promise.reject(response);
+        });
     });
   }
 };

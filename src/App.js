@@ -5,17 +5,17 @@ import {
   StyleSheet
 } from 'react-native';
 
-var NavigationConstants = require('./constants/NavigationConstants');
-var RouteConstants = require('./constants/RouteConstants');
-var AppActions = require('./actions/AppActions');
-var AppStore = require('./stores/AppStore');
-var NavigationsActions = require('./actions/NavigationsActions');
-var AppNavigator = require('./components/AppNavigator');
+import NavigationConstants from './constants/NavigationConstants';
+import RouteConstants from './constants/RouteConstants';
+import AppActions from './actions/AppActions';
+import SessionStore from './stores/SessionStore';
+import NavigationsActions from './actions/NavigationsActions';
+import AppNavigator from './components/AppNavigator';
 
-class App extends Component{
-  constructor(){
+class App extends Component {
+  constructor() {
     super()
-    this._onAppChange = this._onAppChange.bind(this);
+    this._onSessionChange = this._onSessionChange.bind(this);
     this.state = {
       isInicilaizing: false,
       hasSession: false,
@@ -23,45 +23,28 @@ class App extends Component{
   }
 
   componentDidMount() {
-    // QuestionStore.addChangeListener(this._onChange);
-    // VideoStore.addChangeListener(this._onChange);
-    // AppStore.addChangeListener(this._onAppChange);
-    // AppActions.getAppToken();
     AppActions.initializeApp();
-    AppStore.addChangeListener(this._onAppChange);
+    SessionStore.addChangeListener(this._onSessionChange);
   }
 
-  componentWillUnmount() {
-    // QuestionStore.removeChangeListener(this._onChange);
-    // VideoStore.removeChangeListener(this._onChange);
-    // AppStore.removeChangeListener(this._onAppChange);
-  }
-
-  _onAppChange() {
-    var session = AppStore.getSession();
-    if(session === null){
-      NavigationsActions.addRoute({
+  _onSessionChange() {
+    let session = SessionStore.getSession();
+    if (session === null) {
+      NavigationsActions.replaceRoute({
         id: RouteConstants.ROUTE_LOGIN,
         data: null
       });
     }
   }
 
-  _onChange() {
-    // if (!QuestionStore.isLoading() && QuestionStore.getAll().length > 0 &&
-    //     !VideoStore.isLoading() && VideoStore.getAll().length > 0) {
-    //   NavigationActions.replace({route: RouteConstants.HOME});
-    // }
-  }
-
-  render(){
+  render() {
     return (
-      <AppNavigator initialRoute={{id: RouteConstants.ROUTE_SPLASH, data: null}}/>
+      <AppNavigator initialRoute={{ id: RouteConstants.ROUTE_SPLASH }}/>
     );
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   video: {
     height: 200,
     backgroundColor: "black"

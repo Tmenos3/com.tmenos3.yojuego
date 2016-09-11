@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {AppRegistry} from 'react-native';
+import {
+  AppRegistry
+} from 'react-native'
+import App from './src/App';
 
-var App = require('./src/App');
-
-class yojuego extends Component {
+class YoJuego extends Component {
   render() {
     return (
       <App/>
@@ -11,4 +12,4 @@ class yojuego extends Component {
   }
 }
 
-AppRegistry.registerComponent('yojuego', () => yojuego);
+AppRegistry.registerComponent('YoJuego', () => YoJuego);
