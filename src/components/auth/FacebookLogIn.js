@@ -11,8 +11,12 @@ import RouteConstants from '../../constants/RouteConstants';
 class FacebookLogIn extends Component {
   render() {
     return (
-      <WebView style={styles.container} source={{ uri: 'http://localhost:8080/login/facebook' }}/>
+      <WebView onNavigationStateChange={this._onLoad} style={styles.container} source={{ uri: 'http://localhost:8080/login/facebook' }}/>
     );
+  }
+
+  _onLoad(a,b,c,d){
+
   }
 }
 const styles = StyleSheet.create({

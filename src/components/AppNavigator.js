@@ -6,7 +6,7 @@ import NavigationConstants from '../constants/NavigationConstants';
 import Splash from './Splash';
 import LogIn from './LogIn';
 import FacebookLogIn from './auth/FacebookLogIn';
-
+import SignUp from './auth/SignUp';
 var _navigator;
 
 class AppNavigator extends Component {
@@ -48,7 +48,7 @@ class AppNavigator extends Component {
     }
   }
 
-  _renderComponent(route, navigator) {
+  _renderComponent(route) {
     switch (route.id) {
       case RouteConstants.ROUTE_SPLASH:
         return (
@@ -61,6 +61,10 @@ class AppNavigator extends Component {
       case RouteConstants.ROUTE_FACEBOOK_LOGIN:
         return (
           <FacebookLogIn/>
+        );
+      case RouteConstants.ROUTE_SIGNUP:
+        return (
+          <SignUp/>
         );
     }
   }

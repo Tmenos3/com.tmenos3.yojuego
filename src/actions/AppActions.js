@@ -14,12 +14,6 @@ var AppActions = {
 
     setTimeout(() => {
       AppActions.setSession(null);
-
-      if (isLoggedIn) {
-        AppActions.setInitialProfile();
-      } else {
-        AppActions.setLogIn();
-      };
     }, 3000);
   },
 
@@ -28,21 +22,7 @@ var AppActions = {
       actionType: AppConstants.SET_SESSION,
       payload: session
     });
-  },
-
-  setInitialProfile() {
-    Dispatcher.handleViewAction({
-      actionType: AppConstants.SET_INITIAL_PROFILE,
-      //payload: session
-    });
-  },
-
-  setLogIn() {
-    Dispatcher.handleViewAction({
-      actionType: AppConstants.SET_LOG_IN,
-      payload: null
-    });
-  },
+  }
 };
 
 module.exports = AppActions;

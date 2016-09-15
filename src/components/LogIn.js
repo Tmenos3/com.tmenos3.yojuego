@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Text,
   TouchableOpacity,
+  TextInput,
   View,
   StyleSheet} from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
@@ -18,9 +19,16 @@ class LogIn extends Component {
         <TouchableOpacity style={styles.button}>
           <Text> Google </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text> YoJuego </Text>
-        </TouchableOpacity>
+        <View>
+          <TextInput placeholder={"usuario"} style={styles.textInput}/>
+          <TextInput placeholder={"contraseña"} style={styles.textInput}/>
+          <TouchableOpacity style={styles.button}>
+            <Text> YoJuego </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._showSignUp}>
+            <Text style={styles.link}> No tienes cuenta??Registrate </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -28,6 +36,12 @@ class LogIn extends Component {
   _showFacebookLogin() {
     NavigationsActions.addRoute({
       id: RouteConstants.ROUTE_FACEBOOK_LOGIN
+    });
+  }
+
+  _showSignUp() {
+    NavigationsActions.addRoute({
+      id: RouteConstants.ROUTE_SIGNUP
     });
   }
 }
@@ -47,25 +61,25 @@ var styles = StyleSheet.create({
     marginVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
   // text: {
   //   fontSize: 20,
   //   color: 'white',
   //   fontWeight: 'bold',
   //   textAlign: 'center',
   // },
-  // textInput: {
-  //   height: 40,
-  //   color: 'black',
-  //   borderColor: 'white',
-  //   borderWidth: 1,
-  //   backgroundColor: "white",
-  // },
-  // link: {
-  //   fontSize: 10,
-  //   color: 'blue',
-  //   textAlign: 'center',
-  // },
+  textInput: {
+    width: 80,
+    height: 20,
+    color: 'black',
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  link: {
+    fontSize: 10,
+    color: 'blue',
+    textAlign: 'center',
+  },
   // button: {
   //   width: 50,
   //   height: 25,
