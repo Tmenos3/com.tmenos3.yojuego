@@ -34,12 +34,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/FFPSoft/com.ffpsoft.yojuego.git"
+    "url": "https://github.com/Tmenos3/com.tmenos3.yojuego.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/FFPSoft/com.ffpsoft.yojuego/issues"
+    "url": "https://github.com/Tmenos3/com.tmenos3.yojuego/issues"
   },
-  "homepage": "https://github.com/FFPSoft/com.ffpsoft.yojuego"
+  "homepage": "https://github.com/Tmenos3/com.tmenos3.yojuego"
 }
