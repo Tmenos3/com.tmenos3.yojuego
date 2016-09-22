@@ -8,10 +8,17 @@ var NavigationsActions = {
       data: route
     });
   },
+
   replaceRoute: function (route) {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.REPLACE_ROUTE,
       data: route
+    });
+  },
+
+  back: function (route) {
+    Dispatcher.handleViewAction({
+      actionType: NavigationConstants.BACK
     });
   }
 }

@@ -7,6 +7,7 @@ import Splash from './Splash';
 import LogIn from './LogIn';
 import FacebookLogIn from './auth/FacebookLogIn';
 import SignUp from './auth/SignUp';
+import CompletePlayerProfileInfo from './CompletePlayerProfileInfo';
 var _navigator;
 
 class AppNavigator extends Component {
@@ -27,6 +28,9 @@ class AppNavigator extends Component {
           id: NavigationStore.getCurrentRoute().id,
           payload: NavigationStore.getCurrentRoute().data
         });
+        break;
+      case NavigationConstants.BACK:
+        _navigator.pop();
         break;
     }
   }
@@ -65,6 +69,10 @@ class AppNavigator extends Component {
       case RouteConstants.ROUTE_SIGNUP:
         return (
           <SignUp/>
+        );
+      case RouteConstants.ROUTE_COMPLETE_SIGNUP:
+        return (
+          <CompletePlayerProfileInfo/>
         );
     }
   }

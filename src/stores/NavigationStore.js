@@ -40,6 +40,11 @@ NavigationStore.dispatchToken = AppDispatcher.register(function (action) {
       _currentAction = NavigationConstants.REPLACE_ROUTE;
       NavigationStore.emitChange();
       break;
+
+    case NavigationConstants.BACK:
+      _currentAction = NavigationConstants.BACK;
+      NavigationStore.emitChange();
+      break;
   }
 });
 

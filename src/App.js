@@ -15,7 +15,6 @@ import AppNavigator from './components/AppNavigator';
 class App extends Component {
   constructor() {
     super()
-    this._onSessionChange = this._onSessionChange.bind(this);
     this.state = {
       isInicilaizing: false,
       hasSession: false,
@@ -24,16 +23,13 @@ class App extends Component {
 
   componentDidMount() {
     AppActions.initializeApp();
-    SessionStore.addChangeListener(this._onSessionChange);
-  }
-
-  _onSessionChange() {
-    let session = SessionStore.getSession();
-    if (session === null) {
+    if (SessionStore.getSession() === null) {
       NavigationsActions.replaceRoute({
         id: RouteConstants.ROUTE_LOGIN,
         data: null
       });
+    } else {
+      //navegar al home
     }
   }
 

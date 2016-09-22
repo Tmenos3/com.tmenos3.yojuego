@@ -1,7 +1,6 @@
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  ADD_ROUTE: null,
-  REPLACE_ROUTE: null,
-  BACK: null
+  SET_SESSION: null,
+  SET_PLAYER: null
 });

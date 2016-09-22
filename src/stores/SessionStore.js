@@ -1,11 +1,13 @@
+import { EventEmitter } from 'events';
 import assign from 'object-assign';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
-import { EventEmitter } from 'events';
+import SessionConstants from '../constants/SessionConstants';
 
 var CHANGE_EVENT = 'change';
 var _isInitializing = false;
 var _session = null;
+let _loadingPlayer = false;
 
 var SessionStore = assign({}, EventEmitter.prototype, {
   emitChange: function () {
@@ -17,25 +19,26 @@ var SessionStore = assign({}, EventEmitter.prototype, {
   removeChangeListener: function (callback) {
     this.removeListener(CHANGE_EVENT, callback);
   },
-  isInitilizing() {
-    return _isInitializing;
-  },
   getSession() {
     return _session;
+  },
+  loadingPlayer() {
+    return _loadingPlayer;
   }
 });
 
 SessionStore.dispatchToken = AppDispatcher.register(function (action) {
   switch (action.actionType) {
-
-    case AppConstants.INIT_APP:
-      _isInitializing = true;
+    case SessionConstants.SET_SESSION:
+      _isInitializing = false;
+      _session = action.payload;
+      _loadingPlayer = _session != null && (!_session.player || _session.player == null);
       SessionStore.emitChange();
       break;
 
-    case AppConstants.SET_SESSION:
-      _isInitializing = false;
-      _session = action.payload;
+    case SessionConstants.SET_PLAYER:
+      _session.player = action.payload;
+      _loadingPlayer = false;
       SessionStore.emitChange();
       break;
   }

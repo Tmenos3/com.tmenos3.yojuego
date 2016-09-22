@@ -4,13 +4,31 @@ import {
   TouchableOpacity,
   TextInput,
   View,
-  StyleSheet} from 'react-native';
+  StyleSheet,
+  ActivityIndicator} from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
+import SessionStore from '../stores/SessionStore';
 
 class LogIn extends Component {
+  constructor(props) {
+    super(props);
+
+    this._onSessionChange = this._onSessionChange.bind(this);
+    this.state = { loadingPlayer: false };
+  }
+
   render() {
+    if (this.state.loadingPlayer)
+      return (
+        <ActivityIndicator
+          animating={this.state.animating}
+          style={[styles.centering, { height: 80 }]}
+          size="large"
+          />
+      );
+
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={this._showFacebookLogin}>
@@ -31,6 +49,33 @@ class LogIn extends Component {
         </View>
       </View>
     );
+  }
+
+  componentDidMount() {
+    SessionStore.addChangeListener(this._onSessionChange);
+  }
+
+  componentWillUnmount() {
+    SessionStore.removeChangeListener(_onSessionChange);
+  }
+
+  _onSessionChange() {
+    if (!SessionStore.getSession() || SessionStore.getSession() == null)
+      return;
+
+    if (SessionStore.getSession() != null && SessionStore.getSession().token != null) {
+      if (SessionStore.loadingPlayer()) {
+        this.setState({ loadingPlayer: true });
+      } else {
+        if (SessionStore.getSession().player && SessionStore.getSession().player != null) {
+          // navegar al home
+        } else {
+          NavigationsActions.replaceRoute({
+            id: RouteConstants.ROUTE_COMPLETE_SIGNUP
+          });
+        }
+      }
+    }
   }
 
   _showFacebookLogin() {
@@ -93,6 +138,11 @@ var styles = StyleSheet.create({
   //   backgroundColor: "red",
   //   textAlign: 'center',
   // },
+  centering: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+  },
 });
 
 module.exports = LogIn;

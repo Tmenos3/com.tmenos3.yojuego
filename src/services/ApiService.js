@@ -1,7 +1,23 @@
-var BASEURL = 'https://api.aula365.com/v2/';
+var BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
 //var BASEURL = 'http://demo2.api.aula365.com/';
 
 var ApiService = {
+  getPlayerByToken: function(token) {
+    var _headers = new Headers();
+    _headers.append('Authorization', "Bearer " + token);
+
+    return fetch(BASEURL + "/player" , { headers: _headers })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+        return Promise.reject("error");
+      });
+  },
+
   getAppToken: function (scope, clientId, clientSecret) {
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
