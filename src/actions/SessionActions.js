@@ -27,6 +27,9 @@ var SessionActions = {
           console.log(error);
         });
     }
+  },
+  setPlayer(){
+
   }
 };
 

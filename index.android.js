@@ -8,8 +8,7 @@ import CompletePlayerProfileInfo from './src/components/CompletePlayerProfileInf
 class YoJuego extends Component {
   render() {
     return (
-      //<App/>
-      <CompletePlayerProfileInfo/>
+      <App/>
     );
   }
 }

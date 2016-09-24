@@ -5,11 +5,8 @@ import {
   TextInput,
   View,
   StyleSheet} from 'react-native';
-// import NavigationsActions from '../actions/NavigationsActions';
-// import NavigationConstants from '../constants/NavigationConstants';
-// import RouteConstants from '../constants/RouteConstants';
-let BASEURL = 'http://192.168.0.10:8080/';
-let USERID = '123456';
+import NavigationsActions from '../actions/NavigationsActions';
+import RouteConstants from '../constants/RouteConstants';
 
 class CompletePlayerProfileInfo extends Component {
   constructor(props) {
@@ -74,7 +71,8 @@ class CompletePlayerProfileInfo extends Component {
           onPress={this._confirmProfile}>
           <Text> Ok </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button}
+          onPress={this._backPressed}>
           <Text> Back </Text>
         </TouchableOpacity>
       </View>
@@ -93,7 +91,7 @@ class CompletePlayerProfileInfo extends Component {
     if (text.length <= 0) {
       this.setState({ dayBorderColor: 'red' });
     } else {
-      this.setState({ dayBorderColor: 'white' , day: text});
+      this.setState({ dayBorderColor: 'white', day: text });
     }
   }
 
@@ -121,37 +119,44 @@ class CompletePlayerProfileInfo extends Component {
     }
   }
 
+  _backPressed() {
+    NavigationsActions.replaceRoute({
+      id: RouteConstants.ROUTE_COMPLETE_SIGNUP
+    });
+  }
+
   _confirmProfile() {
     // NavigationsActions.addRoute({
     //   id: RouteConstants.ROUTE_SIGNUP
     // });
 
-    let _headers = new Headers();
-    //_headers.append('Authorization', token);
-    _headers.append('Content-Type', 'application/json');
-    let form = {
-      'nickname': this.state.nickname,
-      'birthday': this.state.year + '-' + this.state.month + '-' + this.state.day + 'T00:00:00Z',
-      'state': this.state.state,
-      'adminState': 'adminState'
-    };
+    // let _headers = new Headers();
+    // //_headers.append('Authorization', token);
+    // _headers.append('Content-Type', 'application/json');
+    // _headers.append('Ahutorization', 'Bearer ' + TOKEN);
+    // let form = {
+    //   'nickname': this.state.nickname,
+    //   'birthday': this.state.year + '-' + this.state.month + '-' + this.state.day + 'T00:00:00Z',
+    //   'state': this.state.state,
+    //   'adminState': 'adminState'
+    // };
 
-    return fetch(BASEURL + USERID + "/player/profile", {
-      headers: _headers,
-      method: 'post',
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          //return response.json();
-          alert('profiled saved');
-        } else {
-          response.json()
-            .then((error) => {
-              alert('error: ');
-            });
-        }
-      });
+    // return fetch(BASEURL + USERID + "/player/profile", {
+    //   headers: _headers,
+    //   method: 'post',
+    //   body: JSON.stringify(form)
+    // })
+    //   .then((response) => {
+    //     if (response.ok) {
+    //       //return response.json();
+    //       alert('profiled saved');
+    //     } else {
+    //       response.json()
+    //         .then((error) => {
+    //           alert('error: ');
+    //         });
+    //     }
+    //   });
   }
 }
 
