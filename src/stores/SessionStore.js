@@ -8,6 +8,7 @@ var CHANGE_EVENT = 'change';
 var _isInitializing = false;
 var _session = null;
 let _loadingPlayer = false;
+let _settingPlayer = false;
 
 var SessionStore = assign({}, EventEmitter.prototype, {
   emitChange: function () {
@@ -24,6 +25,9 @@ var SessionStore = assign({}, EventEmitter.prototype, {
   },
   loadingPlayer() {
     return _loadingPlayer;
+  },
+  settingPlayer() {
+    return _settingPlayer;
   }
 });
 
@@ -39,6 +43,13 @@ SessionStore.dispatchToken = AppDispatcher.register(function (action) {
     case SessionConstants.SET_PLAYER:
       _session.player = action.payload;
       _loadingPlayer = false;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.SETTING_PLAYER:
+      _session.player = null;
+      _loadingPlayer = false;
+      _settingPlayer = true;
       SessionStore.emitChange();
       break;
   }
