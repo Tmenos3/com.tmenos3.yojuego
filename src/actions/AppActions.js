@@ -8,7 +8,10 @@ var isLoggedIn = false;
 
 var AppActions = {
   initializeApp: function () {
-    Dispatcher.handleViewAction({
+    // Dispatcher.handleViewAction({
+    //   actionType: AppConstants.INIT_APP
+    // });
+    Dispatcher.handleAction({
       actionType: AppConstants.INIT_APP
     });
 
@@ -18,10 +21,14 @@ var AppActions = {
   },
 
   setSession(session) {
-    Dispatcher.handleViewAction({
+    Dispatcher.handleAction({
       actionType: AppConstants.SET_SESSION,
       payload: session
     });
+    // Dispatcher.handleViewAction({
+    //   actionType: AppConstants.SET_SESSION,
+    //   payload: session
+    // });
   }
 };
 

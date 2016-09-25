@@ -7,8 +7,8 @@ import {
   StyleSheet} from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
 import RouteConstants from '../constants/RouteConstants';
-import SessionStore from '../stores/SessionStore';
-import SessionActions from '../actions/SessionActions';
+import CompletePlayerProfileInfoStore from '../stores/CompletePlayerProfileInfoStore';
+import CompletePlayerProfileInfoActions from '../actions/CompletePlayerProfileInfoActions';
 
 class CompletePlayerProfileInfo extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class CompletePlayerProfileInfo extends Component {
       settingPlayer: false
     };
     this._onChangeNickname = this._onChangeNickname.bind(this);
-    this._onSessionChange = this._onSessionChange.bind(this);
+    this._onPlayerInfoChange = this._onPlayerInfoChange.bind(this);
     this._confirmProfile = this._confirmProfile.bind(this);
     this._onChangeDay = this._onChangeDay.bind(this);
     this._onChangeMonth = this._onChangeMonth.bind(this);
@@ -37,9 +37,9 @@ class CompletePlayerProfileInfo extends Component {
     this._onChangeState = this._onChangeState.bind(this);
   }
 
-  // componentDidMount() {
-  //   SessionStore.addChangeListener(this._onSessionChange);
-  // }
+  componentDidMount() {
+    CompletePlayerProfileInfoStore.addChangeListener(this._onPlayerInfoChange);
+  }
 
   // componentWillUnmount() {
   //   //SessionStore.removeChangeListener(this._onSessionChange);
@@ -95,61 +95,56 @@ class CompletePlayerProfileInfo extends Component {
     // }
 
     return (
-      <View>
-        <Text> test </Text>
+      <View style={styles.container}>
+        <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.nicknameBorderColor }}>
+          <TextInput placeholder={"Nickname"}
+            style={styles.textInput}
+            returnKeyType = {"done"}
+            onChangeText ={this._onChangeNickname }/>
+        </View>
+        <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.dayBorderColor }}>
+          <TextInput placeholder={"Day"}
+            style={styles.textInput}
+            returnKeyType = {"done"}
+            keyboardType = {"numeric"}
+            onChangeText ={this._onChangeDay }/>
+        </View>
+        <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.monthBorderColor }}>
+          <TextInput placeholder={"Month"}
+            style={styles.textInput}
+            returnKeyType = {"done"}
+            keyboardType = {"numeric"}
+            onChangeText ={this._onChangeMonth }/>
+        </View>
+        <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.yearBorderColor }}>
+          <TextInput placeholder={"Year"}
+            style={styles.textInput}
+            returnKeyType = {"done"}
+            keyboardType = {"numeric"}
+            onChangeText ={this._onChangeYear}/>
+        </View>
+        <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.stateBorderColor }}>
+          <TextInput placeholder={"State"}
+            style={styles.textInput}
+            returnKeyType = {"done"}
+            onChangeText ={this._onChangeState }/>
+        </View>
+        <TouchableOpacity style={styles.button}
+          onPress={this._confirmProfile}>
+          <Text> Ok </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}
+          onPress={this._backPressed}>
+          <Text> Back </Text>
+        </TouchableOpacity>
       </View>
     );
-    // return (
-    //   <View style={styles.container}>
-    //     <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.nicknameBorderColor }}>
-    //       <TextInput placeholder={"Nickname"}
-    //         style={styles.textInput}
-    //         returnKeyType = {"done"}
-    //         onChangeText ={this._onChangeNickname }/>
-    //     </View>
-    //     <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.dayBorderColor }}>
-    //       <TextInput placeholder={"Day"}
-    //         style={styles.textInput}
-    //         returnKeyType = {"done"}
-    //         keyboardType = {"numeric"}
-    //         onChangeText ={this._onChangeDay }/>
-    //     </View>
-    //     <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.monthBorderColor }}>
-    //       <TextInput placeholder={"Month"}
-    //         style={styles.textInput}
-    //         returnKeyType = {"done"}
-    //         keyboardType = {"numeric"}
-    //         onChangeText ={this._onChangeMonth }/>
-    //     </View>
-    //     <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.yearBorderColor }}>
-    //       <TextInput placeholder={"Year"}
-    //         style={styles.textInput}
-    //         returnKeyType = {"done"}
-    //         keyboardType = {"numeric"}
-    //         onChangeText ={this._onChangeYear}/>
-    //     </View>
-    //     <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.stateBorderColor }}>
-    //       <TextInput placeholder={"State"}
-    //         style={styles.textInput}
-    //         returnKeyType = {"done"}
-    //         onChangeText ={this._onChangeState }/>
-    //     </View>
-    //     <TouchableOpacity style={styles.button}
-    //       onPress={this._confirmProfile}>
-    //       <Text> Ok </Text>
-    //     </TouchableOpacity>
-    //     <TouchableOpacity style={styles.button}
-    //       onPress={this._backPressed}>
-    //       <Text> Back </Text>
-    //     </TouchableOpacity>
-    //   </View>
-    // );
   }
 
-  _onSessionChange() {
-    // if (SessionStore.settingPlayer()) {
-    //   this.setState({ settingPlayer: true });
-    // }
+  _onPlayerInfoChange() {
+    if (CompletePlayerProfileInfoStore.settingPlayer()) {
+      this.setState({ settingPlayer: true });
+    }
   }
 
 
@@ -200,7 +195,7 @@ class CompletePlayerProfileInfo extends Component {
   }
 
   _confirmProfile() {
-    SessionActions.setPlayer(this.state.nickname, this.state.birthday, this.state.state, this.state.adminState);
+    CompletePlayerProfileInfoActions.setPlayer(this.state.nickname, this.state.birthday, this.state.state, this.state.adminState);
   }
 }
 
