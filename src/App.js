@@ -8,7 +8,7 @@ import {
 import NavigationConstants from './constants/NavigationConstants';
 import RouteConstants from './constants/RouteConstants';
 import AppActions from './actions/AppActions';
-import SessionStore from './stores/SessionStore';
+import AppStore from './stores/AppStore';
 import NavigationsActions from './actions/NavigationsActions';
 import AppNavigator from './components/AppNavigator';
 
@@ -22,14 +22,19 @@ class App extends Component {
   }
 
   componentDidMount() {
+    AppStore.addChangeListener(this._onAppSessionChange)
     AppActions.initializeApp();
-    if (SessionStore.getSession() === null) {
+  }
+
+  componentWillUnmount() {
+    AppStore.removeChangeListener(this._onAppSessionChange)
+  }
+
+  _onAppSessionChange() {
+    if (AppStore.ready()) {
       NavigationsActions.replaceRoute({
-        id: RouteConstants.ROUTE_LOGIN,
-        data: null
+        id: RouteConstants.ROUTE_LOGIN
       });
-    } else {
-      //navegar al home
     }
   }
 
