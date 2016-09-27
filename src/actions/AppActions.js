@@ -7,7 +7,7 @@ var isLoggedIn = false;
 
 var AppActions = {
   initializeApp: function () {
-    Dispatcher.handleAction({
+    Dispatcher.handleViewAction({
       actionType: AppConstants.INIT_APP
     });
 
@@ -17,7 +17,7 @@ var AppActions = {
   },
 
   readyApp() {
-    Dispatcher.handleAction({
+    Dispatcher.handleViewAction({
       actionType: AppConstants.APP_READY
     });
   }

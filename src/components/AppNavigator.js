@@ -7,7 +7,7 @@ import Splash from './Splash';
 import LogIn from './LogIn';
 import FacebookLogIn from './auth/FacebookLogIn';
 import SignUp from './auth/SignUp';
-import CompletePlayerProfileInfo from './CompletePlayerProfileInfo';
+import PlayerSignUp from './auth/PlayerSignUp';
 var _navigator;
 
 class AppNavigator extends Component {
@@ -72,7 +72,7 @@ class AppNavigator extends Component {
         );
       case RouteConstants.ROUTE_COMPLETE_SIGNUP:
         return (
-          <CompletePlayerProfileInfo/>
+          <PlayerSignUp/>
         );
     }
   }

@@ -16,19 +16,9 @@ class LogIn extends Component {
     super(props);
 
     this._onSessionChange = this._onSessionChange.bind(this);
-    this.state = { loadingPlayer: false };
   }
 
   render() {
-    if (this.state.loadingPlayer)
-      return (
-        <ActivityIndicator
-          animating={this.state.animating}
-          style={[styles.centering, { height: 80 }]}
-          size="large"
-          />
-      );
-
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={this._showFacebookLogin}>
@@ -56,25 +46,21 @@ class LogIn extends Component {
   }
 
   componentWillUnmount() {
-    SessionStore.removeChangeListener(_onSessionChange);
+    SessionStore.removeChangeListener(this._onSessionChange);
   }
 
   _onSessionChange() {
-    if (!SessionStore.getSession() || SessionStore.getSession() == null)
+    if (!SessionStore.getToken() || SessionStore.getToken() == null)
       return;
 
-    if (SessionStore.getSession() != null && SessionStore.getSession().token != null) {
-      if (SessionStore.loadingPlayer()) {
-        this.setState({ loadingPlayer: true });
-      } else {
-        if (SessionStore.getSession().player && SessionStore.getSession().player != null) {
-          // navegar al home
-        } else {
-          NavigationsActions.replaceRoute({
-            id: RouteConstants.ROUTE_COMPLETE_SIGNUP
-          });
-        }
-      }
+    if (!SessionStore.getPlayer() || SessionStore.getPlayer() == null) {
+      NavigationsActions.replaceRoute({
+        id: RouteConstants.ROUTE_COMPLETE_SIGNUP
+      });
+    } else {
+      NavigationsActions.replaceRoute({
+        id: RouteConstants.HOME
+      });
     }
   }
 

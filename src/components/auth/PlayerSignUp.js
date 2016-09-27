@@ -5,12 +5,12 @@ import {
   TextInput,
   View,
   StyleSheet} from 'react-native';
-import NavigationsActions from '../actions/NavigationsActions';
-import RouteConstants from '../constants/RouteConstants';
-import CompletePlayerProfileInfoStore from '../stores/CompletePlayerProfileInfoStore';
-import CompletePlayerProfileInfoActions from '../actions/CompletePlayerProfileInfoActions';
+import NavigationsActions from '../../actions/NavigationsActions';
+import RouteConstants from '../../constants/RouteConstants';
+import PlayerStore from '../../stores/PlayerStore';
+import PlayerActions from '../../actions/PlayerActions';
 
-class CompletePlayerProfileInfo extends Component {
+class PlayerSignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +38,7 @@ class CompletePlayerProfileInfo extends Component {
   }
 
   componentDidMount() {
-    CompletePlayerProfileInfoStore.addChangeListener(this._onPlayerInfoChange);
+    // PlayerStore.addChangeListener(this._onPlayerInfoChange);
   }
 
   // componentWillUnmount() {
@@ -93,7 +93,6 @@ class CompletePlayerProfileInfo extends Component {
     //   </View>
     //   );
     // }
-
     return (
       <View style={styles.container}>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.nicknameBorderColor }}>
@@ -142,7 +141,7 @@ class CompletePlayerProfileInfo extends Component {
   }
 
   _onPlayerInfoChange() {
-    if (CompletePlayerProfileInfoStore.settingPlayer()) {
+    if (PlayerStore.settingPlayer()) {
       this.setState({ settingPlayer: true });
     }
   }
@@ -195,7 +194,7 @@ class CompletePlayerProfileInfo extends Component {
   }
 
   _confirmProfile() {
-    CompletePlayerProfileInfoActions.setPlayer(this.state.nickname, this.state.birthday, this.state.state, this.state.adminState);
+    PlayerActions.setPlayer(this.state.nickname, this.state.birthday, this.state.state, this.state.adminState);
   }
 }
 
@@ -224,4 +223,4 @@ var styles = StyleSheet.create({
   }
 });
 
-module.exports = CompletePlayerProfileInfo;
+module.exports = PlayerSignUp;
