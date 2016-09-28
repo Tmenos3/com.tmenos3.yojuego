@@ -24,7 +24,7 @@ class LogIn extends Component {
         <TouchableOpacity style={styles.button} onPress={this._showFacebookLogin}>
           <Text> Facebook </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={this._showGoogleLogin}>
           <Text> Google </Text>
         </TouchableOpacity>
         <View>
@@ -73,6 +73,12 @@ class LogIn extends Component {
   _showSignUp() {
     NavigationsActions.addRoute({
       id: RouteConstants.ROUTE_SIGNUP
+    });
+  }
+
+  _showGoogleLogin() {
+    NavigationsActions.addRoute({
+      id: RouteConstants.ROUTE_GOOGLE_LOGIN
     });
   }
 }

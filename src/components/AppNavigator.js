@@ -6,6 +6,7 @@ import NavigationConstants from '../constants/NavigationConstants';
 import Splash from './Splash';
 import LogIn from './LogIn';
 import FacebookLogIn from './auth/FacebookLogIn';
+import GoogleLogIn from './auth/GoogleLogin';
 import SignUp from './auth/SignUp';
 import PlayerSignUp from './auth/PlayerSignUp';
 var _navigator;
@@ -65,6 +66,10 @@ class AppNavigator extends Component {
       case RouteConstants.ROUTE_FACEBOOK_LOGIN:
         return (
           <FacebookLogIn/>
+        );
+      case RouteConstants.ROUTE_GOOGLE_LOGIN:
+        return (
+          <GoogleLogIn/>
         );
       case RouteConstants.ROUTE_SIGNUP:
         return (
