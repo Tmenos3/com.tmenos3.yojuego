@@ -19,7 +19,8 @@ class FacebookLogIn extends Component {
   _onLoad(state) {
     console.log(state.url);
     if (state.url.indexOf('http://ec2-54-174-177-82.compute-1.amazonaws.com:8081/auth/success') != -1) {
-      var token = state.url.split("token=")[1];
+      let token = state.url.split("token=")[1];
+      token = token.substring(0, token.length - 4);
       NavigationsActions.back();
       SessionActions.setSession(token);
     }

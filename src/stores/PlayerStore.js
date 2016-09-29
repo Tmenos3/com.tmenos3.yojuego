@@ -23,7 +23,7 @@ var PlayerStore = assign({}, EventEmitter.prototype, {
     return _loadingPlayer;
   },
   creatingPlayer() {
-    return _creatinigPlayer;
+    return _creatingPlayer;
   },
   getPlayer() {
     return _player;
@@ -41,6 +41,12 @@ PlayerStore.dispatchToken = AppDispatcher.register(function (action) {
 
     case PlayerConstants.GET_PLAYER:
       _loadingPlayer = true;
+      PlayerStore.emitChange();
+      break;
+
+    case PlayerConstants.CREATE_PLAYER:
+      _loadingPlayer = false;
+      _creatingPlayer = true;
       PlayerStore.emitChange();
       break;
   }
