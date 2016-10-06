@@ -5,7 +5,10 @@ import {
   TextInput,
   View,
   StyleSheet,
-  ActivityIndicator} from 'react-native';
+  ActivityIndicator,
+  Dimensions,
+  Image
+} from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
@@ -21,22 +24,35 @@ class LogIn extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={this._showFacebookLogin}>
-          <Text> Facebook </Text>
+        <TouchableOpacity style={styles.facebookButtton} onPress={this._showFacebookLogin}>
+          <Image style={styles.facebookImage} source={require('../statics/facebook-logo-white.png') }></Image>
+          <Text style={styles.buttonText}>Facebook</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={this._showGoogleLogin}>
-          <Text> Google </Text>
+        <TouchableOpacity style={styles.googleButtton} onPress={this._showGoogleLogin}>
+          <Image style={styles.googleImage} source={require('../statics/google-plus-logo-white.png') }></Image>
+          <Text style={styles.buttonText}>Google+</Text>
         </TouchableOpacity>
-        <View>
-          <TextInput placeholder={"usuario"} style={styles.textInput}/>
-          <TextInput placeholder={"contraseña"} style={styles.textInput}/>
-          <TouchableOpacity style={styles.button}>
-            <Text> YoJuego </Text>
-          </TouchableOpacity>
+        <View style={styles.line}></View>
+        <View style={styles.inputContainer}>
+          <TextInput placeholder={"Email"} style={styles.input}/>
+        </View>
+        <View style={[styles.inputContainer, {
+          borderTopWidth: 0,
+          marginBottom: Dimensions.get('window').width * 0.06
+        }]}>
+          <TextInput placeholder={"Contraseña"} style={styles.input}/>
+        </View>
+        <View style={styles.loginContainer}>
           <TouchableOpacity onPress={this._showSignUp}>
-            <Text style={styles.link}> No tienes cuenta??Registrate </Text>
+            <Text style={styles.text}>Olvide mi contraseña...</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.loginButton}>
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity style={styles.signUp}>
+          <Text style={styles.text}>{'No tengo cuenta! Quiero Registrarme'}</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -87,54 +103,77 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     flexDirection: 'column',
-    alignItems: 'center'
-  },
-  button: {
-    width: 80,
-    height: 20,
-    backgroundColor: 'blue',
-    marginVertical: 20,
     alignItems: 'center',
+  },
+  facebookButtton: {
+    width: Dimensions.get('window').width * 0.94,
+    height: 40,
+    backgroundColor: '#3b5998',
+    marginTop: Dimensions.get('window').width * 0.03,
     justifyContent: 'center',
+    borderRadius: Dimensions.get('window').width * 0.012
   },
-  // text: {
-  //   fontSize: 20,
-  //   color: 'white',
-  //   fontWeight: 'bold',
-  //   textAlign: 'center',
-  // },
-  textInput: {
-    width: 80,
-    height: 20,
-    color: 'black',
-    borderWidth: 1,
-    borderColor: 'black',
+  googleButtton: {
+    width: Dimensions.get('window').width * 0.94,
+    height: 40,
+    backgroundColor: '#dc4d28',
+    marginTop: Dimensions.get('window').width * 0.03,
+    justifyContent: 'center',
+    borderRadius: Dimensions.get('window').width * 0.012
   },
-  link: {
-    fontSize: 10,
-    color: 'blue',
+  buttonText: {
+    color: 'white',
+    fontSize: 15,
     textAlign: 'center',
+    fontWeight: 'bold'
   },
-  // button: {
-  //   width: 50,
-  //   height: 25,
-  //   backgroundColor: 'red'
-  // },
-  // buttonText: {
-  //   height: 30,
-  //   color: 'black',
-  //   borderColor: 'black',
-  //   borderWidth: 1,
-  //   backgroundColor: "red",
-  //   textAlign: 'center',
-  // },
-  centering: {
+  line: {
+    width: Dimensions.get('window').width * 0.94,
+    height: Dimensions.get('window').height * 0.03,
+    borderBottomWidth: 0.7,
+    borderColor: 'grey',
+    marginBottom: Dimensions.get('window').width * 0.06
+  },
+  inputContainer: {
+    borderWidth: 0.7,
+    borderColor: 'grey'
+  },
+  input: {
+    width: Dimensions.get('window').width * 0.94
+  },
+  loginContainer: {
+    width: Dimensions.get('window').width * 0.94,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 8,
+    marginBottom: Dimensions.get('window').width * 0.5
   },
+  loginButton: {
+    width: Dimensions.get('window').width * 0.3,
+    height: 40,
+    justifyContent: 'center',
+    borderRadius: Dimensions.get('window').width * 0.012,
+    backgroundColor: '#33adff'
+  },
+  text: {
+    color: 'grey'
+  },
+  facebookImage: {
+    width: 25,
+    height: 25,
+    position: 'absolute',
+    left: 7,
+    bottom: 7
+  },
+  googleImage: {
+    width: 22,
+    height: 22,
+    position: 'absolute',
+    left: 10,
+    bottom: 9
+  }
 });
 
 module.exports = LogIn;
