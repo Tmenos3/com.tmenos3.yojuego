@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  StyleSheet
+  StyleSheet,
+  InteractionManager
 } from 'react-native';
 
 import NavigationConstants from './constants/NavigationConstants';
@@ -22,8 +23,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    AppStore.addChangeListener(this._onAppSessionChange)
-    AppActions.initializeApp();
+    AppStore.addChangeListener(this._onAppSessionChange);
+    InteractionManager.runAfterInteractions(() => {
+      AppActions.initializeApp();
+    });
   }
 
   componentWillUnmount() {

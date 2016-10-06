@@ -103,7 +103,7 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    // justifyContent: 'center',
+    justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -148,7 +148,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: Dimensions.get('window').width * 0.5
+     marginBottom: Dimensions.get('window').width * 0.1
   },
   loginButton: {
     width: Dimensions.get('window').width * 0.3,
