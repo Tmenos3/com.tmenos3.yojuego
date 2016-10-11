@@ -5,6 +5,7 @@ import RouteConstants from '../constants/RouteConstants';
 import NavigationConstants from '../constants/NavigationConstants';
 import Splash from './Splash';
 import LogIn from './LogIn';
+import InputMail from './InputMail';
 import FacebookLogIn from './auth/FacebookLogIn';
 import GoogleLogIn from './auth/GoogleLogin';
 import SignUp from './auth/SignUp';
@@ -78,6 +79,10 @@ class AppNavigator extends Component {
       case RouteConstants.ROUTE_COMPLETE_SIGNUP:
         return (
           <PlayerSignUp/>
+        );
+      case RouteConstants.ROUTE_FORGET_PASSWORD:
+        return (
+          <InputMail/>
         );
     }
   }

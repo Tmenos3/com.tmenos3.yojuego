@@ -6,5 +6,6 @@ module.exports = keyMirror({
   ROUTE_FACEBOOK_LOGIN: null,
   ROUTE_GOOGLE_LOGIN: null,
   ROUTE_SIGNUP: null,
-  ROUTE_COMPLETE_SIGNUP: null
+  ROUTE_COMPLETE_SIGNUP: null,
+  ROUTE_FORGET_PASSWORD: null
 });

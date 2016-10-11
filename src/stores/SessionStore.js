@@ -8,6 +8,9 @@ import PlayerConstants from '../constants/PlayerConstants';
 var CHANGE_EVENT = 'change';
 var _token = null;
 var _player = null;
+var _mail = null;
+var _mailSent = null;
+var _errorSendingMail = null;
 
 var SessionStore = assign({}, EventEmitter.prototype, {
   emitChange: function () {
@@ -24,6 +27,15 @@ var SessionStore = assign({}, EventEmitter.prototype, {
   },
   getPlayer() {
     return _player;
+  },
+  getMail() {
+    return _mail;
+  },
+  mailSent() {
+    return _mailSent;
+  },
+  errorSendingMail() {
+    return _errorSendingMail;
   }
 });
 
@@ -32,6 +44,17 @@ SessionStore.dispatchToken = AppDispatcher.register(function (action) {
     case SessionConstants.SET_SESSION:
       _token = action.payload.token;
       _player = action.payload.player;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.SEND_MAIL_RESTORE_PASSWORD:
+      _mail = action.payload.mail;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.MAIL_SENT:
+      _mailSent = action.payload.sent;
+      _errorSendingMail = action.payload.error;
       SessionStore.emitChange();
       break;
 

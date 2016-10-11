@@ -19,6 +19,7 @@ class LogIn extends Component {
     super(props);
 
     this._onSessionChange = this._onSessionChange.bind(this);
+    this._forgetPassword = this._forgetPassword.bind(this);
   }
 
   render() {
@@ -43,7 +44,7 @@ class LogIn extends Component {
           <TextInput placeholder={"Contraseña"} style={styles.input}/>
         </View>
         <View style={styles.loginContainer}>
-          <TouchableOpacity onPress={this._showSignUp}>
+          <TouchableOpacity onPress={this._showSignUp} onPress={this._forgetPassword}>
             <Text style={styles.text}>Olvide mi contraseña...</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.loginButton}>
@@ -97,6 +98,12 @@ class LogIn extends Component {
       id: RouteConstants.ROUTE_GOOGLE_LOGIN
     });
   }
+
+  _forgetPassword() {
+    NavigationsActions.addRoute({
+      id: RouteConstants.ROUTE_FORGET_PASSWORD
+    });
+  }
 }
 
 var styles = StyleSheet.create({
@@ -148,7 +155,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-     marginBottom: Dimensions.get('window').width * 0.1
+    marginBottom: Dimensions.get('window').width * 0.1
   },
   loginButton: {
     width: Dimensions.get('window').width * 0.3,

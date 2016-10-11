@@ -93,7 +93,6 @@ class SignUp extends Component {
     //   </View>
     //   );
     // }
-    return (<Text> oasoaksnfaksfna </Text>);
     return (
       <View style={styles.container}>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.nicknameBorderColor }}>

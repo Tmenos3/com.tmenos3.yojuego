@@ -12,10 +12,8 @@ var PlayerActions = {
 
     ApiService.setPlayerInfo(nickname, birthday, state, adminState, SessionStore.getToken())
       .then((player) => {
-        //LogHelper.warning("PlayerActions.createPlayer(resolve)", player);
         PlayerActions.setPlayer(player);
       }, (cause) => {
-        //LogHelper.warning("PlayerActions.createPlayer(rejected)", cause);
         PlayerActions.setPlayer(null);
       })
       .catch((error) => {
