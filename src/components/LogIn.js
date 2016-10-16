@@ -5,8 +5,8 @@ import {
   TextInput,
   View,
   StyleSheet,
-  ActivityIndicator,
   Dimensions,
+  Platform,
   Image
 } from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
@@ -20,6 +20,30 @@ class LogIn extends Component {
 
     this._onSessionChange = this._onSessionChange.bind(this);
     this._forgetPassword = this._forgetPassword.bind(this);
+  }
+
+  componentDidMount() {
+    SessionStore.addChangeListener(this._onSessionChange);
+
+    if (Platform.OS === 'android') {
+      var BackAndroid = require('react-native').BackAndroid;
+      BackAndroid.addEventListener('hardwareBackPress', () => {
+        this._backPressed();
+        return true;
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    SessionStore.removeChangeListener(this._onSessionChange);
+
+    if (Platform.OS === 'android') {
+      var BackAndroid = require('react-native').BackAndroid;
+      BackAndroid.removeEventListener('hardwareBackPress', () => {
+        this._backPressed();
+        return true;
+      });
+    }
   }
 
   render() {
@@ -44,26 +68,18 @@ class LogIn extends Component {
           <TextInput placeholder={"Contraseña"} style={styles.input}/>
         </View>
         <View style={styles.loginContainer}>
-          <TouchableOpacity onPress={this._showSignUp} onPress={this._forgetPassword}>
+          <TouchableOpacity onPress={this._forgetPassword}>
             <Text style={styles.text}>Olvide mi contraseña...</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.loginButton}>
             <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.signUp}>
+        <TouchableOpacity style={styles.signUp} onPress={this._showSignUp}>
           <Text style={styles.text}>{'No tengo cuenta! Quiero Registrarme'}</Text>
         </TouchableOpacity>
       </View>
     );
-  }
-
-  componentDidMount() {
-    SessionStore.addChangeListener(this._onSessionChange);
-  }
-
-  componentWillUnmount() {
-    SessionStore.removeChangeListener(this._onSessionChange);
   }
 
   _onSessionChange() {
@@ -89,7 +105,7 @@ class LogIn extends Component {
 
   _showSignUp() {
     NavigationsActions.addRoute({
-      id: RouteConstants.ROUTE_SIGNUP
+      id: RouteConstants.ROUTE_SIGNUP_STEPONE
     });
   }
 
@@ -103,6 +119,10 @@ class LogIn extends Component {
     NavigationsActions.addRoute({
       id: RouteConstants.ROUTE_FORGET_PASSWORD
     });
+  }
+
+  _backPressed() {
+    NavigationsActions.back();
   }
 }
 

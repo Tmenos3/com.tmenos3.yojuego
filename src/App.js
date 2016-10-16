@@ -24,6 +24,7 @@ class App extends Component {
 
   componentDidMount() {
     AppStore.addChangeListener(this._onAppSessionChange);
+    
     InteractionManager.runAfterInteractions(() => {
       AppActions.initializeApp();
     });

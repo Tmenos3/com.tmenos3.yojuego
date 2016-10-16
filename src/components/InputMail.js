@@ -6,9 +6,8 @@ import {
     TextInput,
     View,
     StyleSheet,
-    ActivityIndicator,
-    Dimensions,
-    Image
+    Platform,
+    Dimensions
 } from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
 import NavigationConstants from '../constants/NavigationConstants';
@@ -25,17 +24,33 @@ class LogIn extends Component {
             mailSentMessage: null
         };
         this._send = this._send.bind(this);
-        this._back = this._back.bind(this);
+        this._backPressed = this._backPressed.bind(this);
         this._onChangeMail = this._onChangeMail.bind(this);
         this._onMailSent = this._onMailSent.bind(this);
     }
 
     componentDidMount() {
         SessionStore.addChangeListener(this._onMailSent);
+
+        if (Platform.OS === 'android') {
+            var BackAndroid = require('react-native').BackAndroid;
+            BackAndroid.addEventListener('hardwareBackPress', () => {
+                this._backPressed();
+                return true;
+            });
+        }
     }
 
     componentWillUnmount() {
         SessionStore.removeChangeListener(this._onMailSent);
+
+        if (Platform.OS === 'android') {
+            var BackAndroid = require('react-native').BackAndroid;
+            BackAndroid.removeEventListener('hardwareBackPress', () => {
+                this._backPressed();
+                return true;
+            });
+        }
     }
 
     render() {
@@ -63,7 +78,7 @@ class LogIn extends Component {
                         <Text style={styles.buttonText}>Enviar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.loginButton} onPress={this._back}>
-                        <Text style={styles.buttonText}>Volver</Text>
+                        <Text style={styles.buttonText}>Atrás</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ alignItems: 'center' }}>
@@ -79,7 +94,7 @@ class LogIn extends Component {
         SessionActions.sendMailRestorePassword(this.state.mail);
     }
 
-    _back() {
+    _backPressed() {
         NavigationsActions.replaceRoute({
             id: RouteConstants.ROUTE_LOGIN
         });

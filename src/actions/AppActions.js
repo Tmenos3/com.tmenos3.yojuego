@@ -1,5 +1,3 @@
-import {ToastAndroid} from 'react-native';
-
 var AppConstants = require('../constants/AppConstants');
 var Dispatcher = require('../dispatcher/Dispatcher');
 // var LogHelper = require('../utilities/LogHelper');

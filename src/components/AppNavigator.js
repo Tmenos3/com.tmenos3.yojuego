@@ -8,7 +8,8 @@ import LogIn from './LogIn';
 import InputMail from './InputMail';
 import FacebookLogIn from './auth/FacebookLogIn';
 import GoogleLogIn from './auth/GoogleLogin';
-import SignUp from './auth/SignUp';
+import SignUpStepOne from './auth/SignUpStepOne';
+import SignUpStepTwo from './auth/SignUpStepTwo';
 import PlayerSignUp from './auth/PlayerSignUp';
 var _navigator;
 
@@ -72,9 +73,13 @@ class AppNavigator extends Component {
         return (
           <GoogleLogIn/>
         );
-      case RouteConstants.ROUTE_SIGNUP:
+      case RouteConstants.ROUTE_SIGNUP_STEPONE:
         return (
-          <SignUp/>
+          <SignUpStepOne/>
+        );
+      case RouteConstants.ROUTE_SIGNUP_STEPTWO:
+        return (
+          <SignUpStepTwo/>
         );
       case RouteConstants.ROUTE_COMPLETE_SIGNUP:
         return (

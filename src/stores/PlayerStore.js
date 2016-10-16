@@ -8,6 +8,17 @@ var CHANGE_EVENT = 'change';
 var _loadingPlayer = false;
 var _creatingPlayer = false;
 var _player = null;
+var _signUpInfo = {
+  username: null,
+  password: null,
+  nickname: null,
+  state: null,
+  adminState: null,
+  day: null,
+  month: null,
+  year: null
+};
+var _signUpStepOneComplete = false;
 
 var PlayerStore = assign({}, EventEmitter.prototype, {
   emitChange: function () {
@@ -27,6 +38,12 @@ var PlayerStore = assign({}, EventEmitter.prototype, {
   },
   getPlayer() {
     return _player;
+  },
+  getSignUpInfo() {
+    return _signUpInfo;
+  },
+  signUpStepOneComplete(){
+    return _signUpStepOneComplete;
   }
 });
 
@@ -47,6 +64,13 @@ PlayerStore.dispatchToken = AppDispatcher.register(function (action) {
     case PlayerConstants.CREATE_PLAYER:
       _loadingPlayer = false;
       _creatingPlayer = true;
+      PlayerStore.emitChange();
+      break;
+
+    case PlayerConstants.SET_SIGNUP_STEPONE:
+      _signUpInfo.username = action.payload.username;
+      _signUpInfo.password = action.payload.password;
+      _signUpStepOneComplete = true;
       PlayerStore.emitChange();
       break;
   }
