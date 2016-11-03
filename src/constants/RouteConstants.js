@@ -8,5 +8,6 @@ module.exports = keyMirror({
   ROUTE_SIGNUP_STEPONE: null,
   ROUTE_SIGNUP_STEPTWO: null,
   ROUTE_COMPLETE_SIGNUP: null,
-  ROUTE_FORGET_PASSWORD: null
+  ROUTE_FORGET_PASSWORD: null,
+  ROUTE_HOME: null,
 });

@@ -14,13 +14,13 @@ class Body extends Component {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       dataSource: ds.cloneWithRows([{ date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { date: { day: '21', month: 'OCT' }, desc: 'One match.' }])
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+      { date: { day: '21', month: 'OCT' }, desc: 'One match.' }])
     };
 
     this._renderRow = this._renderRow.bind(this);
@@ -34,8 +34,8 @@ class Body extends Component {
           renderRow={this._renderRow}
           style={styles.listView}
           />
-        <TouchableOpacity  style={styles.button} onPress={this._showSignUp}>
-          <Text style={{ left: 13.5, bottom: 13.5, color: 'black', fontSize: 60 }}>+</Text>
+        <TouchableOpacity style={styles.button} onPress={this._showSignUp}>
+          <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
     );
@@ -70,7 +70,16 @@ var styles = StyleSheet.create({
     borderRadius: 30,
     position: 'absolute',
     right: 20,
-    bottom: 20
+    bottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 45,
+    backgroundColor: 'transparent',
+    flex: 1
   },
   dataRow: {
     marginTop: 6,

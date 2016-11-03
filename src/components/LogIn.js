@@ -127,7 +127,7 @@ class LogIn extends Component {
       });
     } else {
       NavigationsActions.replaceRoute({
-        id: RouteConstants.HOME
+        id: RouteConstants.ROUTE_HOME
       });
     }
   }

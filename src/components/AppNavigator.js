@@ -11,6 +11,7 @@ import GoogleLogIn from './auth/GoogleLogin';
 import SignUpStepOne from './auth/SignUpStepOne';
 import SignUpStepTwo from './auth/SignUpStepTwo';
 import PlayerSignUp from './auth/PlayerSignUp';
+import Home from './home/Home';
 var _navigator;
 
 class AppNavigator extends Component {
@@ -41,10 +42,10 @@ class AppNavigator extends Component {
   render() {
     return (
       <Navigator
-        initialRoute = {this.props.initialRoute}
-        ref = {this._setNavigator}
-        renderScene = {this._renderComponent}
-        style = {{ flex: 1 }}
+        initialRoute={this.props.initialRoute}
+        ref={this._setNavigator}
+        renderScene={this._renderComponent}
+        style={{ flex: 1 }}
         />
     );
   }
@@ -59,35 +60,39 @@ class AppNavigator extends Component {
     switch (route.id) {
       case RouteConstants.ROUTE_SPLASH:
         return (
-          <Splash/>
+          <Splash />
         );
       case RouteConstants.ROUTE_LOGIN:
         return (
-          <LogIn/>
+          <LogIn />
         );
       case RouteConstants.ROUTE_FACEBOOK_LOGIN:
         return (
-          <FacebookLogIn/>
+          <FacebookLogIn />
         );
       case RouteConstants.ROUTE_GOOGLE_LOGIN:
         return (
-          <GoogleLogIn/>
+          <GoogleLogIn />
         );
       case RouteConstants.ROUTE_SIGNUP_STEPONE:
         return (
-          <SignUpStepOne/>
+          <SignUpStepOne />
         );
       case RouteConstants.ROUTE_SIGNUP_STEPTWO:
         return (
-          <SignUpStepTwo/>
+          <SignUpStepTwo />
         );
       case RouteConstants.ROUTE_COMPLETE_SIGNUP:
         return (
-          <PlayerSignUp/>
+          <PlayerSignUp />
         );
       case RouteConstants.ROUTE_FORGET_PASSWORD:
         return (
-          <InputMail/>
+          <InputMail />
+        );
+      case RouteConstants.ROUTE_HOME:
+        return (
+          <Home />
         );
     }
   }
