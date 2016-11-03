@@ -42,6 +42,40 @@ var SessionActions = {
         error: error
       }
     });
+  },
+
+  login(email, password) {
+    Dispatcher.handleServerAction({
+      actionType: SessionConstants.SESSION_LOGIN_INTENT,
+      payload: {
+        email: email,
+        password: password
+      }
+    });
+    let _token;
+    ApiService.login(email, password)
+      .then((response) => {
+        return response.token;
+      })
+      .then((token) => {
+        _token = token;
+        return ApiService.getPlayerByToken(token);
+      })
+      .then((response) => {
+        SessionActions.setSession(_token, response.resp);
+      }, (cause) => {
+        SessionActions.setError(cause);
+      })
+      .catch((error) => {
+        SessionActions.setError(error);
+      });
+  },
+
+  setError(error) {
+    Dispatcher.handleServerAction({
+      actionType: SessionConstants.SESSION_LOGIN_ERROR,
+      payload: error
+    });
   }
 };
 

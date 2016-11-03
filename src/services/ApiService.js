@@ -5,6 +5,7 @@ var ApiService = {
   getPlayerByToken: function (token) {
     var _headers = new Headers();
     _headers.append('Authorization', "Bearer " + token);
+    _headers.append('Content-Type', 'application/json');
 
     return fetch(BASEURL + "/player", { headers: _headers })
       .then((response) => {
@@ -14,7 +15,10 @@ var ApiService = {
               return responseData;
             });
         }
-        return Promise.reject("error");
+        return response.json()
+          .then((error) => {
+            return Promise.reject(error);
+          });
       });
   },
   sendMailRestorePassword: function (email) {
@@ -138,6 +142,34 @@ var ApiService = {
           .then((error) => {
             return Promise.reject(error);
           });
+      });
+  },
+  login(email, password) {
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+
+    let form = {
+      "email": email,
+      "password": password
+    };
+    return fetch(BASEURL + "/login/yojuego", {
+      method: 'post',
+      headers: _headers,
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
       });
   }
 };

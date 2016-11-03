@@ -7,19 +7,31 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import NavigationsActions from '../actions/NavigationsActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
 import SessionStore from '../stores/SessionStore';
+import SessionActions from '../actions/SessionActions';
 
 class LogIn extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      email: '',
+      password: '',
+      loading: false
+    }
+
     this._onSessionChange = this._onSessionChange.bind(this);
     this._forgetPassword = this._forgetPassword.bind(this);
+    this._onLoginPressed = this._onLoginPressed.bind(this);
+    this._onEmailTextChanged = this._onEmailTextChanged.bind(this);
+    this._onPasswordTextChanged = this._onPasswordTextChanged.bind(this);
+    this._renderLoading = this._renderLoading.bind(this);
   }
 
   componentDidMount() {
@@ -50,41 +62,64 @@ class LogIn extends Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.facebookButtton} onPress={this._showFacebookLogin}>
-          <Image style={styles.facebookImage} source={require('../statics/facebook-logo-white.png') }></Image>
           <Text style={styles.buttonText}>Facebook</Text>
+          <Image style={styles.facebookImage} source={require('../statics/facebook-logo-white.png')}></Image>
         </TouchableOpacity>
         <TouchableOpacity style={styles.googleButtton} onPress={this._showGoogleLogin}>
-          <Image style={styles.googleImage} source={require('../statics/google-plus-logo-white.png') }></Image>
           <Text style={styles.buttonText}>Google+</Text>
+          <Image style={styles.googleImage} source={require('../statics/google-plus-logo-white.png')}></Image>
         </TouchableOpacity>
         <View style={styles.line}></View>
         <View style={styles.inputContainer}>
-          <TextInput placeholder={"Email"} style={styles.input}/>
+          <TextInput
+            placeholder={"Email"}
+            style={styles.input}
+            onChangeText={this._onEmailTextChanged}
+            text={this.state.email}
+            />
         </View>
         <View style={[styles.inputContainer, {
           borderTopWidth: 0,
           marginBottom: Dimensions.get('window').width * 0.06
         }]}>
-          <TextInput placeholder={"Contraseña"} style={styles.input}/>
+          <TextInput
+            placeholder={"Contraseña"}
+            style={styles.input}
+            onChangeText={this._onPasswordTextChanged}
+            text={this.state.password}
+            />
         </View>
         <View style={styles.loginContainer}>
           <TouchableOpacity onPress={this._forgetPassword}>
             <Text style={styles.text}>Olvide mi contraseña...</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.loginButton}>
+          <TouchableOpacity style={styles.loginButton} onPress={this._onLoginPressed}>
             <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.signUp} onPress={this._showSignUp}>
           <Text style={styles.text}>{'No tengo cuenta! Quiero Registrarme'}</Text>
         </TouchableOpacity>
+        {this._renderLoading()}
       </View>
     );
   }
 
+  _renderLoading() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator animating={true} size='large' />
+        </View>
+      )
+    }
+  }
+
   _onSessionChange() {
-    if (!SessionStore.getToken() || SessionStore.getToken() == null)
+    if (!SessionStore.getToken() || SessionStore.getToken() == null) {
+      this.setState({ loading: SessionStore.logingIn() })
       return;
+    }
 
     if (!SessionStore.getPlayer() || SessionStore.getPlayer() == null) {
       NavigationsActions.replaceRoute({
@@ -124,6 +159,23 @@ class LogIn extends Component {
   _backPressed() {
     NavigationsActions.back();
   }
+
+  _onLoginPressed() {
+    SessionActions.login(this.state.email, this.state.password);
+  }
+
+  _onEmailTextChanged(text) {
+    this.setState({
+      email: text
+    });
+  }
+
+  _onPasswordTextChanged(text) {
+    this.setState({
+      password: text
+    });
+  }
+
 }
 
 var styles = StyleSheet.create({
@@ -168,7 +220,8 @@ var styles = StyleSheet.create({
     borderColor: 'grey'
   },
   input: {
-    width: Dimensions.get('window').width * 0.94
+    width: Dimensions.get('window').width * 0.94,
+    height: 30
   },
   loginContainer: {
     width: Dimensions.get('window').width * 0.94,
@@ -200,6 +253,16 @@ var styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
     bottom: 9
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.25)'
   }
 });
 

@@ -11,6 +11,7 @@ var _player = null;
 var _mail = null;
 var _mailSent = null;
 var _errorSendingMail = null;
+var _logingIn = false;
 
 var SessionStore = assign({}, EventEmitter.prototype, {
   emitChange: function () {
@@ -36,6 +37,9 @@ var SessionStore = assign({}, EventEmitter.prototype, {
   },
   errorSendingMail() {
     return _errorSendingMail;
+  },
+  logingIn() {
+    return _logingIn;
   }
 });
 
@@ -60,6 +64,16 @@ SessionStore.dispatchToken = AppDispatcher.register(function (action) {
 
     case PlayerConstants.SET_PLAYER:
       _player = action.payload;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.SESSION_LOGIN_INTENT:
+      _logingIn = true;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.SESSION_LOGIN_ERROR:
+      _logingIn = false;
       SessionStore.emitChange();
       break;
   }
