@@ -12,6 +12,7 @@ import SignUpStepOne from './auth/SignUpStepOne';
 import SignUpStepTwo from './auth/SignUpStepTwo';
 import PlayerSignUp from './auth/PlayerSignUp';
 import Home from './home/Home';
+import CreateMatch from '.CreateMatch';
 var _navigator;
 
 class AppNavigator extends Component {
@@ -93,6 +94,10 @@ class AppNavigator extends Component {
       case RouteConstants.ROUTE_HOME:
         return (
           <Home />
+        );
+      case RouteConstants.ROUTE_CREATE_MATCH:
+        return (
+          <CreateMatch />
         );
     }
   }
