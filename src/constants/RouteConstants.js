@@ -10,5 +10,6 @@ module.exports = keyMirror({
   ROUTE_COMPLETE_SIGNUP: null,
   ROUTE_FORGET_PASSWORD: null,
   ROUTE_HOME: null,
-  MATCH_DETAIL: null
+  MATCH_DETAIL: null,
+  ROUTE_CREATE_MATCH: null
 });
