@@ -12,6 +12,12 @@ var _mail = null;
 var _mailSent = null;
 var _errorSendingMail = null;
 var _logingIn = false;
+var _signUpInfo = {
+  email: null,
+  password: null
+};
+var _signUpStepOneComplete = false;
+var _signUpStepTwoComplete = false;
 
 var SessionStore = assign({}, EventEmitter.prototype, {
   emitChange: function () {
@@ -40,6 +46,15 @@ var SessionStore = assign({}, EventEmitter.prototype, {
   },
   logingIn() {
     return _logingIn;
+  },
+  getSignUpInfo() {
+    return _signUpInfo;
+  },
+  signUpStepOneComplete() {
+    return _signUpStepOneComplete;
+  },
+  signUpComplete() {
+    return _signUpStepTwoComplete;
   }
 });
 
@@ -74,6 +89,18 @@ SessionStore.dispatchToken = AppDispatcher.register(function (action) {
 
     case SessionConstants.SESSION_LOGIN_ERROR:
       _logingIn = false;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.SET_SIGNUP_STEPONE:
+      _signUpInfo.email = action.payload.email;
+      _signUpInfo.password = action.payload.password;
+      _signUpStepOneComplete = true;
+      SessionStore.emitChange();
+      break;
+
+    case SessionConstants.SET_SIGNUP_STEPTWO:
+      _signUpStepTwoComplete = true;
       SessionStore.emitChange();
       break;
   }

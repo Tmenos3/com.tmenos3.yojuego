@@ -6,11 +6,12 @@ import {
   View,
   Dimensions,
   Platform,
-  StyleSheet} from 'react-native';
+  StyleSheet
+} from 'react-native';
 import NavigationsActions from '../../actions/NavigationsActions';
 import RouteConstants from '../../constants/RouteConstants';
-import PlayerStore from '../../stores/PlayerStore';
-import PlayerActions from '../../actions/PlayerActions';
+import SessionStore from '../../stores/SessionStore';
+import SessionActions from '../../actions/SessionActions';
 
 class SignUpStepOne extends Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class SignUpStepOne extends Component {
       year: '',
       state: '',
       adminState: '',
-      canContinue: false
+      canContinue: false,
+      loading: false
     };
 
     this._onChangeNickname = this._onChangeNickname.bind(this);
@@ -38,13 +40,14 @@ class SignUpStepOne extends Component {
     this._onChangeState = this._onChangeState.bind(this);
     this._onChangeAdminState = this._onChangeAdminState.bind(this);
     this._canContinue = this._canContinue.bind(this);
-    // this._onSignUpStepOneComplete = this._onSignUpStepOneComplete.bind(this);
+    this._onSignUpComplete = this._onSignUpComplete.bind(this);
     this._nextProfile = this._nextProfile.bind(this);
     this._backPressed = this._backPressed.bind(this);
+    this._renderLoading = this._renderLoading.bind(this);
   }
 
   componentDidMount() {
-    // PlayerStore.addChangeListener(this._onSignUpStepOneComplete);
+    SessionStore.addChangeListener(this._onSignUpComplete);
 
     if (Platform.OS === 'android') {
       var BackAndroid = require('react-native').BackAndroid;
@@ -56,7 +59,7 @@ class SignUpStepOne extends Component {
   }
 
   componentWillUnmount() {
-    // PlayerStore.removeChangeListener(this._onSignUpStepOneComplete);
+    SessionStore.removeChangeListener(this._onSignUpComplete);
 
     if (Platform.OS === 'android') {
       var BackAndroid = require('react-native').BackAndroid;
@@ -70,44 +73,44 @@ class SignUpStepOne extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={[styles.inputContainer, { borderTopWidth: 0.5, borderColor: this.state.usernameBorderColor }]}>
+        <View style={[styles.inputContainer, { borderTopWidth: 0.5, borderColor: this.state.nicknameBorderColor }]}>
           <TextInput placeholder={"Nickname"}
             style={styles.input}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeUsername }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeNickname} />
         </View>
 
         <View style={styles.dateContainer}>
-          <View style={[styles.inputDateContainer, { marginLeft: 0, width: Dimensions.get('window').width * 0.225, borderColor: this.state.repeatUsernameBorderColor }]}>
+          <View style={[styles.inputDateContainer, { marginLeft: 0, width: Dimensions.get('window').width * 0.225, borderColor: this.state.dayBorderColor }]}>
             <TextInput placeholder={"Día"}
               style={styles.input}
-              returnKeyType = {"done"}
-              onChangeText ={this._onChangeRepeatUsername }/>
+              returnKeyType={"done"}
+              onChangeText={this._onChangeDay} />
           </View>
-          <View style={[styles.inputDateContainer, { width: Dimensions.get('window').width * 0.225, borderColor: this.state.repeatUsernameBorderColor }]}>
+          <View style={[styles.inputDateContainer, { width: Dimensions.get('window').width * 0.225, borderColor: this.state.monthBorderColor }]}>
             <TextInput placeholder={"Mes"}
               style={styles.input}
-              returnKeyType = {"done"}
-              onChangeText ={this._onChangeRepeatUsername }/>
+              returnKeyType={"done"}
+              onChangeText={this._onChangeMonth} />
           </View>
-          <View style={[styles.inputDateContainer, { width: Dimensions.get('window').width * 0.45, borderColor: this.state.repeatUsernameBorderColor }]}>
+          <View style={[styles.inputDateContainer, { width: Dimensions.get('window').width * 0.45, borderColor: this.state.yearBorderColor }]}>
             <TextInput placeholder={"Año"}
               style={styles.input}
-              returnKeyType = {"done"}
-              onChangeText ={this._onChangeRepeatUsername }/>
+              returnKeyType={"done"}
+              onChangeText={this._onChangeYear} />
           </View>
         </View>
-        <View style={[styles.inputContainer, { borderLeftWidth: 0.5, borderColor: this.state.passwordBorderColor }]}>
+        <View style={[styles.inputContainer, { borderLeftWidth: 0.5, borderColor: this.state.stateBorderColor }]}>
           <TextInput placeholder={"Estado"}
             style={styles.input}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangePassword }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeState} />
         </View>
-        <View style={[styles.inputContainer, { borderColor: this.state.repeatPasswordBorderColor, marginBottom: Dimensions.get('window').width * 0.06 }]}>
+        <View style={[styles.inputContainer, { borderColor: this.state.adminStateBorderColor, marginBottom: Dimensions.get('window').width * 0.06 }]}>
           <TextInput placeholder={"Admin state"}
             style={styles.input}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeRepeatPassword }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeAdminState} />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.button, { backgroundColor: this.state.canContinue ? '#33adff' : 'grey' }]}
@@ -119,17 +122,30 @@ class SignUpStepOne extends Component {
             <Text style={styles.buttonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
+        {this._renderLoading()}
       </View>
     );
   }
 
-  // _onSignUpStepOneComplete() {
-  //   if (PlayerStore.signUpStepOneComplete()) {
-  //     NavigationsActions.addRoute({
-  //       id: RouteConstants.ROUTE_SIGNUP_STEPTWO
-  //     });
-  //   }
-  // }
+  _renderLoading() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator animating={true} size='large' />
+        </View>
+      )
+    }
+  }
+
+  _onSignUpComplete() {
+    if (SessionStore.signUpComplete()) {
+      NavigationsActions.addRoute({
+        id: RouteConstants.ROUTE_HOME
+      });
+    } else {
+      this.setState({ loading: true });
+    }
+  }
 
   _canContinue() {
     this.setState({
@@ -192,7 +208,7 @@ class SignUpStepOne extends Component {
 
   _nextProfile() {
     if (this.state.canContinue) {
-      PlayerActions.signUpStepTwo(this.state.nickname, this.state.day, this.state.month, this.state.year, this.state.state, this.state.adminState);
+      SessionActions.signUpStepTwo(this.state.nickname, this.state.day, this.state.month, this.state.year, this.state.state, this.state.adminState);
     }
   }
 

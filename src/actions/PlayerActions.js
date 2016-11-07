@@ -43,16 +43,6 @@ var PlayerActions = {
       actionType: PlayerConstants.SET_PLAYER,
       payload: player
     });
-  },
-
-  signUpStepOne(username, password) {
-    Dispatcher.handleServerAction({
-      actionType: PlayerConstants.SET_SIGNUP_STEPONE,
-      payload: {
-        username: username,
-        password: password
-      }
-    });
   }
 };
 

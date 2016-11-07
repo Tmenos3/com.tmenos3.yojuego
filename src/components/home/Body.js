@@ -6,6 +6,9 @@ import {
   ListView,
   Text
 } from 'react-native';
+import MatchActions from '../../actions/MatchActions';
+import MatchStore from '../../stores/MatchStore';
+import RouteConstants from '../../constants/RouteConstants';
 
 class Body extends Component {
   constructor(props) {
@@ -13,17 +16,31 @@ class Body extends Component {
 
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      dataSource: ds.cloneWithRows([{ date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-      { date: { day: '21', month: 'OCT' }, desc: 'One match.' }])
+      dataSource: ds.cloneWithRows([
+        { id: 1, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 2, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 3, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 4, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 5, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 6, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 7, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
+        { id: 8, date: { day: '21', month: 'OCT' }, desc: 'One match.' }]),
+      loadingMatch: false
     };
 
     this._renderRow = this._renderRow.bind(this);
+    this._rowPreseed = this._rowPreseed.bind(this);
+    this._onMatchChange = this._onMatchChange.bind(this);
+    this._showMatchDetail = this._showMatchDetail.bind(this);
+    this._renderLoading = this._renderLoading.bind(this);
+  }
+
+  componentDidMount() {
+    MatchStore.addChangeListener(this._onMatchChange);
+  }
+
+  componentWillUnmount() {
+    MatchStore.removeChangeListener(this._onMatchChange);
   }
 
   render() {
@@ -37,6 +54,7 @@ class Body extends Component {
         <TouchableOpacity style={styles.button} onPress={this._showSignUp}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
+        {this._renderLoading()}
       </View>
     );
   }
@@ -44,7 +62,7 @@ class Body extends Component {
   _renderRow(rowData) {
     return (
       <View style={{ borderRadius: 10 }}>
-        <TouchableOpacity style={styles.dataRow}>
+        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowPreseed(rowData.id)}>
           <View style={styles.dataRowLeft}>
             <Text style={{ fontSize: 26 }}>{rowData.date.day}</Text>
             <Text style={{ fontSize: 13 }}>{rowData.date.month}</Text>
@@ -55,6 +73,40 @@ class Body extends Component {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  _rowPreseed(idMatch) {
+    MatchActions.getMatchDetail(idMatch);
+  }
+
+  _onMatchChange() {
+    if (MatchStore.loadingMatchDetail()) {
+      this.setState({ loadingMatch: true });
+    } else {
+      let match = MatchStore.getMatch();
+      if (match != null) {
+        this._showMatchDetail(match);
+      } else {
+        this.setState({ error: MatchStore.getError() });
+      }
+    }
+  }
+
+  _showMatchDetail(match) {
+    NavigationsActions.replaceRoute({
+      id: RouteConstants.MATCH_DETAIL,
+      payload: match
+    });
+  }
+
+  _renderLoading() {
+    if (this.state.loadingMatch) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator animating={true} size='large' />
+        </View>
+      )
+    }
   }
 }
 
@@ -105,6 +157,16 @@ var styles = StyleSheet.create({
   listView: {
     flex: 1,
     borderColor: 'grey'
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.25)'
   }
 });
 module.exports = Body;

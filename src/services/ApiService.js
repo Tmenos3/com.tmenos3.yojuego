@@ -171,6 +171,38 @@ var ApiService = {
           });
 
       });
+  },
+  signUp(email, password, nickname, day, month, year, state, adminState) {
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+
+    let form = {
+      "email": email,
+      "password": password,
+      "nickName": nickname,
+      "birthDate": year + "-" + month + "-" + day + "T00:00:00Z",
+      "state": state,
+      "adminState": adminState
+    };
+    return fetch(BASEURL + "/signup/yojuego", {
+      method: 'post',
+      headers: _headers,
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
+      });
   }
 };
 

@@ -4,7 +4,8 @@ import {
   Text,
   TextInput,
   View,
-  StyleSheet} from 'react-native';
+  StyleSheet
+} from 'react-native';
 import NavigationsActions from '../../actions/NavigationsActions';
 import RouteConstants from '../../constants/RouteConstants';
 import PlayerStore from '../../stores/PlayerStore';
@@ -54,41 +55,41 @@ class PlayerSignUp extends Component {
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.nicknameBorderColor }}>
           <TextInput placeholder={"Nickname"}
             style={styles.textInput}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeNickname }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeNickname} />
         </View>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.dayBorderColor }}>
           <TextInput placeholder={"Day"}
             style={styles.textInput}
-            returnKeyType = {"done"}
-            keyboardType = {"numeric"}
-            onChangeText ={this._onChangeDay }/>
+            returnKeyType={"done"}
+            keyboardType={"numeric"}
+            onChangeText={this._onChangeDay} />
         </View>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.monthBorderColor }}>
           <TextInput placeholder={"Month"}
             style={styles.textInput}
-            returnKeyType = {"done"}
-            keyboardType = {"numeric"}
-            onChangeText ={this._onChangeMonth }/>
+            returnKeyType={"done"}
+            keyboardType={"numeric"}
+            onChangeText={this._onChangeMonth} />
         </View>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.yearBorderColor }}>
           <TextInput placeholder={"Year"}
             style={styles.textInput}
-            returnKeyType = {"done"}
-            keyboardType = {"numeric"}
-            onChangeText ={this._onChangeYear}/>
+            returnKeyType={"done"}
+            keyboardType={"numeric"}
+            onChangeText={this._onChangeYear} />
         </View>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.stateBorderColor }}>
           <TextInput placeholder={"State"}
             style={styles.textInput}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeState }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeState} />
         </View>
         <View style={{ marginVertical: 1, borderWidth: 1, borderColor: this.state.adminStateBorderColor }}>
           <TextInput placeholder={"Adminstate"}
             style={styles.textInput}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeAdminState }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeAdminState} />
         </View>
         <TouchableOpacity style={styles.button}
           onPress={this._confirmProfile}>
@@ -104,7 +105,11 @@ class PlayerSignUp extends Component {
 
   _onPlayerInfoChange() {
     if (PlayerStore.creatingPlayer()) {
-      this.setState({ creatingPlayer: true  });
+      this.setState({ creatingPlayer: true });
+    } else if (!PlayerStore.creatingPlayer() && PlayerStore.getPlayer() != null) {
+      NavigationsActions.replaceRoute({
+        id: RouteConstants.ROUTE_HOME
+      });
     }
   }
 

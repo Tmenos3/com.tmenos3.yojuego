@@ -9,8 +9,8 @@ import {
   StyleSheet} from 'react-native';
 import NavigationsActions from '../../actions/NavigationsActions';
 import RouteConstants from '../../constants/RouteConstants';
-import PlayerStore from '../../stores/PlayerStore';
-import PlayerActions from '../../actions/PlayerActions';
+import SessionStore from '../../stores/SessionStore';
+import SessionActions from '../../actions/SessionActions';
 
 class SignUpStepOne extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class SignUpStepOne extends Component {
   }
 
   componentDidMount() {
-    PlayerStore.addChangeListener(this._onSignUpStepOneComplete);
+    SessionStore.addChangeListener(this._onSignUpStepOneComplete);
 
     if (Platform.OS === 'android') {
       var BackAndroid = require('react-native').BackAndroid;
@@ -51,7 +51,7 @@ class SignUpStepOne extends Component {
   }
 
   componentWillUnmount() {
-    PlayerStore.removeChangeListener(this._onSignUpStepOneComplete);
+    SessionStore.removeChangeListener(this._onSignUpStepOneComplete);
 
     if (Platform.OS === 'android') {
       var BackAndroid = require('react-native').BackAndroid;
@@ -107,7 +107,7 @@ class SignUpStepOne extends Component {
   }
 
   _onSignUpStepOneComplete() {
-    if (PlayerStore.signUpStepOneComplete()) {
+    if (SessionStore.signUpStepOneComplete()) {
       NavigationsActions.addRoute({
         id: RouteConstants.ROUTE_SIGNUP_STEPTWO
       });
@@ -165,7 +165,7 @@ class SignUpStepOne extends Component {
 
   _nextProfile() {
     if (this.state.canContinue) {
-      PlayerActions.signUpStepOne(this.state.username, this.state.password);
+      SessionActions.signUpStepOne(this.state.username, this.state.password);
     }
   }
 

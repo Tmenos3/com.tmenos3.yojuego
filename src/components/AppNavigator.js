@@ -94,6 +94,10 @@ class AppNavigator extends Component {
         return (
           <Home />
         );
+      case RouteConstants.MATCH_DETAIL:
+        return (
+          <MatchDetail />
+        );
     }
   }
 }

@@ -5,14 +5,43 @@ import Dispatcher from '../dispatcher/Dispatcher';
 import LogHelper from '../services/LogHelper';
 
 var SessionActions = {
-  setSession(token, player) {
-    Dispatcher.handleViewAction({
-      actionType: SessionConstants.SET_SESSION,
-      payload: {
-        token: token,
-        player: player
-      }
-    });
+  setSession(token) {
+    ApiService.getPlayerByToken(token)
+      .then((response) => {
+        Dispatcher.handleViewAction({
+          actionType: SessionConstants.SET_SESSION,
+          payload: {
+            token: token,
+            player: response.player
+          }
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: SessionConstants.SET_SESSION,
+          payload: {
+            token: token,
+            player: null
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: SessionConstants.SET_SESSION,
+          payload: {
+            token: token,
+            player: null
+          }
+        });
+      });
+
+
+    // Dispatcher.handleViewAction({
+    //   actionType: SessionConstants.SET_SESSION,
+    //   payload: {
+    //     token: token,
+    //     player: player
+    //   }
+    // });
   },
   sendMailRestorePassword(mail) {
     Dispatcher.handleViewAction({
@@ -76,6 +105,42 @@ var SessionActions = {
       actionType: SessionConstants.SESSION_LOGIN_ERROR,
       payload: error
     });
+  },
+  signUpStepOne(email, password) {
+    Dispatcher.handleServerAction({
+      actionType: SessionConstants.SET_SIGNUP_STEPONE,
+      payload: {
+        email: email,
+        password: password
+      }
+    });
+  },
+
+  signUpStepTwo(nickname, day, month, year, state, adminState) {
+    Dispatcher.handleServerAction({
+      actionType: SessionConstants.SET_SIGNUP_STEPTWO,
+      payload: null
+    });
+
+    let info = SessionStore.getSignUpInfo();
+    let _token;
+    ApiService.signUp(info.email, info.password, nickname, day, month, year, state, adminState)
+      .then((response) => {
+        return response.token;
+      })
+      .then((token) => {
+        //_token = token;
+        //return ApiService.getPlayerByToken(token);
+        SessionActions.setSession(token);
+      })
+      // .then((response) => {
+      //   SessionActions.setSession(_token, response.resp);
+      // }, (cause) => {
+      //   SessionActions.setError(cause);
+      // })
+      .catch((error) => {
+        SessionActions.setError(error);
+      });
   }
 };
 

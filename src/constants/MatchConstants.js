@@ -1,8 +1,7 @@
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  CREATE_PLAYER: null,
-  SET_PLAYER: null,
-  GET_PLAYER: null,
+  MATCH_DETAIL_GOT: null,
+  ERROR_GETTING_MATCH_DETAIL: null,
   GET_MATCH_DETAIL: null
 });
