@@ -11,14 +11,6 @@ class MatchDetail extends Component {
         super(props);
     }
 
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
     render() {
         return (
             <View style={styles.container}>
@@ -33,9 +25,7 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        justifyContent: 'center',
         flexDirection: 'column',
-        alignItems: 'center',
     }
 });
 
