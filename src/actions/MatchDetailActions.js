@@ -2,7 +2,6 @@ import ApiService from '../services/ApiService';
 import MatchDetailConstants from '../constants/MatchDetailConstants';
 import SessionStore from '../stores/SessionStore';
 import Dispatcher from '../dispatcher/Dispatcher';
-import controlExecutionTime from '../controlExecutionTime';
 
 var TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkFWZzc5XzJMaVloTGFCVWZKU1VZIiwiaWF0IjoxNDc5MDAzNDQxfQ.VpdRbHlgel7BOg5DBjqdQBjbMRjOfwvruCBHu7i8ZaI';
 var WAITING_TIME = 5000;
@@ -14,42 +13,31 @@ var MatchDetailActions = {
       payload: null
     });
 
-    let callback = () => {
-      //ApiService.getMatchInfo(matchId, SessionStore.getToken())
-      ApiService.getMatchInfo(matchId, TOKEN)
-        .then((match) => {
-          Dispatcher.handleServerAction({
-            actionType: MatchDetailConstants.MATCH_DETAIL_GOT,
-            payload: {
-              match: match,
-            }
-          });
-        }, (cause) => {
-          Dispatcher.handleServerAction({
-            actionType: MatchDetailConstants.ERROR_GETTING_MATCH_DETAIL,
-            payload: {
-              error: cause,
-            }
-          });
-        })
-        .catch((error) => {
-          Dispatcher.handleServerAction({
-            actionType: MatchDetailConstants.ERROR_GETTING_MATCH_DETAIL,
-            payload: {
-              error: error,
-            }
-          });
+    //ApiService.getMatchInfo(matchId, SessionStore.getToken())
+    ApiService.getMatchInfo(matchId, TOKEN)
+      .then((match) => {
+        Dispatcher.handleServerAction({
+          actionType: MatchDetailConstants.MATCH_DETAIL_GOT,
+          payload: {
+            match: match,
+          }
         });
-    }
-
-    let doAfterTimeExpires = () => {
-      Dispatcher.handleServerAction({
-        actionType: MatchDetailConstants.TIME_EXPIRED_GETTING_MATCH_DETAIL,
-        payload: {}
+      }, (cause) => {
+        Dispatcher.handleServerAction({
+          actionType: MatchDetailConstants.ERROR_GETTING_MATCH_DETAIL,
+          payload: {
+            error: cause,
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleServerAction({
+          actionType: MatchDetailConstants.ERROR_GETTING_MATCH_DETAIL,
+          payload: {
+            error: error,
+          }
+        });
       });
-    }
-
-    controlExecutionTime(callback, WAITING_TIME, doAfterTimeExpires);
   },
   sendComment(playerId, matchId, comment) {
     Dispatcher.handleViewAction({
