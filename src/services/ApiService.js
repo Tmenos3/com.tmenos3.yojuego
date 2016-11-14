@@ -203,6 +203,79 @@ var ApiService = {
           });
 
       });
+  },
+  getMatchInfo(matchId, token) {
+    var _headers = new Headers();
+    _headers.append('Authorization', "Bearer " + token);
+    _headers.append('Content-Type', 'application/json');
+
+    return fetch(BASEURL + "/match/" + matchId, { headers: _headers })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.resp;
+            });
+        }
+        return response.json()
+          .then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  },
+  getPlayers(playerIds, token) {
+    var _headers = new Headers();
+    _headers.append('Authorization', "Bearer " + token);
+    _headers.append('Content-Type', 'application/json');
+    let form = {
+      "playerIds": playerIds
+    };
+
+    return fetch(BASEURL + "/player/all" + matchId, {
+      headers: _headers,
+      method: 'post',
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData.resp;
+            });
+        }
+        return response.json()
+          .then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  },
+  sendComment(playerId, matchId, comment, token) {
+    let _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+    _headers.append('authorization', 'Bearer ' + token);
+    let form = {
+      "owner": playerId,
+      "text": comment
+    };
+
+    return fetch(BASEURL + '/match/' + matchId + '/comment', {
+      headers: _headers,
+      method: 'post',
+      body: JSON.stringify(form)
+    }).then((response) => {
+      if (response) {
+        return response.json()
+          .then((responseData) => {
+            return responseData.resp;
+          });
+      }
+      return response.json()
+        .then((error) => {
+          return Promise.reject(error);
+        });
+    }).catch((err) => {
+      console.log(JSON.stringify(err));
+    });
   }
 };
 

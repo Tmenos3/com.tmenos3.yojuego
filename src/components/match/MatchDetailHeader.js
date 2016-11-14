@@ -17,7 +17,8 @@ class MatchDetailHeader extends Component {
     this.state = {
       day: 10,
       month: 10,
-      desc: 'demo match'
+      desc: 'demo match',
+      match: props.match
     }
   }
 

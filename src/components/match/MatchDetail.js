@@ -9,13 +9,17 @@ import MatchDetailBody from './MatchDetailBody';
 class MatchDetail extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            match: props.match
+        }
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <MatchDetailHeader />
-                <MatchDetailBody />
+                <MatchDetailHeader match={this.state.match} />
+                <MatchDetailBody match={this.state.match} />
             </View>
         );
     }

@@ -7,8 +7,16 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    ListView
+    ListView,
+    ScrollView,
+    ActivityIndicator
 } from 'react-native';
+import CollapsablePanel from '../CollapsablePanel';
+import MatchDetailActions from '../../actions/MatchDetailActions';
+import MatchDetailStore from '../../stores/MatchDetailStore';
+
+var MATCH_ID = "AVhbcAbS07HU-r1n0p3r";
+var PLAYER_ID = "AVg7teCFiYhLaBUfJSUH";
 
 class MatchDetailBody extends Component {
     constructor(props) {
@@ -17,36 +25,19 @@ class MatchDetailBody extends Component {
         const dsComments = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         const dsPlayersAccepted = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         const dsPlayersWaiting = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
         this.state = {
-            comments: dsComments.cloneWithRows([
-                { id: 1, comment: 'This is a comment sent by me' },
-                { id: 2, comment: 'a comment' },
-                { id: 3, comment: 'a comment' },
-                { id: 1, comment: 'This is another comment sent by me' },
-                { id: 5, comment: 'a comment' },
-                { id: 6, comment: 'a comment' },
-                { id: 1, comment: 'Sent by me too' },
-                { id: 8, comment: 'a comment' }]),
-            playersAccepted: dsPlayersAccepted.cloneWithRows([
-                { id: 1, date: 'algo' },
-                { id: 2, date: 'algo' },
-                { id: 3, date: 'algo' },
-                { id: 4, date: 'algo' },
-                { id: 5, date: 'algo' },
-                { id: 6, date: 'algo' },
-                { id: 7, date: 'algo' },
-                { id: 8, date: 'algo' }]),
-            playersWaiting: dsPlayersWaiting.cloneWithRows([
-                { id: 1, date: 'algo' },
-                { id: 2, date: 'algo' },
-                { id: 3, date: 'algo' },
-                { id: 4, date: 'algo' },
-                { id: 5, date: 'algo' },
-                { id: 6, date: 'algo' },
-                { id: 7, date: 'algo' },
-                { id: 8, date: 'algo' }]),
+            comments: dsComments.cloneWithRows([]),
+            playersAccepted: dsPlayersAccepted.cloneWithRows([]),
+            playersWaiting: dsPlayersWaiting.cloneWithRows([]),
             loadingMatch: false,
-            inputHeight: 30
+            loadingPlayers: false,
+            inputHeight: 30,
+            match: null,
+            players: null,
+            errorLoadingMatch: false,
+            sendCommentText: null,
+            sendingComment: false
         };
 
         this._renderRowComments = this._renderRowComments.bind(this);
@@ -54,10 +45,18 @@ class MatchDetailBody extends Component {
         this._renderRowPlayersWaiting = this._renderRowPlayersWaiting.bind(this);
         this._renderPlayers = this._renderPlayers.bind(this);
         this._renderComments = this._renderComments.bind(this);
+        this._removePlayer = this._removePlayer.bind(this);
+        this._addPlayer = this._addPlayer.bind(this);
+        this._onMatchDetailChange = this._onMatchDetailChange.bind(this);
+        this._sendComment = this._sendComment.bind(this);
+        this._onSendCommentTextChanged = this._onSendCommentTextChanged.bind(this);
+        this._renderSendCommentButton = this._renderSendCommentButton.bind(this);
     }
 
     componentDidMount() {
-
+        MatchDetailStore.addChangeListener(this._onMatchDetailChange);
+        //MatchDetailActions.loadMatchDetail(this.state.match._id);
+        MatchDetailActions.loadMatch(MATCH_ID);
     }
 
     componentWillUnmount() {
@@ -65,52 +64,153 @@ class MatchDetailBody extends Component {
     }
 
     render() {
+        let _scrollView = ScrollView;
         return (
             <View style={styles.container}>
-                {this._renderPlayers()}
-                {this._renderComments()}
+                <ScrollView
+                    ref={(scrollView) => { _scrollView = scrollView; } }
+                    automaticallyAdjustContentInsets={true}
+                    scrollEventThrottle={200}
+                    style={styles.scrollView}>
+                    {this._renderPlayers()}
+                    {this._renderComments()}
+                </ScrollView>
+                {this._renderLoading()}
             </View>
         );
     }
 
+    _renderLoading() {
+        if (this.state.loadingMatch) {
+            return (
+                <View style={styles.loading}>
+                    <ActivityIndicator animating={true} size='large' />
+                </View>
+            )
+        }
+    }
+
+    _onMatchDetailChange() {
+        if (MatchDetailStore.loadingMatchDetail()) {
+            this.setState({ loadingMatch: true });
+        } else if (MatchDetailStore.sendingComment()) {
+            this.setState({ sendingComment: true });
+        } else {
+            let match = MatchDetailStore.getMatch();
+            if (match != null && match != undefined) {
+                const dsComments = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+                const dsPlayers = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
+                this.setState({
+                    match: match,
+                    comments: dsComments.cloneWithRows(match.comments),
+                    playersAccepted: dsPlayers.cloneWithRows(match.players),
+                    loadingMatch: false,
+                    loadingPlayers: false,
+                    sendingComment: false,
+                    sendCommentText: null
+                });
+
+                // if (MatchDetailStore.loadingPlayers()) {
+                //     this.setState({ loadingPlayers: true });
+                // } else {
+                //     const dsPlayers = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+                //     let players = MatchDetailStore.getPlayers(match.players);
+                //     if (players != null && players != undefined) {
+
+                //         this.setState({
+                //             playersAccepted: dsPlayers.cloneWithRows(players),
+                //             loadingPlayers: false
+                //         });
+                //     } else {
+                //         this.setState({
+                //             playersAccepted: dsPlayers.cloneWithRows([]),
+                //             loadingPlayers: false
+                //         });
+                //     }
+                // }
+            } else {
+                let error = MatchDetailStore.getError();
+                const dsComments = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+                const dsPlayers = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+                this.setState({
+                    loadingMatch: false,
+                    loadingPlayers: false,
+                    match: null,
+                    errorLoadingMatch: true,
+                    comments: dsComments.cloneWithRows([]),
+                    playersAccepted: dsPlayers.cloneWithRows([]),
+                    error: error,
+                    sendingComment: false
+                });
+            }
+        }
+    }
+
     _renderPlayers() {
         return (
-            <View style={styles.sectionPlayers}>
+            <CollapsablePanel style={styles.sectionPlayers} title='Jugadores'>
                 <ListView
                     dataSource={this.state.playersAccepted}
                     renderRow={this._renderRowPlayersAccepted}
                     style={styles.listViewPlayers}
                     horizontal={true}
+                    enableEmptySections={true}
                     />
                 <ListView
                     dataSource={this.state.playersWaiting}
                     renderRow={this._renderRowPlayersWaiting}
                     style={styles.listViewPlayers}
                     horizontal={true}
+                    enableEmptySections={true}
                     />
-            </View>
+                <TouchableOpacity style={styles.buttonAddPlayer} onPress={this._addPlayer}>
+                    <Image style={styles.buttonAddPlayerImage} source={require('../../statics/add-player.png')}></Image>
+                </TouchableOpacity>
+            </CollapsablePanel>
         );
     }
 
     _renderComments() {
         return (
-            <View style={styles.sectionMessages}>
+            <CollapsablePanel style={styles.sectionMessages} title='Comentarios'>
                 <View style={styles.sectionForReading}>
                     <ListView
                         dataSource={this.state.comments}
                         renderRow={this._renderRowComments}
                         style={styles.listView}
+                        enableEmptySections={true}
                         />
                 </View>
                 <View style={styles.sectionForWritting}>
-                    <TextInput style={styles.sendComment} placeholder={"Escribir..."}>
+                    <TextInput
+                        style={styles.sendComment}
+                        placeholder={"Escribir..."}
+                        onChangeText={this._onSendCommentTextChanged}
+                        text={this.state.sendCommentText}>
                     </TextInput>
-                    <TouchableOpacity style={styles.button}>
-                        <Image style={styles.buttonImage} source={require('../../statics/write-message.png')}></Image>
-                    </TouchableOpacity>
+                    {this._renderSendCommentButton()}
                 </View>
-            </View>
+            </CollapsablePanel>
         );
+    }
+
+    _renderSendCommentButton() {
+        if (this.state.sendingComment) {
+            return (
+                <view style={styles.button}>
+                    <ActivityIndicator animating={true} size='large' />
+                </view>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={this._sendComment}>
+                    <Image style={styles.buttonImage} source={require('../../statics/write-message.png')}></Image>
+                </TouchableOpacity>
+            );
+        }
     }
 
     _renderRowComments(rowData) {
@@ -118,7 +218,7 @@ class MatchDetailBody extends Component {
             return (
                 <View style={{ alignItems: 'flex-end', borderRadius: 10 }}>
                     <View style={[styles.comment, styles.commentMine, { height: this.state.inputHeight }]}>
-                        <Text style={{ fontSize: 15 }}>{rowData.comment}
+                        <Text style={{ fontSize: 15 }}>{rowData.text}
                         </Text>
                     </View>
                 </View>
@@ -127,7 +227,7 @@ class MatchDetailBody extends Component {
             return (
                 <View style={{ borderRadius: 10 }}>
                     <View style={[styles.comment, styles.commentOther]}>
-                        <Text style={{ fontSize: 15 }}>{rowData.comment}</Text>
+                        <Text style={{ fontSize: 15 }}>{rowData.text}</Text>
                     </View>
                 </View>
             );
@@ -138,7 +238,10 @@ class MatchDetailBody extends Component {
         return (
             <View style={{ borderRadius: 10 }}>
                 <View style={styles.playerAccepted}>
-                    <Text style={{ fontSize: 15 }}>{rowData.id}</Text>
+                    <TouchableOpacity style={styles.buttonMinus} onPress={() => this._removePlayer(rowData._id)}>
+                        <Image style={styles.buttonMinusImage} source={require('../../statics/minus.png')}></Image>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 15 }}>{rowData._id}</Text>
                 </View>
             </View>
         );
@@ -148,23 +251,47 @@ class MatchDetailBody extends Component {
         return (
             <View style={{ borderRadius: 10 }}>
                 <View style={styles.playerWaiting}>
-                    <Text style={{ fontSize: 15 }}>{rowData.id}</Text>
+                    <TouchableOpacity style={styles.buttonMinus} onPress={() => this._removePlayer(rowData._id)}>
+                        <Image style={styles.buttonMinusImage} source={require('../../statics/minus.png')}></Image>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 15 }}>{rowData.nickname}</Text>
                 </View>
             </View>
         );
     }
+
+    _removePlayer(playerId) {
+
+    }
+
+    _addPlayer() {
+
+    }
+
+    _sendComment() {
+        if (this.state.sendCommentText)
+            MatchDetailActions.sendComment(PLAYER_ID, MATCH_ID, this.state.sendCommentText);
+    }
+
+    _onSendCommentTextChanged(text) {
+        this.setState({
+            sendCommentText: text
+        });
+    }
 }
 
 var styles = StyleSheet.create({
+    scrollView: {
+        backgroundColor: '#d9d9d9',
+    },
     container: {
         flex: 1,
         backgroundColor: '#d9d9d9',
         flexDirection: 'column'
     },
     sectionPlayers: {
-        flex: 1,
         marginTop: 6,
-        marginBottom: 3,
+        marginBottom: 20,
         marginRight: 6,
         marginLeft: 6,
         borderBottomWidth: 0.5,
@@ -172,7 +299,6 @@ var styles = StyleSheet.create({
         borderRadius: 5
     },
     sectionMessages: {
-        flex: 1,
         borderBottomWidth: 0.5,
         backgroundColor: 'transparent',
         borderRadius: 5
@@ -205,6 +331,33 @@ var styles = StyleSheet.create({
         backgroundColor: 'transparent',
         borderRadius: 5
     },
+    buttonAddPlayer: {
+        width: 100,
+        height: 100,
+        backgroundColor: 'transparent',
+        borderColor: 'gray'
+    },
+    buttonMinus: {
+        width: 25,
+        height: 25,
+        backgroundColor: 'transparent',
+        left: 29,
+        top: -20,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonAddPlayerImage: {
+        width: 80,
+        height: 80,
+        backgroundColor: 'transparent',
+        borderColor: 'gray',
+        marginTop: 20
+    },
+    buttonMinusImage: {
+        width: 25,
+        height: 25,
+        backgroundColor: 'transparent'
+    },
     buttonInvitations: {
         width: 50,
         height: 50,
@@ -224,7 +377,6 @@ var styles = StyleSheet.create({
         borderColor: 'grey'
     },
     listView: {
-        flex: 1,
         borderColor: 'grey'
     },
     playerAccepted: {
@@ -234,7 +386,9 @@ var styles = StyleSheet.create({
         height: 90,
         width: 90,
         borderRadius: 45,
-        backgroundColor: 'gray'
+        backgroundColor: 'gray',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     playerWaiting: {
         marginTop: 10,
@@ -243,7 +397,9 @@ var styles = StyleSheet.create({
         height: 90,
         width: 90,
         borderRadius: 45,
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     comment: {
         marginTop: 10,
@@ -260,6 +416,16 @@ var styles = StyleSheet.create({
         marginRight: 10,
         backgroundColor: 'yellow',
         width: Dimensions.get('window').width * 0.70,
+    },
+    loading: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.25)'
     }
 });
 

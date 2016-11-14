@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Navigator } from 'react-native';
 import NavigationStore from '../stores/NavigationStore';
+import MatchStore from '../stores/MatchStore';
 import RouteConstants from '../constants/RouteConstants';
 import NavigationConstants from '../constants/NavigationConstants';
 import Splash from './Splash';
@@ -12,6 +13,7 @@ import SignUpStepOne from './auth/SignUpStepOne';
 import SignUpStepTwo from './auth/SignUpStepTwo';
 import PlayerSignUp from './auth/PlayerSignUp';
 import Home from './home/Home';
+import MatchDetail from './match/MatchDetail';
 import CreateMatch from '.CreateMatch';
 var _navigator;
 
@@ -98,7 +100,7 @@ class AppNavigator extends Component {
 
       case RouteConstants.MATCH_DETAIL:
         return (
-          <MatchDetail />
+          <MatchDetail match={MatchStore.getMatch()} />
         );
 
       case RouteConstants.ROUTE_CREATE_MATCH:
