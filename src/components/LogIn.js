@@ -212,12 +212,12 @@ var styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.94,
     height: Dimensions.get('window').height * 0.03,
     borderBottomWidth: 0.7,
-    borderColor: 'grey',
+    borderColor: 'gray',
     marginBottom: Dimensions.get('window').width * 0.06
   },
   inputContainer: {
     borderWidth: 0.7,
-    borderColor: 'grey'
+    borderColor: 'gray'
   },
   input: {
     width: Dimensions.get('window').width * 0.94,

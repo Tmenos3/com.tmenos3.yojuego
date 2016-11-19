@@ -9,7 +9,9 @@ import {
     Dimensions,
     ListView,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    Picker,
+    Switch
 } from 'react-native';
 import CollapsablePanel from '../CollapsablePanel';
 import MatchDetailActions from '../../actions/MatchDetailActions';
@@ -37,13 +39,16 @@ class MatchDetailBody extends Component {
             players: null,
             errorLoadingMatch: false,
             sendCommentText: null,
-            sendingComment: false
+            sendingComment: false,
+            matchType: 5,
+            allowReserve: true
         };
 
         this._renderRowComments = this._renderRowComments.bind(this);
         this._renderRowPlayersAccepted = this._renderRowPlayersAccepted.bind(this);
         this._renderRowPlayersWaiting = this._renderRowPlayersWaiting.bind(this);
         this._renderPlayers = this._renderPlayers.bind(this);
+        this._renderStadium = this._renderStadium.bind(this);
         this._renderComments = this._renderComments.bind(this);
         this._removePlayer = this._removePlayer.bind(this);
         this._addPlayer = this._addPlayer.bind(this);
@@ -73,6 +78,7 @@ class MatchDetailBody extends Component {
                     scrollEventThrottle={200}
                     style={styles.scrollView}>
                     {this._renderPlayers()}
+                    {this._renderStadium()}
                     {this._renderComments()}
                 </ScrollView>
                 {this._renderLoading()}
@@ -167,6 +173,72 @@ class MatchDetailBody extends Component {
                 <TouchableOpacity style={styles.buttonAddPlayer} onPress={this._addPlayer}>
                     <Image style={styles.buttonAddPlayerImage} source={require('../../statics/add-player.png')}></Image>
                 </TouchableOpacity>
+            </CollapsablePanel>
+        );
+    }
+
+    _renderStadium() {
+        return (
+            <CollapsablePanel style={styles.sectionStadium} title='Cancha'>
+                <Text style={[styles.buttonFilterText, { color: 'green', margin: 6 }]}>Si hay cancha SELECCIONADA</Text>
+                <View style={[styles.filter, { margin: 6, height: 1 }]} />
+                <View style={styles.filter}>
+                    <Text style={[styles.buttonFilterText, { margin: 6 }]}>Futbol Vieytes</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                    <View>
+                        <Text style={[styles.buttonFilterText, { color: 'red', margin: 6 }]}>No pierdas tiempo</Text>
+                        <Text style={[styles.buttonFilterText, { color: 'red', margin: 6 }]}>Reservala ahora!!!</Text>
+                    </View>
+                    <View style={{ justifyContent: 'center' }}>
+                        <TouchableOpacity style={{ width: 100, height: 40, marginRight: 6, backgroundColor: 'red', borderRadius: 5, justifyContent: 'center' }}>
+                            <Text style={styles.buttonFilterText}>Reservar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={[styles.filter, { margin: 6, height: 1 }]} />
+                <View style={[styles.filter, { margin: 6, height: 1 }]} />
+                <Text style={[styles.buttonFilterText, { color: 'green', margin: 6 }]}>Si NO hay cancha SELECCIONADA</Text>
+                <View style={[styles.filter, { margin: 6, height: 1 }]} />
+                <Text style={[styles.buttonFilterText, { margin: 6 }]}>Todavía no tenés Cancha</Text>
+                <Text style={[styles.buttonFilterText, { margin: 6 }]}>Donde querés jugar?</Text>
+                <View style={styles.filter}>
+                    <TouchableOpacity style={[styles.buttonFilter, { margin: 6 }]}>
+                        <Text style={styles.buttonFilterText}>Elegir ubicacion</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.buttonFilter, { margin: 6 }]}>
+                        <Text style={styles.buttonFilterText}>Mi ubicacion</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={[styles.buttonFilterText, { margin: 6 }]}>Cuántos son?</Text>
+                <View style={[styles.filter, { height: 40 }]}>
+                </View>
+                <Text style={[styles.buttonFilterText, { margin: 6 }]}>Querés reservar?</Text>
+                <View style={[styles.filter, { justifyContent: 'center' }]}>
+                    <Text style={[styles.buttonFilterText, { margin: 6 }]}>Si</Text>
+                    <Switch
+                        onValueChange={(value) => this.setState({ allowReserve: value })}
+                        style={{ margin: 6 }}
+                        value={this.state.allowReserve} />
+                    <Text style={[styles.buttonFilterText, { margin: 6 }]}>No</Text>
+                </View>
+                <Text style={[styles.buttonFilterText, { margin: 6 }]}>Cómo queres pagar?</Text>
+                <View style={styles.filter}>
+                    <Text style={[styles.buttonFilterText, { margin: 6 }]}>En la cancha</Text>
+                    <Switch
+                        onValueChange={(value) => this.setState({ allowReserve: value })}
+                        style={{ marginBottom: 6 }}
+                        value={this.state.allowReserve} />
+                    <Text style={[styles.buttonFilterText, { margin: 6 }]}>On Line</Text>
+                </View>
+                <View style={{ flexDirection: 'row', marginTop: 12 }}>
+                    <TouchableOpacity style={[styles.buttonFilter, { marginRight: 6, backgroundColor: '#33adff' }]}>
+                        <Text style={styles.buttonFilterText}>Buscar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.buttonFilter, { marginLeft: 6 }]}>
+                        <Text style={styles.buttonFilterText}>Sin cancha</Text>
+                    </TouchableOpacity>
+                </View>
             </CollapsablePanel>
         );
     }
@@ -426,6 +498,27 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.25)'
+    },
+    filter: {
+        borderColor: 'gray',
+        borderWidth: 0.7,
+        flexDirection: 'row'
+    },
+    buttonFilter: {
+        //width: Dimensions.get('window').width * 0.3,
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+        borderRadius: Dimensions.get('window').width * 0.012,
+        borderColor: 'gray',
+        borderWidth: 0.7,
+        backgroundColor: 'white'
+    },
+    buttonFilterText: {
+        color: 'gray',
+        fontSize: 15,
+        textAlign: 'center',
+        fontWeight: 'bold'
     }
 });
 
