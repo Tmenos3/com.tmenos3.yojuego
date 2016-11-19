@@ -3,26 +3,65 @@ import {
   Text,
   View,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  ListView
 } from 'react-native';
+import CollapsablePanel from '../CollapsablePanel';
 
 class CreateMatch extends Component {
+  constructor(props) {
+    super(props);
+    this._renderButton = this._renderButton.bind(this);
+    this._renderDateTime + this._renderDateTime.bind(this);
+  }
+
+
   render() {
+    let _scrollView = ScrollView;
     return (
       <View style={styles.container}>
-        <View style={styles.topButtons}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>
-              Fecha
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>
-              Hora
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView
+          ref={(scrollView) => { _scrollView = scrollView; } }
+          automaticallyAdjustContentInsets={true}
+          scrollEventThrottle={200}
+          style={styles.scrollView}>
+          {this._renderDateTime()}
+        </ScrollView>
+
       </View>
+    );
+  }
+
+  _renderButton(valor) {
+    return (
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.text}>
+          valor
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  _renderDateTime() {
+    return (
+      <CollapsablePanel style={styles.sectionPlayers} title='Jugadores'>
+        <ListView
+
+
+          horizontal={true}
+          enableEmptySections={true}
+          />
+        <ListView
+
+
+          horizontal={true}
+          enableEmptySections={true}
+          />
+        <TouchableOpacity style={styles.buttonAddPlayer} onPress={this._addPlayer}>
+
+        </TouchableOpacity>
+      </CollapsablePanel>
     );
   }
 }
@@ -34,6 +73,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 15
+  },
+  scrollView: {
+    backgroundColor: '#d9d9d9',
+  },
+  sectionPlayers: {
+    marginTop: 6,
+    marginBottom: 20,
+    marginRight: 6,
+    marginLeft: 6,
+    borderBottomWidth: 0.5,
+    backgroundColor: '#F6F6F6',
+    borderRadius: 5
   },
   text: {
     fontSize: 20,
