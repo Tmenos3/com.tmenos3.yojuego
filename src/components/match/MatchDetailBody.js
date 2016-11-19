@@ -231,6 +231,21 @@ class MatchDetailBody extends Component {
                         value={this.state.allowReserve} />
                     <Text style={[styles.buttonFilterText, { margin: 6 }]}>On Line</Text>
                 </View>
+                <Text style={[styles.buttonFilterText, { margin: 6 }]}>Otros filtros</Text>
+                <View style={[styles.filter, { flexDirection: 'column' }]}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={[styles.buttonFilterText, { margin: 6 }]}>Techada</Text>
+                        <Switch style={{ marginBottom: 6 }}/>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={[styles.buttonFilterText, { margin: 6 }]}>Duchas</Text>
+                        <Switch style={{ marginBottom: 6 }}/>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={[styles.buttonFilterText, { margin: 6 }]}>Buffet</Text>
+                        <Switch style={{ marginBottom: 6 }}/>
+                    </View>
+                </View>
                 <View style={{ flexDirection: 'row', marginTop: 12 }}>
                     <TouchableOpacity style={[styles.buttonFilter, { marginRight: 6, backgroundColor: '#33adff' }]}>
                         <Text style={styles.buttonFilterText}>Buscar</Text>
