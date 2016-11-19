@@ -14,7 +14,8 @@ import SignUpStepTwo from './auth/SignUpStepTwo';
 import PlayerSignUp from './auth/PlayerSignUp';
 import Home from './home/Home';
 import MatchDetail from './match/MatchDetail';
-import CreateMatch from '.CreateMatch';
+import CreateMatch from './matchCreation/CreateMatch';
+
 var _navigator;
 
 class AppNavigator extends Component {

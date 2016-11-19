@@ -37,7 +37,7 @@ class App extends Component {
   _onAppSessionChange() {
     if (AppStore.ready()) {
       NavigationsActions.replaceRoute({
-        id: RouteConstants.ROUTE_LOGIN
+        id: RouteConstants.ROUTE_CREATE_MATCH
       });
     }
   }
