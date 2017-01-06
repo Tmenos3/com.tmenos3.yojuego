@@ -13,13 +13,10 @@ import AppStore from './stores/AppStore';
 import NavigationsActions from './actions/NavigationsActions';
 import AppNavigator from './components/AppNavigator';
 
-class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      isInicilaizing: false,
-      hasSession: false,
-    };
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    
   }
 
   componentDidMount() {
@@ -48,12 +45,3 @@ class App extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  video: {
-    height: 200,
-    backgroundColor: "black"
-  }
-});
-
-module.exports = App;

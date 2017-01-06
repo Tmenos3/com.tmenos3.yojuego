@@ -23,6 +23,4 @@ var NavigationsActions = {
   }
 }
 
-
-
 module.exports = NavigationsActions;

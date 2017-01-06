@@ -13,8 +13,8 @@ import {
 import NavigationsActions from '../actions/NavigationsActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
-import SessionStore from '../stores/SessionStore';
-import SessionActions from '../actions/SessionActions';
+import LoginStore from '../stores/LoginStore';
+import LoginActions from '../actions/LoginActions';
 
 class LogIn extends Component {
   constructor(props) {
@@ -23,44 +23,46 @@ class LogIn extends Component {
     this.state = {
       email: '',
       password: '',
-      loading: false
+      loading: false,
+      loginCompleted: false,
+      loginErrorReturn: null
     }
 
-    this._onSessionChange = this._onSessionChange.bind(this);
+    this._onLoginStoreChange = this._onLoginStoreChange.bind(this);
     this._forgetPassword = this._forgetPassword.bind(this);
     this._onLoginPressed = this._onLoginPressed.bind(this);
     this._onEmailTextChanged = this._onEmailTextChanged.bind(this);
     this._onPasswordTextChanged = this._onPasswordTextChanged.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
+    this._renderLoginError = this._renderLoginError.bind(this);
   }
 
   componentDidMount() {
-    SessionStore.addChangeListener(this._onSessionChange);
-
-    if (Platform.OS === 'android') {
-      var BackAndroid = require('react-native').BackAndroid;
-      BackAndroid.addEventListener('hardwareBackPress', () => {
-        this._backPressed();
-        return true;
-      });
-    }
+    LoginStore.addChangeListener(this._onLoginStoreChange);
   }
 
   componentWillUnmount() {
-    SessionStore.removeChangeListener(this._onSessionChange);
+    LoginStore.removeChangeListener(this._onLoginStoreChange);
+  }
 
-    if (Platform.OS === 'android') {
-      var BackAndroid = require('react-native').BackAndroid;
-      BackAndroid.removeEventListener('hardwareBackPress', () => {
-        this._backPressed();
-        return true;
-      });
-    }
+  _onLoginStoreChange() {
+    this.setState({
+      loading: LoginStore.isWorking(),
+      loginCompleted: LoginStore.isLoginCompleted(),
+      loginErrorReturn: LoginStore.loginErrorReturn()
+    }, () => {
+      if (this.state.loginCompleted && !this.state.loginErrorReturn) {
+        NavigationsActions.replaceRoute({
+          id: RouteConstants.ROUTE_HOME
+        });
+      }
+    });
   }
 
   render() {
     return (
       <View style={styles.container}>
+        {this._renderLoginError()}
         <TouchableOpacity style={styles.facebookButtton} onPress={this._showFacebookLogin}>
           <Text style={styles.buttonText}>Facebook</Text>
           <Image style={styles.facebookImage} source={require('../statics/facebook-logo-white.png')}></Image>
@@ -113,22 +115,16 @@ class LogIn extends Component {
         </View>
       )
     }
+    return null;
   }
 
-  _onSessionChange() {
-    if (!SessionStore.getToken() || SessionStore.getToken() == null) {
-      this.setState({ loading: SessionStore.logingIn() })
-      return;
-    }
-
-    if (!SessionStore.getPlayer() || SessionStore.getPlayer() == null) {
-      NavigationsActions.replaceRoute({
-        id: RouteConstants.ROUTE_COMPLETE_SIGNUP
-      });
+  _renderLoginError() {
+    if (this.state.loginErrorReturn) {
+      return (
+        <Text style={styles.errorText}>{this.state.loginErrorReturn}</Text>
+      )
     } else {
-      NavigationsActions.replaceRoute({
-        id: RouteConstants.ROUTE_HOME
-      });
+      return null;
     }
   }
 
@@ -140,7 +136,7 @@ class LogIn extends Component {
 
   _showSignUp() {
     NavigationsActions.addRoute({
-      id: RouteConstants.ROUTE_SIGNUP_STEPONE
+      id: RouteConstants.ROUTE_SIGNUP
     });
   }
 
@@ -161,7 +157,7 @@ class LogIn extends Component {
   }
 
   _onLoginPressed() {
-    SessionActions.login(this.state.email, this.state.password);
+    LoginActions.login(this.state.email, this.state.password);
   }
 
   _onEmailTextChanged(text) {
@@ -239,6 +235,9 @@ var styles = StyleSheet.create({
   },
   text: {
     color: 'grey'
+  },
+  errorText: {
+    color: 'red'
   },
   facebookImage: {
     width: 25,

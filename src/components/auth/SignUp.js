@@ -5,14 +5,15 @@ import {
   TextInput,
   View,
   Dimensions,
-  Platform,
-  StyleSheet} from 'react-native';
+  StyleSheet,
+  ActivityIndicator
+} from 'react-native';
 import NavigationsActions from '../../actions/NavigationsActions';
 import RouteConstants from '../../constants/RouteConstants';
-import SessionStore from '../../stores/SessionStore';
-import SessionActions from '../../actions/SessionActions';
+import SignUpStore from '../../stores/SignUpStore';
+import SignUpActions from '../../actions/SignUpActions';
 
-class SignUpStepOne extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,76 +25,66 @@ class SignUpStepOne extends Component {
       repeatUsername: '',
       password: '',
       repeatPassword: '',
-      canContinue: false
+      canContinue: false,
+      loading: false,
+      signUpErrorReturn: null,
+      signUpCompleted: false
     };
+
+    this._onStoreChange = this._onStoreChange.bind(this);
+    this._renderError = this._renderError.bind(this);
+    this._canContinue = this._canContinue.bind(this);
+    this._nextPressed = this._nextPressed.bind(this);
 
     this._onChangeUsername = this._onChangeUsername.bind(this);
     this._onChangeRepeatUsername = this._onChangeRepeatUsername.bind(this);
     this._onChangePassword = this._onChangePassword.bind(this);
     this._onChangeRepeatPassword = this._onChangeRepeatPassword.bind(this);
-    this._canContinue = this._canContinue.bind(this);
-    this._onSignUpStepOneComplete = this._onSignUpStepOneComplete.bind(this);
-    this._nextProfile = this._nextProfile.bind(this);
     this._backPressed = this._backPressed.bind(this);
 
   }
 
   componentDidMount() {
-    SessionStore.addChangeListener(this._onSignUpStepOneComplete);
-
-    if (Platform.OS === 'android') {
-      var BackAndroid = require('react-native').BackAndroid;
-      BackAndroid.addEventListener('hardwareBackPress', () => {
-        this._backPressed();
-        return true;
-      });
-    }
+    SignUpStore.addChangeListener(this._onStoreChange);
   }
 
   componentWillUnmount() {
-    SessionStore.removeChangeListener(this._onSignUpStepOneComplete);
-
-    if (Platform.OS === 'android') {
-      var BackAndroid = require('react-native').BackAndroid;
-      BackAndroid.removeEventListener('hardwareBackPress', () => {
-        this._backPressed();
-        return true;
-      });
-    }
+    SignUpStore.removeChangeListener(this._onStoreChange);
   }
 
   render() {
     return (
       <View style={styles.container}>
+        {this._renderError()}
         <View style={[styles.inputContainer, { borderTopWidth: 0.5, borderColor: this.state.usernameBorderColor }]}>
           <TextInput placeholder={"Mail"}
             style={styles.input}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeUsername }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeUsername} />
         </View>
         <View style={[styles.inputContainer, { borderColor: this.state.repeatUsernameBorderColor }]}>
           <TextInput placeholder={"Confirmar mail"}
             style={styles.input}
-            returnKeyType = {"done"}
-            onChangeText ={this._onChangeRepeatUsername }/>
+            returnKeyType={"done"}
+            onChangeText={this._onChangeRepeatUsername} />
         </View>
         <View style={[styles.inputContainer, { borderColor: this.state.passwordBorderColor }]}>
           <TextInput placeholder={"Contraseña"}
             style={styles.input}
-            returnKeyType = {"done"}
-            secureTextEntry = {true}
-            onChangeText ={this._onChangePassword }/>
+            returnKeyType={"done"}
+            secureTextEntry={true}
+            onChangeText={this._onChangePassword} />
         </View>
         <View style={[styles.inputContainer, { borderColor: this.state.repeatPasswordBorderColor, marginBottom: Dimensions.get('window').width * 0.06 }]}>
           <TextInput placeholder={"Confirmar contraseña"}
             style={styles.input}
-            returnKeyType = {"done"}
-            secureTextEntry = {true}
-            onChangeText ={this._onChangeRepeatPassword }/>
+            returnKeyType={"done"}
+            secureTextEntry={true}
+            onChangeText={this._onChangeRepeatPassword} />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.button, { backgroundColor: this.state.canContinue ? '#33adff' : 'grey' }]}
-            onPress={this._nextProfile}>
+            onPress={this._nextPressed}>
             <Text style={styles.buttonText}>Siguiente</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}
@@ -101,17 +92,23 @@ class SignUpStepOne extends Component {
             <Text style={styles.buttonText}>Atrás</Text>
           </TouchableOpacity>
         </View>
-
+        {this._renderLoading()}
       </View>
     );
   }
 
-  _onSignUpStepOneComplete() {
-    if (SessionStore.signUpStepOneComplete()) {
-      NavigationsActions.addRoute({
-        id: RouteConstants.ROUTE_SIGNUP_STEPTWO
-      });
-    }
+  _onStoreChange() {
+    this.setState({
+      loading: SignUpStore.isWorking(),
+      signUpCompleted: SignUpStore.isSignUpCompleted(),
+      signUpErrorReturn: SignUpStore.signUpErrorReturn()
+    }, () => {
+      if (this.state.signUpCompleted && !this.state.signUpErrorReturn) {
+        NavigationsActions.replaceRoute({
+          id: RouteConstants.ROUTE_CREATE_PROFILE
+        });
+      }
+    });
   }
 
   _canContinue() {
@@ -121,6 +118,27 @@ class SignUpStepOne extends Component {
       this.state.username == this.state.repeatUsername &&
       this.state.password == this.state.repeatPassword
     });
+  }
+
+  _renderLoading() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loading}>
+          <ActivityIndicator animating={true} size='large' />
+        </View>
+      )
+    }
+    return null;
+  }
+
+  _renderError() {
+    if (this.state.signUpErrorReturn) {
+      return (
+        <Text style={styles.errorText}>{this.state.signUpErrorReturn}</Text>
+      )
+    } else {
+      return null;
+    }
   }
 
   _onChangeUsername(text) {
@@ -163,9 +181,9 @@ class SignUpStepOne extends Component {
     }
   }
 
-  _nextProfile() {
+  _nextPressed() {
     if (this.state.canContinue) {
-      SessionActions.signUpStepOne(this.state.username, this.state.password);
+      SignUpActions.signUp(this.state.username, this.state.password);
     }
   }
 
@@ -214,4 +232,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = SignUpStepOne;
+module.exports = SignUp;

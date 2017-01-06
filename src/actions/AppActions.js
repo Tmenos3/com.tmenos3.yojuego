@@ -10,14 +10,11 @@ var AppActions = {
     });
 
     setTimeout(() => {
-      AppActions.readyApp();
+      Dispatcher.handleViewAction({
+        actionType: AppConstants.APP_READY
+      });
     }, 3000);
-  },
-
-  readyApp() {
-    Dispatcher.handleViewAction({
-      actionType: AppConstants.APP_READY
-    });
   }
 }
+
 module.exports = AppActions;
