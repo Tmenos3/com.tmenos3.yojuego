@@ -1,113 +1,132 @@
+import DateTimePanel from './DateTimePanel';
+import NavigationActions from '../../actions/NavigationActions';
+import Panel from './CalendarPanel';
 import React, { Component } from 'react';
+import RouteConstants from '../../constants/RouteConstants';
 import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  ListView
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View
 } from 'react-native';
-import CollapsablePanel from '../CollapsablePanel';
 
 class CreateMatch extends Component {
   constructor(props) {
     super(props);
-    this._renderButton = this._renderButton.bind(this);
-    this._renderDateTime + this._renderDateTime.bind(this);
+
+    this._onFieldSearchPress = this._onFieldSearchPress.bind(this);
   }
 
 
   render() {
-    let _scrollView = ScrollView;
     return (
       <View style={styles.container}>
-        <ScrollView
-          ref={(scrollView) => { _scrollView = scrollView; } }
-          automaticallyAdjustContentInsets={true}
-          scrollEventThrottle={200}
-          style={styles.scrollView}>
-          {this._renderDateTime()}
-        </ScrollView>
-
+        <View style={styles.header}>
+          <View style={styles.topMenu}>
+            <TouchableHighlight>
+              <Text style={styles.close} >
+                {'X'}
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight>
+              <Text style={styles.save} >
+                {'Invitar Jugadores'}
+              </Text>
+            </TouchableHighlight>
+          </View>
+          <View style={styles.titleContainer} >
+            <TextInput placeholder={'título'} style={styles.title} />
+          </View>
+        </View>
+        <View style={styles.detailContainer}>
+          <View style={styles.dateContainer}>
+            <ScrollView style={styles.date}>
+              <DateTimePanel />
+            </ScrollView>
+            <View style={styles.weather}>
+            </View>
+          </View>
+          <TouchableHighlight style={styles.searchStadiumContainer} onPress={this._onFieldSearchPress}>
+            <Text style={styles.searchStadium}>
+              {'buscar cancha...'}
+            </Text>
+          </TouchableHighlight>
+        </View>
       </View>
     );
   }
 
-  _renderButton(valor) {
-    return (
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.text}>
-          valor
-        </Text>
-      </TouchableOpacity>
-    );
-  }
-
-  _renderDateTime() {
-    return (
-      <CollapsablePanel style={styles.sectionPlayers} title='Jugadores'>
-        <ListView
-
-
-          horizontal={true}
-          enableEmptySections={true}
-          />
-        <ListView
-
-
-          horizontal={true}
-          enableEmptySections={true}
-          />
-        <TouchableOpacity style={styles.buttonAddPlayer} onPress={this._addPlayer}>
-
-        </TouchableOpacity>
-      </CollapsablePanel>
-    );
+  _onFieldSearchPress() {
+    NavigationActions.addRoute({
+      id: RouteConstants.ROUTE_FIELD_SEARCH,
+      data: {
+        title: this.state.title,
+        date: this.state.date
+      }
+    });
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "green",
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingTop: 15
+    flex: 1
   },
-  scrollView: {
-    backgroundColor: '#d9d9d9',
+  header: {
+    height: 80,
+    backgroundColor: 'blue',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 7
   },
-  sectionPlayers: {
-    marginTop: 6,
-    marginBottom: 20,
-    marginRight: 6,
-    marginLeft: 6,
-    borderBottomWidth: 0.5,
-    backgroundColor: '#F6F6F6',
-    borderRadius: 5
-  },
-  text: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  button: {
-    flex: 1,
-    height: 30,
-    alignSelf: 'stretch',
-    backgroundColor: 'green',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 1,
-  },
-  topButtons: {
-    marginTop: 2,
+  topMenu: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'stretch',
+    justifyContent: 'space-between',
+  },
+  close: {
+    fontSize: 15,
+    color: 'white'
+  },
+  save: {
+    fontSize: 15,
+    color: 'white'
+  },
+  detailContainer: {
+    flex: 1,
+    backgroundColor: '#f4f7f9',
+    padding: 15,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  titleContainer: {
+    paddingHorizontal: 10,
+    height: 40,
+  },
+  title: {
+    flex: 1,
+    color: 'white'
+  },
+  dateContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+  },
+  date: {
+    marginBottom: 10
+  },
+  weather: {
+    backgroundColor: 'green',
+    height: 200,
+    marginBottom: 10
+  },
+  searchStadiumContainer: {
     backgroundColor: 'white',
+    paddingHorizontal: 10,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
+  searchStadium: {
   }
 });
 

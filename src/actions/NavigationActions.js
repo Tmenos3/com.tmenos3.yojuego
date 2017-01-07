@@ -1,7 +1,7 @@
 var NavigationConstants = require('../constants/NavigationConstants');
 var Dispatcher = require('../dispatcher/Dispatcher');
 
-var NavigationsActions = {
+var NavigationActions = {
   addRoute: function (route) {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.ADD_ROUTE,
@@ -25,4 +25,4 @@ var NavigationsActions = {
 
 
 
-module.exports = NavigationsActions;
+module.exports = NavigationActions;

@@ -93,7 +93,7 @@ class Body extends Component {
   }
 
   _showMatchDetail(match) {
-    NavigationsActions.replaceRoute({
+    NavigationActions.replaceRoute({
       id: RouteConstants.MATCH_DETAIL,
       payload: match
     });

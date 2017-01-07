@@ -43,6 +43,7 @@ var SessionActions = {
     //   }
     // });
   },
+
   sendMailRestorePassword(mail) {
     Dispatcher.handleViewAction({
       actionType: SessionConstants.SEND_MAIL_RESTORE_PASSWORD,
@@ -63,6 +64,7 @@ var SessionActions = {
         SessionActions.mailSent(false, error);
       });
   },
+
   mailSent(sent, error) {
     Dispatcher.handleServerAction({
       actionType: SessionConstants.MAIL_SENT,
@@ -81,6 +83,7 @@ var SessionActions = {
         password: password
       }
     });
+    
     let _token;
     ApiService.login(email, password)
       .then((response) => {

@@ -8,7 +8,7 @@ import {
   Platform,
   StyleSheet
 } from 'react-native';
-import NavigationsActions from '../../actions/NavigationsActions';
+import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
 import SessionStore from '../../stores/SessionStore';
 import SessionActions from '../../actions/SessionActions';
@@ -139,7 +139,7 @@ class SignUpStepOne extends Component {
 
   _onSignUpComplete() {
     if (SessionStore.signUpComplete()) {
-      NavigationsActions.addRoute({
+      NavigationActions.addRoute({
         id: RouteConstants.ROUTE_HOME
       });
     } else {
@@ -213,7 +213,7 @@ class SignUpStepOne extends Component {
   }
 
   _backPressed() {
-    NavigationsActions.replaceRoute({
+    NavigationActions.replaceRoute({
       id: RouteConstants.ROUTE_LOGIN
     });
   }

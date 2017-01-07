@@ -6,7 +6,7 @@ import {
   View,
   StyleSheet
 } from 'react-native';
-import NavigationsActions from '../../actions/NavigationsActions';
+import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
 import PlayerStore from '../../stores/PlayerStore';
 import PlayerActions from '../../actions/PlayerActions';
@@ -107,7 +107,7 @@ class PlayerSignUp extends Component {
     if (PlayerStore.creatingPlayer()) {
       this.setState({ creatingPlayer: true });
     } else if (!PlayerStore.creatingPlayer() && PlayerStore.getPlayer() != null) {
-      NavigationsActions.replaceRoute({
+      NavigationActions.replaceRoute({
         id: RouteConstants.ROUTE_HOME
       });
     }
@@ -162,7 +162,7 @@ class PlayerSignUp extends Component {
   }
 
   _backPressed() {
-    NavigationsActions.replaceRoute({
+    NavigationActions.replaceRoute({
       id: RouteConstants.ROUTE_LOGIN
     });
   }

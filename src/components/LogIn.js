@@ -10,7 +10,7 @@ import {
   Image,
   ActivityIndicator
 } from 'react-native';
-import NavigationsActions from '../actions/NavigationsActions';
+import NavigationActions from '../actions/NavigationActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
 import SessionStore from '../stores/SessionStore';
@@ -122,42 +122,42 @@ class LogIn extends Component {
     }
 
     if (!SessionStore.getPlayer() || SessionStore.getPlayer() == null) {
-      NavigationsActions.replaceRoute({
+      NavigationActions.replaceRoute({
         id: RouteConstants.ROUTE_COMPLETE_SIGNUP
       });
     } else {
-      NavigationsActions.replaceRoute({
+      NavigationActions.replaceRoute({
         id: RouteConstants.ROUTE_HOME
       });
     }
   }
 
   _showFacebookLogin() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_FACEBOOK_LOGIN
     });
   }
 
   _showSignUp() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_SIGNUP_STEPONE
     });
   }
 
   _showGoogleLogin() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_GOOGLE_LOGIN
     });
   }
 
   _forgetPassword() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_FORGET_PASSWORD
     });
   }
 
   _backPressed() {
-    NavigationsActions.back();
+    NavigationActions.back();
   }
 
   _onLoginPressed() {
