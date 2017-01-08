@@ -24,6 +24,7 @@
     "object-assign": "^4.1.0",
     "react": "15.3.1",
     "react-native": "0.33.0",
+    "react-native-swiper": "^1.5.4",
     "sync-queue": "0.0.2"
   },
   "description": "YoJuego!",
