@@ -8,7 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
-import NavigationsActions from '../../actions/NavigationsActions';
+import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
 import SignUpStore from '../../stores/SignUpStore';
 import SignUpActions from '../../actions/SignUpActions';
@@ -104,7 +104,7 @@ class SignUp extends Component {
       signUpErrorReturn: SignUpStore.signUpErrorReturn()
     }, () => {
       if (this.state.signUpCompleted && !this.state.signUpErrorReturn) {
-        NavigationsActions.replaceRoute({
+        NavigationActions.replaceRoute({
           id: RouteConstants.ROUTE_CREATE_PROFILE
         });
       }
@@ -188,7 +188,7 @@ class SignUp extends Component {
   }
 
   _backPressed() {
-    NavigationsActions.replaceRoute({
+    NavigationActions.replaceRoute({
       id: RouteConstants.ROUTE_LOGIN
     });
   }

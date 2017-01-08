@@ -15,6 +15,8 @@ import PlayerSignUp from './auth/PlayerSignUp';
 import Home from './home/Home';
 import MatchDetail from './match/MatchDetail';
 import CreateMatch from './matchCreation/CreateMatch';
+import InvitePlayers from './invitePlayers/InvitePlayers';
+import FieldSearch from './matchCreation/fieldSearch/FieldSearch';
 
 var _navigator;
 
@@ -28,13 +30,13 @@ class AppNavigator extends Component {
       case NavigationConstants.ADD_ROUTE:
         _navigator.push({
           id: NavigationStore.getCurrentRoute().id,
-          payload: NavigationStore.getCurrentRoute().data
+          data: NavigationStore.getCurrentRoute().data
         });
         break;
       case NavigationConstants.REPLACE_ROUTE:
         _navigator.replace({
           id: NavigationStore.getCurrentRoute().id,
-          payload: NavigationStore.getCurrentRoute().data
+          data: NavigationStore.getCurrentRoute().data
         });
         break;
       case NavigationConstants.BACK:
@@ -107,6 +109,16 @@ class AppNavigator extends Component {
       case RouteConstants.ROUTE_CREATE_MATCH:
         return (
           <CreateMatch />
+        );
+
+      case RouteConstants.ROUTE_INVITE_PLAYERS:
+        return (
+          <InvitePlayers />
+        );
+
+      case RouteConstants.ROUTE_FIELD_SEARCH:
+        return (
+          <FieldSearch title={route.data.title} date={route.data.date} />
         );
     }
   }

@@ -10,7 +10,7 @@ import NavigationConstants from './constants/NavigationConstants';
 import RouteConstants from './constants/RouteConstants';
 import AppActions from './actions/AppActions';
 import AppStore from './stores/AppStore';
-import NavigationsActions from './actions/NavigationsActions';
+import NavigationActions from './actions/NavigationActions';
 import AppNavigator from './components/AppNavigator';
 
 export default class App extends Component {
@@ -33,8 +33,8 @@ export default class App extends Component {
 
   _onAppSessionChange() {
     if (AppStore.ready()) {
-      NavigationsActions.replaceRoute({
-        id: RouteConstants.ROUTE_LOGIN
+      NavigationActions.replaceRoute({
+        id: RouteConstants.ROUTE_CREATE_MATCH
       });
     }
   }

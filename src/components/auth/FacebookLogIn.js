@@ -4,7 +4,7 @@ import {
   WebView,
   Text
 } from 'react-native';
-import NavigationsActions from '../../actions/NavigationsActions';
+import NavigationActions from '../../actions/NavigationActions';
 import NavigationConstants from '../../constants/NavigationConstants';
 import RouteConstants from '../../constants/RouteConstants';
 import SessionActions from '../../actions/SessionActions';
@@ -23,7 +23,7 @@ class FacebookLogIn extends Component {
     if (state.url.indexOf(BASEURL + '/auth/success') != -1) {
       let token = state.url.split("token=")[1];
       token = token.substring(0, token.length - 4);
-      NavigationsActions.back();
+      NavigationActions.back();
       SessionActions.setSession(token);
     }
   }

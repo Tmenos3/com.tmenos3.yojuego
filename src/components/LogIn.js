@@ -10,7 +10,7 @@ import {
   Image,
   ActivityIndicator
 } from 'react-native';
-import NavigationsActions from '../actions/NavigationsActions';
+import NavigationActions from '../actions/NavigationActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
 import LoginStore from '../stores/LoginStore';
@@ -129,7 +129,7 @@ class LogIn extends Component {
   }
 
   _showFacebookLogin() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_FACEBOOK_LOGIN
     });
   }
@@ -141,19 +141,19 @@ class LogIn extends Component {
   }
 
   _showGoogleLogin() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_GOOGLE_LOGIN
     });
   }
 
   _forgetPassword() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_FORGET_PASSWORD
     });
   }
 
   _backPressed() {
-    NavigationsActions.back();
+    NavigationActions.back();
   }
 
   _onLoginPressed() {

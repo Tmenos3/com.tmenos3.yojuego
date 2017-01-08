@@ -9,7 +9,7 @@ import {
     Platform,
     Dimensions
 } from 'react-native';
-import NavigationsActions from '../actions/NavigationsActions';
+import NavigationActions from '../actions/NavigationActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
 import SessionStore from '../stores/SessionStore';
@@ -95,7 +95,7 @@ class LogIn extends Component {
     }
 
     _backPressed() {
-        NavigationsActions.replaceRoute({
+        NavigationActions.replaceRoute({
             id: RouteConstants.ROUTE_LOGIN
         });
     }
@@ -114,7 +114,7 @@ class LogIn extends Component {
             this.setState({ mailSentMessage: ['El mail para recuperación', 'de contraseña ha sido enviado.', 'Por favor verifique su casilla'] });
 
             // setTimeout(() => {
-            //     NavigationsActions.replaceRoute({
+            //     NavigationActions.replaceRoute({
             //         id: RouteConstants.ROUTE_LOGIN
             //     });
             // }, 3000);
