@@ -34,7 +34,7 @@ export default class App extends Component {
   _onAppSessionChange() {
     if (AppStore.ready()) {
       NavigationActions.replaceRoute({
-        id: RouteConstants.ROUTE_CREATE_MATCH
+        id: RouteConstants.ROUTE_LOGIN
       });
     }
   }

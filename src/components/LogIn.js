@@ -52,7 +52,7 @@ class LogIn extends Component {
       loginErrorReturn: LoginStore.loginErrorReturn()
     }, () => {
       if (this.state.loginCompleted && !this.state.loginErrorReturn) {
-        NavigationsActions.replaceRoute({
+        NavigationActions.replaceRoute({
           id: RouteConstants.ROUTE_HOME
         });
       }
@@ -135,7 +135,7 @@ class LogIn extends Component {
   }
 
   _showSignUp() {
-    NavigationsActions.addRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_SIGNUP
     });
   }
