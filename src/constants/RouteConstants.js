@@ -1,36 +1,36 @@
 class RouteConstants {
   static get ROUTE_SPLASH() {
-    return 'ROUTE_SPLAS';
+    return 'ROUTE_SPLASH';
   }
   static get ROUTE_LOGIN() {
-    return 'ROUTE_LOGI';
+    return 'ROUTE_LOGIN';
   }
   static get ROUTE_FACEBOOK_LOGIN() {
-    return 'ROUTE_FACEBOOK_LOGI';
+    return 'ROUTE_FACEBOOK_LOGIN';
   }
   static get ROUTE_GOOGLE_LOGIN() {
-    return 'ROUTE_GOOGLE_LOGI';
+    return 'ROUTE_GOOGLE_LOGIN';
   }
-  static get ROUTE_SIGNUP_STEPONE() {
-    return 'ROUTE_SIGNUP_STEPON';
-  }
-  static get ROUTE_SIGNUP_STEPTWO() {
-    return 'ROUTE_SIGNUP_STEPTW';
+  static get ROUTE_PLAYER_TOUR() {
+    return 'ROUTE_PLAYER_TOUR';
   }
   static get ROUTE_COMPLETE_SIGNUP() {
-    return 'ROUTE_COMPLETE_SIGNU';
+    return 'ROUTE_COMPLETE_SIGNUP';
+  }
+  static get ROUTE_CREATE_PROFILE() {
+    return 'ROUTE_CREATE_PROFILE';
   }
   static get ROUTE_FORGET_PASSWORD() {
-    return 'ROUTE_FORGET_PASSWOR';
+    return 'ROUTE_FORGET_PASSWORD';
   }
   static get ROUTE_HOME() {
-    return 'ROUTE_HOM';
+    return 'ROUTE_HOME';
   }
   static get MATCH_DETAIL() {
-    return 'MATCH_DETAI';
+    return 'MATCH_DETAIL';
   }
   static get ROUTE_CREATE_MATCH() {
-    return 'ROUTE_CREATE_MATC';
+    return 'ROUTE_CREATE_MATCH';
   }
   static get ROUTE_INVITE_PLAYERS() {
     return 'ROUTE_INVITE_PLAYERS';

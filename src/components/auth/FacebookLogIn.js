@@ -19,7 +19,6 @@ class FacebookLogIn extends Component {
   }
 
   _onLoad(state) {
-    console.log(state.url);
     if (state.url.indexOf(BASEURL + '/auth/success') != -1) {
       let token = state.url.split("token=")[1];
       token = token.substring(0, token.length - 4);

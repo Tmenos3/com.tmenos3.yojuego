@@ -4,7 +4,6 @@ import {
     Text,
     View
 } from 'react-native';
-
 import Swiper from 'react-native-swiper'
 
 class PlayerTour extends Component {

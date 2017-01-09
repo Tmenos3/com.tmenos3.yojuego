@@ -1,7 +1,6 @@
 var AppConstants = require('../constants/AppConstants');
 var Dispatcher = require('../dispatcher/Dispatcher');
 // var LogHelper = require('../utilities/LogHelper');
-var isLoggedIn = false;
 
 var AppActions = {
   initializeApp: function () {

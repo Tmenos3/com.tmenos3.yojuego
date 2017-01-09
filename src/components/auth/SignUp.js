@@ -230,6 +230,12 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold'
   },
+  text: {
+    color: 'grey'
+  },
+  errorText: {
+    color: 'red'
+  }
 });
 
 module.exports = SignUp;

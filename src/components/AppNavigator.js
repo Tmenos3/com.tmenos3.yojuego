@@ -10,8 +10,8 @@ import InputMail from './InputMail';
 import FacebookLogIn from './auth/FacebookLogIn';
 import GoogleLogIn from './auth/GoogleLogin';
 import SignUp from './auth/SignUp';
-import SignUpStepTwo from './auth/SignUpStepTwo';
-import PlayerSignUp from './auth/PlayerSignUp';
+import CompleteProfileInfo from './auth/CompleteProfileInfo';
+import PlayerTour from './playerTour/PlayerTour';
 import Home from './home/Home';
 import MatchDetail from './match/MatchDetail';
 import CreateMatch from './matchCreation/CreateMatch';
@@ -84,13 +84,13 @@ class AppNavigator extends Component {
         return (
           <SignUp />
         );
-      case RouteConstants.ROUTE_SIGNUP_STEPTWO:
+      case RouteConstants.ROUTE_CREATE_PROFILE:
         return (
-          <SignUpStepTwo />
+          <CompleteProfileInfo />
         );
-      case RouteConstants.ROUTE_COMPLETE_SIGNUP:
+      case RouteConstants.ROUTE_PLAYER_TOUR:
         return (
-          <PlayerSignUp />
+          <PlayerTour />
         );
       case RouteConstants.ROUTE_FORGET_PASSWORD:
         return (
@@ -100,22 +100,18 @@ class AppNavigator extends Component {
         return (
           <Home />
         );
-
       case RouteConstants.MATCH_DETAIL:
         return (
           <MatchDetail match={MatchStore.getMatch()} />
         );
-
       case RouteConstants.ROUTE_CREATE_MATCH:
         return (
           <CreateMatch />
         );
-
       case RouteConstants.ROUTE_INVITE_PLAYERS:
         return (
           <InvitePlayers />
         );
-
       case RouteConstants.ROUTE_FIELD_SEARCH:
         return (
           <FieldSearch title={route.data.title} date={route.data.date} />

@@ -2,6 +2,7 @@ var LoginConstants = require('../constants/LoginConstants');
 var AppConstants = require('../constants/AppConstants');
 var Dispatcher = require('../dispatcher/Dispatcher');
 var ApiService = require('../services/ApiService');
+var LocalService = require('../services/LocalService');
 
 
 class LoginActions {
@@ -13,6 +14,7 @@ class LoginActions {
     ApiService.login(email, password)
       .then((resp) => {
         LoginActions.setToken(resp.token);
+        LocalService.saveUserId(resp.userid);
 
         Dispatcher.handleViewAction({
           actionType: LoginConstants.LOGIN_RESOLVED
@@ -38,12 +40,16 @@ class LoginActions {
   }
 
   static setToken(token) {
-    Dispatcher.handleViewAction({
-      actionType: AppConstants.TOKEN_CHANGE,
-      payload: {
-        'token': token
-      }
-    });
+    LocalService.saveToken(token)
+      .then(() => {
+        Dispatcher.handleViewAction({
+          actionType: AppConstants.TOKEN_CHANGE,
+          payload: {
+            token: token
+          }
+        });
+      });
   }
 }
+
 module.exports = LoginActions;

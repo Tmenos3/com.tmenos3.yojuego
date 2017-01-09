@@ -16,7 +16,6 @@ import AppNavigator from './components/AppNavigator';
 export default class App extends Component {
   constructor(props) {
     super(props);
-    
   }
 
   componentDidMount() {

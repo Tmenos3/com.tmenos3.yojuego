@@ -91,18 +91,6 @@ SessionStore.dispatchToken = AppDispatcher.register(function (action) {
       _logingIn = false;
       SessionStore.emitChange();
       break;
-
-    case SessionConstants.SET_SIGNUP_STEPONE:
-      _signUpInfo.email = action.payload.email;
-      _signUpInfo.password = action.payload.password;
-      _signUpStepOneComplete = true;
-      SessionStore.emitChange();
-      break;
-
-    case SessionConstants.SET_SIGNUP_STEPTWO:
-      _signUpStepTwoComplete = true;
-      SessionStore.emitChange();
-      break;
   }
 });
 
