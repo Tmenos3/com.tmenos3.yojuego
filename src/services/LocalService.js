@@ -22,6 +22,10 @@ class LocalService {
   static getPlayer() {
     return _player;
   }
+
+  static hasToken() {
+    return LocalService._token != null && LocalService._token != undefined;
+  }
 };
 
 module.exports = LocalService;
