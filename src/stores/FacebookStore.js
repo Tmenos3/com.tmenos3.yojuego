@@ -1,33 +1,33 @@
 import { EventEmitter } from 'events';
 import assign from 'object-assign';
-import FacebookConstants from '../constants/FacebookConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import FacebookConstants from '../constants/FacebookConstants';
 
 const CHANGE_EVENT = 'change';
 let _isAuthCompleted = false;
 let _isFirstLogin = false;
 
-export default class FacebookStore extends EventEmitter {
-  static emitChange() {
+let FacebookStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static isAuthCompleted() {
+  isAuthCompleted() {
     return _isAuthCompleted;
-  }
+  },
 
-  static isFirstLogin() {
+  isFirstLogin() {
     return _isFirstLogin;
   }
-}
+});
 
 FacebookStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -39,3 +39,5 @@ FacebookStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = FacebookStore;

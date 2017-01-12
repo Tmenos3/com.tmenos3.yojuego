@@ -1,37 +1,38 @@
 import { EventEmitter } from 'events';
-import LoginConstants from '../constants/LoginConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import assign from 'object-assign';
+import LoginConstants from '../constants/LoginConstants';
 
 const CHANGE_EVENT = 'change';
 let _isWorking = false;
 let _isLoginCompleted = false;
 let _loginErrorReturn = null;
 
-export default class LoginStore extends EventEmitter {
-  static emitChange() {
+let LoginStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static isWorking() {
+  isWorking() {
     return _isWorking;
-  }
+  },
 
-  static isLoginCompleted() {
+  isLoginCompleted() {
     return _isLoginCompleted;
-  }
+  },
 
-  static loginErrorReturn() {
+  loginErrorReturn() {
     return _loginErrorReturn;
   }
-}
+});
 
 LoginStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -60,3 +61,5 @@ LoginStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = LoginStore;

@@ -8,7 +8,8 @@ import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
 import FacebookActions from '../../actions/FacebookActions';
 import FacebookStore from '../../stores/FacebookStore';
-const uri = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081/auth/facebook';
+
+const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081/auth/facebook';
 //const BASEURL = 'http://192.168.0.11:8080';
 
 export default class FacebookLogIn extends Component {

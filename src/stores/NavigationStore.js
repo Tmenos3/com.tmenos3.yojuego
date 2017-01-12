@@ -1,32 +1,33 @@
 import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import assign from 'object-assign';
 import NavigationConstants from '../constants/NavigationConstants';
 
 const CHANGE_EVENT = 'change';
 let _currentRoute = { id: null, data: null };
 let _currentAction;
 
-export default class NavigationStore extends EventEmitter {
-  static emitChange() {
+let NavigationStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static getCurrentRoute() {
+  getCurrentRoute() {
     return _currentRoute;
-  }
+  },
 
-  static getCurrentAction() {
+  getCurrentAction() {
     return _currentAction;
   }
-}
+});
 
 NavigationStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -51,3 +52,5 @@ NavigationStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = NavigationStore;

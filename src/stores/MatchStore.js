@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import assign from 'object-assign';
 import MatchConstants from '../constants/MatchConstants';
 
 const CHANGE_EVENT = 'change';
@@ -8,31 +9,31 @@ let _loadingMatchDetail = false;
 let _match = null;
 let _error = null;
 
-export default class MatchStore extends EventEmitter {
-  static emitChange() {
+let MatchStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static loadingMatchDetail() {
+  loadingMatchDetail() {
     return _loadingMatchDetail;
-  }
+  },
 
-  static getMatch() {
+  getMatch() {
     return _match;
-  }
+  },
 
-  static getError() {
+  getError() {
     return _error;
   }
-}
+});
 
 MatchStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -55,3 +56,5 @@ MatchStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = MatchStore;

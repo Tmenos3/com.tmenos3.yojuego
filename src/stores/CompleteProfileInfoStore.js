@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import assign from 'object-assign';
 import CompleteProfileInfoConstants from '../constants/CompleteProfileInfoConstants';
 
 const CHANGE_EVENT = 'change';
@@ -7,31 +8,31 @@ let _isWorking = false;
 let _isProccessCompleted = false;
 let _proccessErrorReturn = null;
 
-export default class CompleteProfileInfoStore extends EventEmitter {
-  static emitChange() {
+let CompleteProfileInfoStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static isWorking() {
+  isWorking() {
     return _isWorking;
-  }
+  },
 
-  static isProccessCompleted() {
+  isProccessCompleted() {
     return _isProccessCompleted;
-  }
+  },
 
-  static proccessErrorReturn() {
+  proccessErrorReturn() {
     return _proccessErrorReturn;
   }
-}
+});
 
 CompleteProfileInfoStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -60,3 +61,5 @@ CompleteProfileInfoStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = CompleteProfileInfoStore;

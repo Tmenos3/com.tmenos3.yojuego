@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import assign from 'object-assign';
 import PlayerConstants from '../constants/PlayerConstants';
 import SessionConstants from '../constants/SessionConstants';
 
@@ -18,55 +19,55 @@ let _signUpInfo = {
 let _signUpStepOneComplete = false;
 let _signUpStepTwoComplete = false;
 
-export default class SessionStore extends EventEmitter {
-  static emitChange() {
+let SessionStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static getToken() {
+  getToken() {
     return _token;
-  }
+  },
 
-  static getPlayer() {
+  getPlayer() {
     return _player;
-  }
+  },
 
-  static getMail() {
+  getMail() {
     return _mail;
-  }
+  },
 
-  static mailSent() {
+  mailSent() {
     return _mailSent;
-  }
+  },
 
-  static errorSendingMail() {
+  errorSendingMail() {
     return _errorSendingMail;
-  }
+  },
 
-  static logingIn() {
+  logingIn() {
     return _logingIn;
-  }
+  },
 
-  static getSignUpInfo() {
+  getSignUpInfo() {
     return _signUpInfo;
-  }
+  },
 
-  static signUpStepOneComplete() {
+  signUpStepOneComplete() {
     return _signUpStepOneComplete;
-  }
+  },
 
-  static signUpComplete() {
+  signUpComplete() {
     return _signUpStepTwoComplete;
   }
-}
+});
 
 SessionStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -103,3 +104,5 @@ SessionStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = SessionStore;

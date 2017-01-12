@@ -1,7 +1,7 @@
 import Flux, { Dispatcher } from 'flux';
 import Queue from 'sync-queue';
 import LogHelper from '../services/LogHelper';
-
+import assign from 'object-assign';
 let queue = new Queue();
 
 let AppDispatcher = assign(new Dispatcher(), {

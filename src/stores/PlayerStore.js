@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import assign from 'object-assign';
 import PlayerConstants from '../constants/PlayerConstants';
 
 const CHANGE_EVENT = 'change';
@@ -8,31 +9,31 @@ let _loadingPlayer = false;
 let _creatingPlayer = false;
 let _player = null;
 
-export default class PlayerStore extends EventEmitter {
-  static emitChange() {
+let PlayerStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static loadingPlayer() {
+  loadingPlayer() {
     return _loadingPlayer;
-  }
+  },
 
-  static creatingPlayer() {
+  creatingPlayer() {
     return _creatingPlayer;
-  }
+  },
 
-  static getPlayer() {
+  getPlayer() {
     return _player;
   }
-}
+});
 
 PlayerStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -55,3 +56,5 @@ PlayerStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = PlayerStore;

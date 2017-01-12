@@ -1,27 +1,28 @@
 import { EventEmitter } from 'events';
 import AppConstants from '../constants/AppConstants';
+import assign from 'object-assign';
 import AppDispatcher from '../dispatcher/Dispatcher';
 
 const CHANGE_EVENT = 'change';
 let _ready = false;
 
-export default class AppStore extends EventEmitter {
-  static emitChange() {
+let AppStore = assign({}, EventEmitter.prototype, {
+  emitChange() {
     this.emit(CHANGE_EVENT);
-  }
+  },
 
-  static addChangeListener(callback) {
+  addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  }
+  },
 
-  static removeChangeListener(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  }
+  },
 
-  static ready() {
+  ready() {
     return _ready;
   }
-}
+});
 
 AppStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -36,3 +37,5 @@ AppStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
+
+module.exports = AppStore;
