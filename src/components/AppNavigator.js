@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import { Navigator } from 'react-native';
-import NavigationStore from '../stores/NavigationStore';
-import MatchStore from '../stores/MatchStore';
-import RouteConstants from '../constants/RouteConstants';
-import NavigationConstants from '../constants/NavigationConstants';
-import Splash from './Splash';
-import LogIn from './LogIn';
-import InputMail from './InputMail';
-import FacebookLogIn from './auth/FacebookLogIn';
-import GoogleLogIn from './auth/GoogleLogin';
-import SignUp from './auth/SignUp';
 import CompleteProfileInfo from './auth/CompleteProfileInfo';
-import PlayerTour from './playerTour/PlayerTour';
-import Home from './home/Home';
-import MatchDetail from './match/MatchDetail';
 import CreateMatch from './matchCreation/CreateMatch';
-import InvitePlayers from './invitePlayers/InvitePlayers';
+import FacebookLogIn from './auth/FacebookLogIn';
 import FieldSearch from './matchCreation/fieldSearch/FieldSearch';
+import GoogleLogIn from './auth/GoogleLogin';
+import Home from './home/Home';
+import InputMail from './InputMail';
+import InvitePlayers from './invitePlayers/InvitePlayers';
+import LogIn from './LogIn';
+import MatchDetail from './match/MatchDetail';
+import MatchStore from '../stores/MatchStore';
+import NavigationConstants from '../constants/NavigationConstants';
+import NavigationStore from '../stores/NavigationStore';
+import PlayerTour from './playerTour/PlayerTour';
+import RouteConstants from '../constants/RouteConstants';
+import SignUp from './auth/SignUp';
+import Splash from './Splash';
 
-var _navigator;
+let _navigator;
 
-class AppNavigator extends Component {
+export default class AppNavigator extends Component {
   componentDidMount() {
     NavigationStore.addChangeListener(this._onNavigationStoreChange);
   }
@@ -119,5 +119,3 @@ class AppNavigator extends Component {
     }
   }
 }
-
-module.exports = AppNavigator;

@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  TouchableOpacity,
-  TextInput,
-  View,
-  StyleSheet,
+  ActivityIndicator,
   Dimensions,
-  Platform,
   Image,
-  ActivityIndicator
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
+import LoginActions from '../actions/LoginActions';
+import LoginStore from '../stores/LoginStore';
 import NavigationActions from '../actions/NavigationActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
-import LoginStore from '../stores/LoginStore';
-import LoginActions from '../actions/LoginActions';
 
-class LogIn extends Component {
+export default class LogIn extends Component {
   constructor(props) {
     super(props);
 
@@ -171,10 +171,9 @@ class LogIn extends Component {
       password: text
     });
   }
-
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -264,5 +263,3 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.25)'
   }
 });
-
-module.exports = LogIn;

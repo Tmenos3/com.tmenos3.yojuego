@@ -1,7 +1,5 @@
-var keyMirror = require('keymirror');
-
-module.exports = keyMirror({
-  ADD_ROUTE: null,
-  REPLACE_ROUTE: null,
-  BACK: null
-});
+export default class NavigationConstants {
+  static get ADD_ROUTE() { return 'ADD_ROUTE'; }
+  static get BACK() { return 'BACK'; }
+  static get REPLACE_ROUTE() { return 'REPLACE_ROUTE'; }
+}

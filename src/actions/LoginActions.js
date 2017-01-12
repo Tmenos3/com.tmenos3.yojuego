@@ -1,11 +1,11 @@
-var LoginConstants = require('../constants/LoginConstants');
-var AppConstants = require('../constants/AppConstants');
-var Dispatcher = require('../dispatcher/Dispatcher');
-var ApiService = require('../services/ApiService');
-var LocalService = require('../services/LocalService');
+import LoginConstants from '../constants/LoginConstants';
+import AppConstants from '../constants/AppConstants';
+import Dispatcher from '../dispatcher/Dispatcher';
+import ApiService from '../services/ApiService';
+import LocalService from '../services/LocalService';
 
 
-class LoginActions {
+export default class LoginActions {
   static login(email, password) {
     Dispatcher.handleViewAction({
       actionType: LoginConstants.LOGIN_INTENT
@@ -50,6 +50,4 @@ class LoginActions {
         });
       });
   }
-}
-
-module.exports = LoginActions;
+};

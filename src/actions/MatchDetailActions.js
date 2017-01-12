@@ -3,11 +3,11 @@ import MatchDetailConstants from '../constants/MatchDetailConstants';
 import SessionStore from '../stores/SessionStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 
-var TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkFWZzc5XzJMaVloTGFCVWZKU1VZIiwiaWF0IjoxNDc5MDAzNDQxfQ.VpdRbHlgel7BOg5DBjqdQBjbMRjOfwvruCBHu7i8ZaI';
-var WAITING_TIME = 5000;
+const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkFWZzc5XzJMaVloTGFCVWZKU1VZIiwiaWF0IjoxNDc5MDAzNDQxfQ.VpdRbHlgel7BOg5DBjqdQBjbMRjOfwvruCBHu7i8ZaI';
+const WAITING_TIME = 5000;
 
-var MatchDetailActions = {
-  loadMatch(matchId) {
+export default class MatchDetailActions {
+  static loadMatch(matchId) {
     Dispatcher.handleViewAction({
       actionType: MatchDetailConstants.LOADING_MATCH_DETAIL,
       payload: null
@@ -38,8 +38,9 @@ var MatchDetailActions = {
           }
         });
       });
-  },
-  sendComment(playerId, matchId, comment) {
+  }
+
+  static sendComment(playerId, matchId, comment) {
     Dispatcher.handleViewAction({
       actionType: MatchDetailConstants.SENDING_COMMENT,
       payload: {}
@@ -67,8 +68,9 @@ var MatchDetailActions = {
           }
         });
       });
-  },
-  loadPlayers(playerIds) {
+  }
+
+  static loadPlayers(playerIds) {
     Dispatcher.handleViewAction({
       actionType: MatchDetailConstants.LOADING_PLAYERS,
       payload: null
@@ -101,5 +103,3 @@ var MatchDetailActions = {
       });
   }
 };
-
-module.exports = MatchDetailActions;

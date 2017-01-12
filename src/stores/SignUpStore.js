@@ -1,33 +1,32 @@
 import { EventEmitter } from 'events';
-import assign from 'object-assign';
-import SignUpConstants from '../constants/SignUpConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import SignUpConstants from '../constants/SignUpConstants';
 
-var CHANGE_EVENT = 'change';
-var _isWorking = false;
-var _isSignUpCompleted = false;
-var _signUpErrorReturn = null;
+const CHANGE_EVENT = 'change';
+let _isWorking = false;
+let _isSignUpCompleted = false;
+let _signUpErrorReturn = null;
 
-var SignUpStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class SignUpStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  isWorking: () => {
+  }
+  static isWorking() {
     return _isWorking;
-  },
-  isSignUpCompleted: () => {
+  }
+  static isSignUpCompleted() {
     return _isSignUpCompleted;
-  },
-  signUpErrorReturn: () => {
+  }
+  static signUpErrorReturn() {
     return _signUpErrorReturn;
   }
-});
+}
 
 SignUpStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -56,5 +55,3 @@ SignUpStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
-
-module.exports = SignUpStore;

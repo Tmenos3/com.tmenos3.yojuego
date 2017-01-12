@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import {
-  TouchableOpacity,
-  Text,
-  TextInput,
-  View,
+  ActivityIndicator,
   Dimensions,
   StyleSheet,
-  ActivityIndicator
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
-import SignUpStore from '../../stores/SignUpStore';
 import SignUpActions from '../../actions/SignUpActions';
+import SignUpStore from '../../stores/SignUpStore';
 
-class SignUp extends Component {
+export default class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -194,7 +194,7 @@ class SignUp extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -237,5 +237,3 @@ var styles = StyleSheet.create({
     color: 'red'
   }
 });
-
-module.exports = SignUp;

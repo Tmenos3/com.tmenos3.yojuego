@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import {
-  TouchableOpacity,
-  Text,
-  TextInput,
-  View,
+  ActivityIndicator,
   Dimensions,
   Platform,
   StyleSheet,
-  ActivityIndicator
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
+import CompleteProfileInfoActions from '../../actions/CompleteProfileInfoActions';
+import CompleteProfileInfoStore from '../../stores/CompleteProfileInfoStore';
 import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
-import CompleteProfileInfoStore from '../../stores/CompleteProfileInfoStore';
-import CompleteProfileInfoActions from '../../actions/CompleteProfileInfoActions';
 
-class CompleteProfileInfo extends Component {
+export default class CompleteProfileInfo extends Component {
   constructor(props) {
     super(props);
 
@@ -161,7 +161,7 @@ class CompleteProfileInfo extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -212,5 +212,3 @@ var styles = StyleSheet.create({
     color: 'red'
   }
 });
-
-module.exports = CompleteProfileInfo;

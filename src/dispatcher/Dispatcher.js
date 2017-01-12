@@ -1,11 +1,10 @@
-var Dispatcher = require('flux').Dispatcher;
-var assign = require('object-assign');
-var Queue = require('sync-queue');
-var LogHelper = require('../services/LogHelper');
+import Flux, { Dispatcher } from 'flux';
+import Queue from 'sync-queue';
+import LogHelper from '../services/LogHelper';
 
-var queue = new Queue();
+let queue = new Queue();
 
-var AppDispatcher = assign(new Dispatcher(), {
+let AppDispatcher = assign(new Dispatcher(), {
   handleViewAction: function (action) {
     action.source = 'VIEW_ACTION';
     LogHelper.log("ACTION (user)", {

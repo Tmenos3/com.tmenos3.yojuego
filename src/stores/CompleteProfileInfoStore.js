@@ -1,33 +1,37 @@
 import { EventEmitter } from 'events';
-import assign from 'object-assign';
-import CompleteProfileInfoConstants from '../constants/CompleteProfileInfoConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
+import CompleteProfileInfoConstants from '../constants/CompleteProfileInfoConstants';
 
-var CHANGE_EVENT = 'change';
-var _isWorking = false;
-var _isProccessCompleted = false;
-var _proccessErrorReturn = null;
+const CHANGE_EVENT = 'change';
+let _isWorking = false;
+let _isProccessCompleted = false;
+let _proccessErrorReturn = null;
 
-var CompleteProfileInfoStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class CompleteProfileInfoStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  isWorking: () => {
+  }
+
+  static isWorking() {
     return _isWorking;
-  },
-  isProccessCompleted: () => {
+  }
+
+  static isProccessCompleted() {
     return _isProccessCompleted;
-  },
-  proccessErrorReturn: () => {
+  }
+
+  static proccessErrorReturn() {
     return _proccessErrorReturn;
   }
-});
+}
 
 CompleteProfileInfoStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -56,5 +60,3 @@ CompleteProfileInfoStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
-
-module.exports = CompleteProfileInfoStore;

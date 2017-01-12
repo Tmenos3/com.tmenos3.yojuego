@@ -3,11 +3,10 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-
-import Header from './Header';
 import Body from './Body';
+import Header from './Header';
 
-class Home extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
   }
@@ -15,19 +14,17 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Header/>
-        <Body/>
+        <Header />
+        <Body />
       </View>
     );
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
     flexDirection: 'column',
   }
 });
-
-module.exports = Home;

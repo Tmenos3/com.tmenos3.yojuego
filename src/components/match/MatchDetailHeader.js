@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
   Image,
-  TouchableOpacity
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 // import MatchActions from '../../actions/MatchActions';
 // import MatchStore from '../../stores/MatchStore';
 // import RouteConstants from '../../constants/RouteConstants';
 
-class MatchDetailHeader extends Component {
+export default class MatchDetailHeader extends Component {
   constructor(props) {
     super(props);
 
@@ -48,7 +48,7 @@ class MatchDetailHeader extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: '#009900',
     height: 60,
@@ -82,5 +82,3 @@ var styles = StyleSheet.create({
     bottom: 7
   },
 });
-
-module.exports = MatchDetailHeader;

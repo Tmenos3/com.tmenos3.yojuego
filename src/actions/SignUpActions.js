@@ -1,9 +1,8 @@
-var SignUpConstants = require('../constants/SignUpConstants');
-var AppConstants = require('../constants/AppConstants');
-var Dispatcher = require('../dispatcher/Dispatcher');
-var ApiService = require('../services/ApiService');
-var LocalService = require('../services/LocalService');
-
+import SignUpConstants from '../constants/SignUpConstants';
+import AppConstants from '../constants/AppConstants';
+import Dispatcher from '../dispatcher/Dispatcher';
+import ApiService from '../services/ApiService';
+import LocalService from '../services/LocalService';
 
 export default class SignUpActions {
   static signUp(email, password) {

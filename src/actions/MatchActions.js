@@ -3,8 +3,8 @@ import MatchConstants from '../constants/MatchConstants';
 import SessionStore from '../stores/SessionStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 
-var MatchActions = {
-  getMatchDetail(idMatch) {
+export default class MatchActions {
+  static getMatchDetail(idMatch) {
     Dispatcher.handleViewAction({
       actionType: MatchConstants.GET_MATCH_DETAIL,
       payload: {
@@ -38,5 +38,3 @@ var MatchActions = {
       });
   }
 };
-
-module.exports = MatchActions;

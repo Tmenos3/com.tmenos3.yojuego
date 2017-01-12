@@ -1,36 +1,40 @@
 import { EventEmitter } from 'events';
-import assign from 'object-assign';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import PlayerConstants from '../constants/PlayerConstants';
 
-var CHANGE_EVENT = 'change';
-var _loadingPlayer = false;
-var _creatingPlayer = false;
-var _player = null;
+const CHANGE_EVENT = 'change';
+let _loadingPlayer = false;
+let _creatingPlayer = false;
+let _player = null;
 
-var PlayerStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class PlayerStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  loadingPlayer() {
+  }
+
+  static loadingPlayer() {
     return _loadingPlayer;
-  },
-  creatingPlayer() {
+  }
+
+  static creatingPlayer() {
     return _creatingPlayer;
-  },
-  getPlayer() {
+  }
+
+  static getPlayer() {
     return _player;
   }
-});
+}
 
-PlayerStore.dispatchToken = AppDispatcher.register(function (action) {
+PlayerStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
     case PlayerConstants.SET_PLAYER:
       _loadingPlayer = false;
@@ -51,5 +55,3 @@ PlayerStore.dispatchToken = AppDispatcher.register(function (action) {
       break;
   }
 });
-
-module.exports = PlayerStore;

@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
+  InteractionManager,
   StyleSheet,
-  InteractionManager
+  Text,
+  View
 } from 'react-native';
-
-import NavigationConstants from './constants/NavigationConstants';
-import RouteConstants from './constants/RouteConstants';
 import AppActions from './actions/AppActions';
+import AppNavigator from './components/AppNavigator';
 import AppStore from './stores/AppStore';
 import NavigationActions from './actions/NavigationActions';
-import AppNavigator from './components/AppNavigator';
+import NavigationConstants from './constants/NavigationConstants';
+import RouteConstants from './constants/RouteConstants';
 
 export default class App extends Component {
   constructor(props) {

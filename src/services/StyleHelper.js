@@ -1,11 +1,9 @@
-var assign = require('object-assign');
 import {
   Dimensions
 } from 'react-native';
 
-var StyleHelper = assign({}, {
-  deviceWith: Dimensions.get('window').width,
+export default class StyleHelper {
+  static get deviceWith() { return Dimensions.get('window').width; }
 
-  deviceHeight: Dimensions.get('window').height
-});
-module.exports = StyleHelper;
+  static get deviceHeight() { return Dimensions.get('window').height; }
+}

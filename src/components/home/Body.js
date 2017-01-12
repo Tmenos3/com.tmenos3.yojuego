@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
   ListView,
-  Text
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import MatchActions from '../../actions/MatchActions';
 import MatchStore from '../../stores/MatchStore';
 import RouteConstants from '../../constants/RouteConstants';
 
-class Body extends Component {
+export default class Body extends Component {
   constructor(props) {
     super(props);
 
@@ -110,7 +110,7 @@ class Body extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#d9d9d9',
@@ -169,4 +169,3 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.25)'
   }
 });
-module.exports = Body;

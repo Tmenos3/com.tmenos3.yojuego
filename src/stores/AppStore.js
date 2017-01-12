@@ -1,27 +1,29 @@
 import { EventEmitter } from 'events';
-import assign from 'object-assign';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
 
-var CHANGE_EVENT = 'change';
-var _ready = false;
+const CHANGE_EVENT = 'change';
+let _ready = false;
 
-var AppStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class AppStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  ready() {
+  }
+
+  static ready() {
     return _ready;
   }
-});
+}
 
-AppStore.dispatchToken = AppDispatcher.register(function (action) {
+AppStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
     case AppConstants.INIT_APP:
       _ready = false;
@@ -34,5 +36,3 @@ AppStore.dispatchToken = AppDispatcher.register(function (action) {
       break;
   }
 });
-
-module.exports = AppStore;

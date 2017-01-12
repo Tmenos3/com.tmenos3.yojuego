@@ -4,8 +4,8 @@ import SessionStore from '../stores/SessionStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LogHelper from '../services/LogHelper';
 
-var SessionActions = {
-  setSession(token) {
+export default class SessionActions {
+  static setSession(token) {
     ApiService.getPlayerByToken(token)
       .then((response) => {
         Dispatcher.handleViewAction({
@@ -42,9 +42,9 @@ var SessionActions = {
     //     player: player
     //   }
     // });
-  },
+  }
 
-  sendMailRestorePassword(mail) {
+  static sendMailRestorePassword(mail) {
     Dispatcher.handleViewAction({
       actionType: SessionConstants.SEND_MAIL_RESTORE_PASSWORD,
       payload: {
@@ -63,9 +63,9 @@ var SessionActions = {
         LogHelper.error("SessionActions.mailSent(false, error)", error);
         SessionActions.mailSent(false, error);
       });
-  },
+  }
 
-  mailSent(sent, error) {
+  static mailSent(sent, error) {
     Dispatcher.handleServerAction({
       actionType: SessionConstants.MAIL_SENT,
       payload: {
@@ -73,9 +73,9 @@ var SessionActions = {
         error: error
       }
     });
-  },
+  }
 
-  login(email, password) {
+  static login(email, password) {
     Dispatcher.handleServerAction({
       actionType: SessionConstants.SESSION_LOGIN_INTENT,
       payload: {
@@ -83,7 +83,7 @@ var SessionActions = {
         password: password
       }
     });
-    
+
     let _token;
     ApiService.login(email, password)
       .then((response) => {
@@ -101,15 +101,16 @@ var SessionActions = {
       .catch((error) => {
         SessionActions.setError(error);
       });
-  },
+  }
 
-  setError(error) {
+  static setError(error) {
     Dispatcher.handleServerAction({
       actionType: SessionConstants.SESSION_LOGIN_ERROR,
       payload: error
     });
-  },
-  signUpStepOne(email, password) {
+  }
+
+  static staticsignUpStepOne(email, password) {
     Dispatcher.handleServerAction({
       actionType: SessionConstants.SET_SIGNUP_STEPONE,
       payload: {
@@ -117,9 +118,9 @@ var SessionActions = {
         password: password
       }
     });
-  },
+  }
 
-  signUpStepTwo(nickname, day, month, year, state, adminState) {
+  static signUpStepTwo(nickname, day, month, year, state, adminState) {
     Dispatcher.handleServerAction({
       actionType: SessionConstants.SET_SIGNUP_STEPTWO,
       payload: null
@@ -146,5 +147,3 @@ var SessionActions = {
       });
   }
 };
-
-module.exports = SessionActions;

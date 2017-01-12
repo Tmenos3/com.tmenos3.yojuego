@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import {Text, 
-        View, 
-        StyleSheet} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
-class Splash extends Component {
+export default class Splash extends Component {
   render() {
     return (
       <View style={styles.background}>
@@ -28,5 +30,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   }
 });
-
-module.exports = Splash;

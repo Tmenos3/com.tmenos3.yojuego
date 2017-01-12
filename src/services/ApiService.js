@@ -1,7 +1,7 @@
-//let BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
-let BASEURL = 'http://192.168.0.14:8080';
+//const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
+const BASEURL = 'http://192.168.0.14:8080';
 
-class ApiService {
+export default class ApiService {
   static login(email, password) {
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
@@ -306,6 +306,4 @@ class ApiService {
   //     console.log(JSON.stringify(err));
   //   });
   // }
-};
-
-module.exports = ApiService;
+}

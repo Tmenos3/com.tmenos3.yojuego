@@ -1,64 +1,74 @@
 import { EventEmitter } from 'events';
-import assign from 'object-assign';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
-import SessionConstants from '../constants/SessionConstants';
 import PlayerConstants from '../constants/PlayerConstants';
+import SessionConstants from '../constants/SessionConstants';
 
-var CHANGE_EVENT = 'change';
-var _token = null;
-var _player = null;
-var _mail = null;
-var _mailSent = null;
-var _errorSendingMail = null;
-var _logingIn = false;
-var _signUpInfo = {
+const CHANGE_EVENT = 'change';
+let _token = null;
+let _player = null;
+let _mail = null;
+let _mailSent = null;
+let _errorSendingMail = null;
+let _logingIn = false;
+let _signUpInfo = {
   email: null,
   password: null
 };
-var _signUpStepOneComplete = false;
-var _signUpStepTwoComplete = false;
+let _signUpStepOneComplete = false;
+let _signUpStepTwoComplete = false;
 
-var SessionStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class SessionStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  getToken() {
+  }
+
+  static getToken() {
     return _token;
-  },
-  getPlayer() {
+  }
+
+  static getPlayer() {
     return _player;
-  },
-  getMail() {
+  }
+
+  static getMail() {
     return _mail;
-  },
-  mailSent() {
+  }
+
+  static mailSent() {
     return _mailSent;
-  },
-  errorSendingMail() {
+  }
+
+  static errorSendingMail() {
     return _errorSendingMail;
-  },
-  logingIn() {
+  }
+
+  static logingIn() {
     return _logingIn;
-  },
-  getSignUpInfo() {
+  }
+
+  static getSignUpInfo() {
     return _signUpInfo;
-  },
-  signUpStepOneComplete() {
+  }
+
+  static signUpStepOneComplete() {
     return _signUpStepOneComplete;
-  },
-  signUpComplete() {
+  }
+
+  static signUpComplete() {
     return _signUpStepTwoComplete;
   }
-});
+}
 
-SessionStore.dispatchToken = AppDispatcher.register(function (action) {
+SessionStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
     case SessionConstants.SET_SESSION:
       _token = action.payload.token;
@@ -93,5 +103,3 @@ SessionStore.dispatchToken = AppDispatcher.register(function (action) {
       break;
   }
 });
-
-module.exports = SessionStore;

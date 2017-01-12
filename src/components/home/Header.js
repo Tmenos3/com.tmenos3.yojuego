@@ -4,7 +4,7 @@ import {
   View
 } from 'react-native';
 
-class Header extends Component {
+export default class Header extends Component {
   constructor(props) {
     super(props);
   }
@@ -18,11 +18,9 @@ class Header extends Component {
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: '#009900',
     height: 60
   }
 });
-
-module.exports = Header;

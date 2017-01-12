@@ -1,26 +1,24 @@
-var NavigationConstants = require('../constants/NavigationConstants');
-var Dispatcher = require('../dispatcher/Dispatcher');
+import NavigationConstants from '../constants/NavigationConstants';
+import Dispatcher from '../dispatcher/Dispatcher';
 
-var NavigationActions = {
-  addRoute: function (route) {
+export default class NavigationActions {
+  static addRoute(route) {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.ADD_ROUTE,
       data: route
     });
-  },
+  }
 
-  replaceRoute: function (route) {
+  static replaceRoute(route) {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.REPLACE_ROUTE,
       data: route
     });
-  },
+  }
 
-  back: function (route) {
+  static back(route) {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.BACK
     });
   }
 }
-
-module.exports = NavigationActions;

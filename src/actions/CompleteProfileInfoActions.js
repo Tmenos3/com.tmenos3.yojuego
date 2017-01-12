@@ -1,7 +1,7 @@
-var CompleteProfileInfoConstants = require('../constants/CompleteProfileInfoConstants');
-var Dispatcher = require('../dispatcher/Dispatcher');
-var ApiService = require('../services/ApiService');
-var LocalService = require('../services/LocalService');
+import CompleteProfileInfoConstants from '../constants/CompleteProfileInfoConstants';
+import Dispatcher from '../dispatcher/Dispatcher';
+import ApiService from '../services/ApiService';
+import LocalService from '../services/LocalService';
 
 export default class CompleteProfileInfoActions {
   static completeProfileInfo(firstName, lastName, nickName) {

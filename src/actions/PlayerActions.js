@@ -4,8 +4,8 @@ import PlayerStore from '../stores/PlayerStore';
 import SessionStore from '../stores/SessionStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 
-var PlayerActions = {
-  createPlayer(nickname, birthday, state, adminState) {
+export default class PlayerActions {
+  static createPlayer(nickname, birthday, state, adminState) {
     Dispatcher.handleServerAction({
       actionType: PlayerConstants.CREATE_PLAYER
     });
@@ -19,8 +19,9 @@ var PlayerActions = {
       .catch((error) => {
         console.log(error);
       });
-  },
-  getPlayer() {
+  }
+
+  static getPlayer() {
     Dispatcher.handleServerAction({
       actionType: PlayerConstants.GET_PLAYER,
       payload: player
@@ -36,14 +37,12 @@ var PlayerActions = {
       .catch((error) => {
         LogHelper.error("SessionActions.getPlayer(catch)", error);
       });
-  },
+  }
 
-  setPlayer(player) {
+  static setPlayer(player) {
     Dispatcher.handleServerAction({
       actionType: PlayerConstants.SET_PLAYER,
       payload: player
     });
   }
 };
-
-module.exports = PlayerActions;

@@ -1,8 +1,4 @@
-import DateTimePanel from './DateTimePanel';
-import NavigationActions from '../../actions/NavigationActions';
-import Panel from './CalendarPanel';
 import React, { Component } from 'react';
-import RouteConstants from '../../constants/RouteConstants';
 import {
   ScrollView,
   StyleSheet,
@@ -11,14 +7,17 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
+import DateTimePanel from './DateTimePanel';
+import NavigationActions from '../../actions/NavigationActions';
+import Panel from './CalendarPanel';
+import RouteConstants from '../../constants/RouteConstants';
 
-class CreateMatch extends Component {
+export default class CreateMatch extends Component {
   constructor(props) {
     super(props);
 
     this._onFieldSearchPress = this._onFieldSearchPress.bind(this);
   }
-
 
   render() {
     return (
@@ -129,5 +128,3 @@ const styles = StyleSheet.create({
   searchStadium: {
   }
 });
-
-module.exports = CreateMatch;

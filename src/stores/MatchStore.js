@@ -1,36 +1,40 @@
 import { EventEmitter } from 'events';
-import assign from 'object-assign';
 import AppConstants from '../constants/AppConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import MatchConstants from '../constants/MatchConstants';
 
-var CHANGE_EVENT = 'change';
-var _loadingMatchDetail = false;
-var _match = null;
-var _error = null;
+const CHANGE_EVENT = 'change';
+let _loadingMatchDetail = false;
+let _match = null;
+let _error = null;
 
-var MatchStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class MatchStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  loadingMatchDetail() {
+  }
+
+  static loadingMatchDetail() {
     return _loadingMatchDetail;
-  },
-  getMatch() {
+  }
+
+  static getMatch() {
     return _match;
-  },
-  getError() {
+  }
+
+  static getError() {
     return _error;
   }
-});
+}
 
-MatchStore.dispatchToken = AppDispatcher.register(function (action) {
+MatchStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
     case MatchConstants.GET_MATCH_DETAIL:
       _loadingMatchDetail = true;
@@ -51,5 +55,3 @@ MatchStore.dispatchToken = AppDispatcher.register(function (action) {
       break;
   }
 });
-
-module.exports = MatchStore;

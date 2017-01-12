@@ -1,4 +1,4 @@
-class LocalService {
+export default class LocalService {
   static _token;
   static _userid;
   static _player;
@@ -6,9 +6,11 @@ class LocalService {
   static saveToken(token) {
     _token = token;
   }
+
   static saveUserId(userid) {
     _userid = userid;
   }
+
   static savePlayer(player) {
     _player = player;
   }
@@ -16,12 +18,12 @@ class LocalService {
   static getToken() {
     return _token;
   }
+
   static getUserId() {
     return _userid;
   }
+
   static getPlayer() {
     return _player;
   }
-};
-
-module.exports = LocalService;
+}

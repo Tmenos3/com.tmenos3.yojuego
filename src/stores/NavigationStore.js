@@ -1,30 +1,34 @@
-var assign = require('object-assign');
-var EventEmitter = require('events').EventEmitter;
-var AppDispatcher = require('../dispatcher/Dispatcher');
-var NavigationConstants = require('../constants/NavigationConstants');
-var _currentRoute = { id: null, data: null };
-var _currentAction;
-var CHANGE_EVENT = 'change';
+import { EventEmitter } from 'events';
+import AppDispatcher from '../dispatcher/Dispatcher';
+import NavigationConstants from '../constants/NavigationConstants';
 
-var NavigationStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+const CHANGE_EVENT = 'change';
+let _currentRoute = { id: null, data: null };
+let _currentAction;
+
+export default class NavigationStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  getCurrentRoute: function () {
+  }
+
+  static getCurrentRoute() {
     return _currentRoute;
-  },
-  getCurrentAction: function () {
+  }
+
+  static getCurrentAction() {
     return _currentAction;
   }
-});
+}
 
-NavigationStore.dispatchToken = AppDispatcher.register(function (action) {
+NavigationStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
 
     case NavigationConstants.ADD_ROUTE:
@@ -47,5 +51,3 @@ NavigationStore.dispatchToken = AppDispatcher.register(function (action) {
       break;
   }
 });
-
-module.exports = NavigationStore;

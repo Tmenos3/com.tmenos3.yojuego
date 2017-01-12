@@ -1,9 +1,9 @@
-var AppConstants = require('../constants/AppConstants');
-var Dispatcher = require('../dispatcher/Dispatcher');
+import AppConstants from '../constants/AppConstants';
+import Dispatcher from '../dispatcher/Dispatcher';
 // var LogHelper = require('../utilities/LogHelper');
 
-var AppActions = {
-  initializeApp: function () {
+export default class AppActions {
+  static initializeApp() {
     Dispatcher.handleViewAction({
       actionType: AppConstants.INIT_APP
     });
@@ -15,5 +15,3 @@ var AppActions = {
     }, 3000);
   }
 }
-
-module.exports = AppActions;
