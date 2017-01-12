@@ -1,5 +1,3 @@
-var keyMirror = require('keymirror');
-
-module.exports = keyMirror({
-  LOGIN_RESOLVED: null
-});
+export default class FacebookConstants {
+  static get LOGIN_RESOLVED() { return 'LOGIN_RESOLVED'; }
+};

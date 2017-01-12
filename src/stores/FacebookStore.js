@@ -3,27 +3,31 @@ import assign from 'object-assign';
 import FacebookConstants from '../constants/FacebookConstants';
 import AppDispatcher from '../dispatcher/Dispatcher';
 
-let CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 let _isAuthCompleted = false;
 let _isFirstLogin = false;
 
-let FacebookStore = assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+export default class FacebookStore extends EventEmitter {
+  static emitChange() {
     this.emit(CHANGE_EVENT);
-  },
-  addChangeListener: function (callback) {
+  }
+
+  static addChangeListener(callback) {
     return this.on(CHANGE_EVENT, callback);
-  },
-  removeChangeListener: function (callback) {
+  }
+
+  static removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
-  },
-  isAuthCompleted: () => {
+  }
+
+  static isAuthCompleted() {
     return _isAuthCompleted;
-  },
-  isFirstLogin: () => {
+  }
+
+  static isFirstLogin() {
     return _isFirstLogin;
   }
-});
+}
 
 FacebookStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
@@ -35,5 +39,3 @@ FacebookStore.dispatchToken = AppDispatcher.register((action) => {
       break;
   }
 });
-
-module.exports = FacebookStore;

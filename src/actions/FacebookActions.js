@@ -1,11 +1,10 @@
-var FacebookConstants = require('../constants/FacebookConstants');
-var AppConstants = require('../constants/AppConstants');
-var Dispatcher = require('../dispatcher/Dispatcher');
-var ApiService = require('../services/ApiService');
-var LocalService = require('../services/LocalService');
+import ApiService from '../services/ApiService';
+import AppConstants from '../constants/AppConstants';
+import Dispatcher from '../dispatcher/Dispatcher';
+import FacebookConstants from '../constants/FacebookConstants';
+import LocalService from '../services/LocalService';
 
-
-class FacebookActions {
+export default class FacebookActions {
   static auth(token) {
     let isFirstLogin = !LocalService.hasToken();
     FacebookActions.setToken(token);
@@ -20,5 +19,3 @@ class FacebookActions {
     LocalService.saveToken(token);
   }
 }
-
-module.exports = FacebookActions;
