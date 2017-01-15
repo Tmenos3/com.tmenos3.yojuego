@@ -1,6 +1,5 @@
 import AppConstants from '../constants/AppConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
-// var LogHelper = require('../utilities/LogHelper');
 
 export default class AppActions {
   static initializeApp() {

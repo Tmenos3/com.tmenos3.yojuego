@@ -9,8 +9,8 @@ import RouteConstants from '../../constants/RouteConstants';
 import FacebookActions from '../../actions/FacebookActions';
 import FacebookStore from '../../stores/FacebookStore';
 
-const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081/auth/facebook';
-//const BASEURL = 'http://192.168.0.11:8080';
+//const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
+const BASEURL = 'http://192.168.0.14:8080';
 
 export default class FacebookLogIn extends Component {
   constructor(props) {
@@ -41,7 +41,6 @@ export default class FacebookLogIn extends Component {
     if (state.url.indexOf(BASEURL + '/auth/success') != -1) {
       let token = state.url.split("token=")[1];
       token = token.substring(0, token.length - 4);
-      // NavigationActions.back();
       FacebookActions.auth(token);
     }
   }

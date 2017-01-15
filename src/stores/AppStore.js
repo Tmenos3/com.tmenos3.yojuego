@@ -18,7 +18,6 @@ let AppStore = assign({}, EventEmitter.prototype, {
   removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   },
-
   ready() {
     return _ready;
   }

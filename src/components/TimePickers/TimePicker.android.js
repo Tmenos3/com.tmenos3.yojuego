@@ -10,6 +10,8 @@ import {
 
 export default class TimePicker extends Component {
   constructor(props) {
+    super(props);
+    
     this.state = {
       presetHour: 4,
       presetMinute: 4,

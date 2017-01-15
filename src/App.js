@@ -15,31 +15,38 @@ import RouteConstants from './constants/RouteConstants';
 export default class App extends Component {
   constructor(props) {
     super(props);
+
+    this._onStoreChange = this._onStoreChange.bind(this);
+    this.state = {
+      appReady: false
+    }
   }
 
   componentDidMount() {
-    AppStore.addChangeListener(this._onAppSessionChange);
-    
+    AppStore.addChangeListener(this._onStoreChange);
+
     InteractionManager.runAfterInteractions(() => {
       AppActions.initializeApp();
     });
   }
 
   componentWillUnmount() {
-    AppStore.removeChangeListener(this._onAppSessionChange)
+    AppStore.removeChangeListener(this._onStoreChange)
   }
 
-  _onAppSessionChange() {
-    if (AppStore.ready()) {
-      NavigationActions.replaceRoute({
-        id: RouteConstants.ROUTE_LOGIN
-      });
-    }
+  _onStoreChange() {
+    this.setState({ appReady: AppStore.ready() }, () => {
+      if (this.state.appReady) {
+        NavigationActions.replaceRoute({
+          id: RouteConstants.ROUTE_LOGIN
+        });
+      }
+    });
   }
 
   render() {
     return (
-      <AppNavigator initialRoute={{ id: RouteConstants.ROUTE_SPLASH }}/>
+      <AppNavigator initialRoute={{ id: RouteConstants.ROUTE_SPLASH }} />
     );
   }
 }

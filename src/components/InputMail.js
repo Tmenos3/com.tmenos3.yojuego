@@ -12,8 +12,8 @@ import dismissKeyboard from 'dismissKeyboard';
 import NavigationActions from '../actions/NavigationActions';
 import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
-import SessionActions from '../actions/SessionActions';
-import SessionStore from '../stores/SessionStore';
+// import SessionActions from '../actions/SessionActions';
+// import SessionStore from '../stores/SessionStore';
 
 export default class LogIn extends Component {
   constructor(props) {
@@ -30,27 +30,27 @@ export default class LogIn extends Component {
   }
 
   componentDidMount() {
-    SessionStore.addChangeListener(this._onMailSent);
+    // SessionStore.addChangeListener(this._onMailSent);
 
-    if (Platform.OS === 'android') {
-      var BackAndroid = require('react-native').BackAndroid;
-      BackAndroid.addEventListener('hardwareBackPress', () => {
-        this._backPressed();
-        return true;
-      });
-    }
+    // if (Platform.OS === 'android') {
+    //   var BackAndroid = require('react-native').BackAndroid;
+    //   BackAndroid.addEventListener('hardwareBackPress', () => {
+    //     this._backPressed();
+    //     return true;
+    //   });
+    // }
   }
 
   componentWillUnmount() {
-    SessionStore.removeChangeListener(this._onMailSent);
+    // SessionStore.removeChangeListener(this._onMailSent);
 
-    if (Platform.OS === 'android') {
-      var BackAndroid = require('react-native').BackAndroid;
-      BackAndroid.removeEventListener('hardwareBackPress', () => {
-        this._backPressed();
-        return true;
-      });
-    }
+    // if (Platform.OS === 'android') {
+    //   var BackAndroid = require('react-native').BackAndroid;
+    //   BackAndroid.removeEventListener('hardwareBackPress', () => {
+    //     this._backPressed();
+    //     return true;
+    //   });
+    // }
   }
 
   render() {
@@ -91,7 +91,7 @@ export default class LogIn extends Component {
   }
 
   _send() {
-    SessionActions.sendMailRestorePassword(this.state.mail);
+    //SessionActions.sendMailRestorePassword(this.state.mail);
   }
 
   _backPressed() {
@@ -109,21 +109,21 @@ export default class LogIn extends Component {
   }
 
   _onMailSent() {
-    if (SessionStore.mailSent()) {
-      dismissKeyboard();
-      this.setState({ mailSentMessage: ['El mail para recuperación', 'de contraseña ha sido enviado.', 'Por favor verifique su casilla'] });
+    // if (SessionStore.mailSent()) {
+    //   dismissKeyboard();
+    //   this.setState({ mailSentMessage: ['El mail para recuperación', 'de contraseña ha sido enviado.', 'Por favor verifique su casilla'] });
 
-      // setTimeout(() => {
-      //     NavigationActions.replaceRoute({
-      //         id: RouteConstants.ROUTE_LOGIN
-      //     });
-      // }, 3000);
-    } else {
-      let error = SessionStore.errorSendingMail();
-      if (error) {
-        this.setState({ mailSentMessage: ['El mail no pudo ser enviado', error] });
-      }
-    }
+    //   // setTimeout(() => {
+    //   //     NavigationActions.replaceRoute({
+    //   //         id: RouteConstants.ROUTE_LOGIN
+    //   //     });
+    //   // }, 3000);
+    // } else {
+    //   let error = SessionStore.errorSendingMail();
+    //   if (error) {
+    //     this.setState({ mailSentMessage: ['El mail no pudo ser enviado', error] });
+    //   }
+    // }
   }
 }
 

@@ -1,6 +1,6 @@
 import ApiService from '../services/ApiService';
 import MatchConstants from '../constants/MatchConstants';
-import SessionStore from '../stores/SessionStore';
+// import SessionStore from '../stores/SessionStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 
 export default class MatchActions {
@@ -12,7 +12,7 @@ export default class MatchActions {
       }
     });
 
-    ApiService.getMatchInfo(idMatch, SessionStore.getToken())
+    ApiService.getMatchInfo(idMatch, null/*SessionStore.getToken()*/)
       .then((match) => {
         Dispatcher.handleServerAction({
           actionType: MatchConstants.MATCH_DETAIL_GOT,

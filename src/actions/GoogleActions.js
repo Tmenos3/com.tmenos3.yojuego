@@ -1,15 +1,15 @@
 import ApiService from '../services/ApiService';
 import Dispatcher from '../dispatcher/Dispatcher';
-import FacebookConstants from '../constants/FacebookConstants';
+import GoogleConstants from '../constants/GoogleConstants';
 import LocalService from '../services/LocalService';
 
-export default class FacebookActions {
+export default class GoogleActions {
   static auth(token) {
     let isFirstLogin = !LocalService.hasToken();
-    FacebookActions.setToken(token);
+    GoogleActions.setToken(token);
 
     Dispatcher.handleViewAction({
-      actionType: FacebookConstants.LOGIN_RESOLVED,
+      actionType: GoogleConstants.LOGIN_RESOLVED,
       payload: { isFirstLogin: isFirstLogin }
     });
   }
