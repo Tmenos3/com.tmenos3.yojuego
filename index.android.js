@@ -12,4 +12,4 @@ class YoJuego extends Component {
   }
 }
 
-AppRegistry.registerComponent('YoJuego', () => YoJuego);
+AppRegistry.registerComponent('yojuego', () => YoJuego);
