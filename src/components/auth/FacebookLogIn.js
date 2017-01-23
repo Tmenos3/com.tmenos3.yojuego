@@ -9,8 +9,8 @@ import RouteConstants from '../../constants/RouteConstants';
 import FacebookActions from '../../actions/FacebookActions';
 import FacebookStore from '../../stores/FacebookStore';
 
-//const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
-const BASEURL = 'http://192.168.0.14:8080';
+const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
+//const BASEURL = 'http://192.168.0.14:8080';
 
 export default class FacebookLogIn extends Component {
   constructor(props) {

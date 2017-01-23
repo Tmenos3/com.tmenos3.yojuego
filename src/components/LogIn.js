@@ -78,6 +78,7 @@ export default class LogIn extends Component {
             style={styles.input}
             onChangeText={this._onEmailTextChanged}
             text={this.state.email}
+            underlineColorAndroid={'transparent'}            
             />
         </View>
         <View style={[styles.inputContainer, {
@@ -89,6 +90,7 @@ export default class LogIn extends Component {
             style={styles.input}
             onChangeText={this._onPasswordTextChanged}
             text={this.state.password}
+            underlineColorAndroid={'transparent'}
             />
         </View>
         <View style={styles.loginContainer}>
@@ -206,17 +208,18 @@ const styles = StyleSheet.create({
   line: {
     width: Dimensions.get('window').width * 0.94,
     height: Dimensions.get('window').height * 0.03,
-    borderBottomWidth: 0.7,
+    borderBottomWidth: 1,
     borderColor: 'gray',
     marginBottom: Dimensions.get('window').width * 0.06
   },
   inputContainer: {
-    borderWidth: 0.7,
-    borderColor: 'gray'
+    borderWidth: 1,
+    borderColor: 'gray',
+    height: 40
   },
   input: {
     width: Dimensions.get('window').width * 0.94,
-    height: 30
+    flex: 1,
   },
   loginContainer: {
     width: Dimensions.get('window').width * 0.94,

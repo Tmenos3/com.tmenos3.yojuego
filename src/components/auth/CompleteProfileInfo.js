@@ -177,14 +177,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#33adff'
   },
   inputContainer: {
-    borderWidth: 0.7,
+    borderWidth: 1,
     borderColor: 'grey',
-    borderTopWidth: 0
-  },
-  inputDateContainer: {
-    borderWidth: 0.7,
-    borderColor: 'grey',
-    borderTopWidth: 0
+    borderTopWidth: 0,
+    height: 40
   },
   buttonContainer: {
     width: Dimensions.get('window').width * 0.94,
@@ -193,14 +189,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Dimensions.get('window').width * 0.1
   },
-  dateContainer: {
-    width: Dimensions.get('window').width * 0.94,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
   input: {
-    width: Dimensions.get('window').width * 0.94
+    width: Dimensions.get('window').width * 0.94,
+    flex: 1
   },
   buttonText: {
     color: 'white',
