@@ -7,6 +7,7 @@ const CHANGE_EVENT = 'change';
 let _isWorking = false;
 let _isLoginCompleted = false;
 let _loginErrorReturn = null;
+let _isFirstLogin = false;
 
 let LoginStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -31,6 +32,10 @@ let LoginStore = assign({}, EventEmitter.prototype, {
 
   loginErrorReturn() {
     return _loginErrorReturn;
+  },
+
+  isFirstLogin() {
+    return _isFirstLogin;
   }
 });
 
@@ -47,6 +52,7 @@ LoginStore.dispatchToken = AppDispatcher.register((action) => {
       _isWorking = false;
       _isLoginCompleted = true;
       _loginErrorReturn = null;
+      _isFirstLogin = action.payload.isFirstLogin;
       LoginStore.emitChange();
       break;
 
