@@ -13,7 +13,6 @@ import {
 import LoginActions from '../actions/LoginActions';
 import LoginStore from '../stores/LoginStore';
 import NavigationActions from '../actions/NavigationActions';
-import NavigationConstants from '../constants/NavigationConstants';
 import RouteConstants from '../constants/RouteConstants';
 
 export default class LogIn extends Component {
@@ -25,7 +24,8 @@ export default class LogIn extends Component {
       password: '',
       loading: false,
       loginCompleted: false,
-      loginErrorReturn: null
+      loginErrorReturn: null,
+      firstLogin: false
     }
 
     this._onLoginStoreChange = this._onLoginStoreChange.bind(this);
@@ -49,12 +49,19 @@ export default class LogIn extends Component {
     this.setState({
       loading: LoginStore.isWorking(),
       loginCompleted: LoginStore.isLoginCompleted(),
-      loginErrorReturn: LoginStore.loginErrorReturn()
+      loginErrorReturn: LoginStore.loginErrorReturn(),
+      firstLogin: LoginStore.isFirstLogin()
     }, () => {
       if (this.state.loginCompleted && !this.state.loginErrorReturn) {
-        NavigationActions.replaceRoute({
-          id: RouteConstants.ROUTE_HOME
-        });
+        if (this.state.firstLogin) {
+          NavigationActions.replaceRoute({
+            id: RouteConstants.ROUTE_CREATE_PROFILE
+          });
+        } else {
+          NavigationActions.replaceRoute({
+            id: RouteConstants.ROUTE_HOME
+          });
+        }
       }
     });
   }

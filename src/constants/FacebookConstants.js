@@ -1,3 +1,3 @@
 export default class FacebookConstants {
-  static get LOGIN_RESOLVED() { return 'LOGIN_RESOLVED'; }
+  static get LOGIN_RESOLVED() { return 'FACEBOOK_LOGIN_RESOLVED'; }
 };
