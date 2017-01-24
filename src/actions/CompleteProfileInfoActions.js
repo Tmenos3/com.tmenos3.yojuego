@@ -12,6 +12,7 @@ export default class CompleteProfileInfoActions {
     ApiService.completeProfileInfo(firstName, lastName, nickName, LocalService.getToken())
       .then((resp) => {
         LocalService.savePlayer(resp.resp);
+        LocalService.firstLoginDone();
 
         Dispatcher.handleViewAction({
           actionType: CompleteProfileInfoConstants.COMPLETE_PROFILE_INFO_RESOLVED

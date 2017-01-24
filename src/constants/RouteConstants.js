@@ -12,4 +12,6 @@ export default class RouteConstants {
   static get ROUTE_LOGIN() { return 'ROUTE_LOGIN'; }
   static get ROUTE_PLAYER_TOUR() { return 'ROUTE_PLAYER_TOUR'; }
   static get ROUTE_SPLASH() { return 'ROUTE_SPLASH'; }
+  static get ROUTE_HOME_MENU() { return 'ROUTE_HOME_MENU'; }
+  static get ROUTE_MATCH_DETAIL() { return 'ROUTE_MATCH_DETAIL'; }
 }

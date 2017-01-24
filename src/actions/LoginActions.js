@@ -15,7 +15,7 @@ export default class LoginActions {
       .then((resp) => {
         LoginActions.setToken(resp.token);
         LocalService.saveUserId(resp.userid);
-        let isFirstLogin = !LocalService.hasToken();
+        let isFirstLogin = LocalService.isFirstLogin();
 
         Dispatcher.handleViewAction({
           actionType: LoginConstants.LOGIN_RESOLVED,

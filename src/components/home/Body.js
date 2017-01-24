@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import MatchActions from '../../actions/MatchActions';
-import MatchStore from '../../stores/MatchStore';
+import HomeActions from '../../actions/HomeActions';
+import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
 
 export default class Body extends Component {
@@ -25,22 +25,27 @@ export default class Body extends Component {
         { id: 6, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
         { id: 7, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
         { id: 8, date: { day: '21', month: 'OCT' }, desc: 'One match.' }]),
-      loadingMatch: false
+      loadingMatches: false,
+      showCreateMatch: false,
+      showMatchDetail: false,
+      idMatch: null
     };
 
     this._renderRow = this._renderRow.bind(this);
     this._rowPreseed = this._rowPreseed.bind(this);
-    this._onMatchChange = this._onMatchChange.bind(this);
-    this._showMatchDetail = this._showMatchDetail.bind(this);
+    this._onStoreChange = this._onStoreChange.bind(this);
+    // this._showMatchDetail = this._showMatchDetail.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
+    this._newMatch = this._newMatch.bind(this);
   }
 
   componentDidMount() {
-    MatchStore.addChangeListener(this._onMatchChange);
+    HomeStore.addChangeListener(this._onStoreChange);
+    HomeActions.loadPlayerMatches();
   }
 
   componentWillUnmount() {
-    MatchStore.removeChangeListener(this._onMatchChange);
+    HomeStore.removeChangeListener(this._onStoreChange);
   }
 
   render() {
@@ -51,12 +56,16 @@ export default class Body extends Component {
           renderRow={this._renderRow}
           style={styles.listView}
           />
-        <TouchableOpacity style={styles.button} onPress={this._showSignUp}>
+        <TouchableOpacity style={styles.button} onPress={this._newMatch}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
         {this._renderLoading()}
       </View>
     );
+  }
+
+  _newMatch() {
+    HomeActions.createMatch();
   }
 
   _renderRow(rowData) {
@@ -76,31 +85,38 @@ export default class Body extends Component {
   }
 
   _rowPreseed(idMatch) {
-    MatchActions.getMatchDetail(idMatch);
+    HomeActions.showMatchDetail(idMatch);
   }
 
-  _onMatchChange() {
-    if (MatchStore.loadingMatchDetail()) {
-      this.setState({ loadingMatch: true });
-    } else {
-      let match = MatchStore.getMatch();
-      if (match != null) {
-        this._showMatchDetail(match);
-      } else {
-        this.setState({ error: MatchStore.getError() });
+  _onStoreChange() {
+    this.setState({
+      showCreateMatch: HomeStore.mustShowCreateMatch(),
+      showMatchDetail: HomeStore.mustShowMatchDetail(),
+      idMatch: HomeStore.getIdMatch(),
+      loadingMatches: HomeStore.isLoadingMatches()
+    }, () => {
+      if (this.state.showCreateMatch) {
+        NavigationActions.replaceRoute({
+          id: RouteConstants.ROUTE_CREATE_MATCH,
+        });
+      } else if (this.state.showMatchDetail) {
+        NavigationActions.replaceRoute({
+          id: RouteConstants.ROUTE_MATCH_DETAIL,
+          payload: this.state.idMatch
+        });
       }
-    }
-  }
-
-  _showMatchDetail(match) {
-    NavigationActions.replaceRoute({
-      id: RouteConstants.MATCH_DETAIL,
-      payload: match
     });
   }
 
+  // _showMatchDetail(match) {
+  //   NavigationActions.replaceRoute({
+  //     id: RouteConstants.CREATE_NEW_MATCH,
+  //     payload: match
+  //   });
+  // }
+
   _renderLoading() {
-    if (this.state.loadingMatch) {
+    if (this.state.loadingMatches) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />

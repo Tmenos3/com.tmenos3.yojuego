@@ -3,6 +3,7 @@ export default class LocalService {
   static _userid;
   static _player;
   static _tourCompleted;
+  static _isFirstLogin;
 
   static saveToken(token) {
     return new Promise((resolve, reject) => {
@@ -35,7 +36,12 @@ export default class LocalService {
     return _player;
   }
 
-  static hasToken() {
-    return LocalService._token != null && LocalService._token != undefined;
+  static isFirstLogin() {
+    //return _isFirstLogin == true;
+    return false;
+  }
+
+  static firstLoginDone(){
+    _isFirstLogin = true;
   }
 };
