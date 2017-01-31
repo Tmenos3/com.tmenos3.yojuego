@@ -10,7 +10,6 @@ import InputMail from './InputMail';
 import InvitePlayers from './invitePlayers/InvitePlayers';
 import LogIn from './LogIn';
 import MatchDetail from './match/MatchDetail';
-import MatchStore from '../stores/MatchStore';
 import NavigationConstants from '../constants/NavigationConstants';
 import NavigationStore from '../stores/NavigationStore';
 import PlayerTour from './playerTour/PlayerTour';
@@ -100,9 +99,9 @@ export default class AppNavigator extends Component {
         return (
           <Home />
         );
-      case RouteConstants.MATCH_DETAIL:
+      case RouteConstants.ROUTE_MATCH_DETAIL:
         return (
-          <MatchDetail match={MatchStore.getMatch()} />
+          <MatchDetail />
         );
       case RouteConstants.ROUTE_CREATE_MATCH:
         return (

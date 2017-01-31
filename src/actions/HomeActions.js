@@ -1,5 +1,8 @@
 import HomeConstants from '../constants/HomeConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
+import ApiService from '../services/ApiService';
+import LocalService from '../services/LocalService';
+import LoginConstants from '../constants/LoginConstants';
 
 export default class HomeActions {
   static showMenu() {
@@ -20,10 +23,10 @@ export default class HomeActions {
     });
   }
 
-  static showMatchDetail(idMatch) {
+  static showMatchDetail(match) {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_MATCH_DETAIL,
-      payload: idMatch
+      payload: match
     });
   }
 
@@ -32,6 +35,23 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_MATCHES
     });
 
-    ApiService.getPlayerMatches();
+    ApiService.getUpcomingPlayerMatches(LocalService.getToken())
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.MATCHES_LOADED,
+          payload: resp.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_MATCHES,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_MATCHES,
+          payload: error.message
+        });
+      });
   }
 };

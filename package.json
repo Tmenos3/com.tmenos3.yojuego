@@ -21,6 +21,7 @@
     "events": "^1.1.1",
     "flux": "^3.1.2",
     "keymirror": "^0.1.1",
+    "moment": "^2.17.1",
     "object-assign": "^4.1.1",
     "react": "15.4.2",
     "react-native": "0.40.0",

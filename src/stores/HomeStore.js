@@ -7,8 +7,10 @@ const CHANGE_EVENT = 'change';
 let _showMenu = false;
 let _showCreateMatch = false;
 let _showMatchDetail = false;
-let _idMatch = null;
+let _match = null;
 let _isLoadingMatches = false;
+let _matches = null;
+let _errorLoadingMatches = null;
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -35,12 +37,20 @@ let HomeStore = assign({}, EventEmitter.prototype, {
     return _showMatchDetail;
   },
 
-  getIdMatch() {
-    return _idMatch;
+  getMatch() {
+    return _match;
   },
 
-  isLoadingMatches(){
+  isLoadingMatches() {
     return _isLoadingMatches;
+  },
+
+  getMatches() {
+    return _matches;
+  },
+
+  getErrorLoadingMatches() {
+    return _errorLoadingMatches;
   }
 });
 
@@ -52,6 +62,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _showMatchDetail = false;
       _idMatch = null;
       _isLoadingMatches = false;
+      _errorLoadingMatches = null;
       HomeStore.emitChange();
       break;
 
@@ -61,6 +72,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _showMatchDetail = false;
       _idMatch = null;
       _isLoadingMatches = false;
+      _errorLoadingMatches = null;
       HomeStore.emitChange();
       break;
 
@@ -70,6 +82,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _showMatchDetail = false;
       _idMatch = null;
       _isLoadingMatches = false;
+      _errorLoadingMatches = null;
       HomeStore.emitChange();
       break;
 
@@ -77,17 +90,28 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _showMenu = false;
       _showCreateMatch = false;
       _showMatchDetail = true;
-      _idMatch = action.payload;
+      _match = action.payload;
       _isLoadingMatches = false;
+      _errorLoadingMatches = null;
       HomeStore.emitChange();
       break;
 
     case HomeConstants.LOADING_MATCHES:
-      _showMenu = false;
-      _showCreateMatch = false;
-      _showMatchDetail = false;
-      _idMatch = null;
       _isLoadingMatches = true;
+      _errorLoadingMatches = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.MATCHES_LOADED:
+      _isLoadingMatches = false;
+      _errorLoadingMatches = null;
+      _matches = action.payload;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.ERROR_LOADING_MATCHES:
+      _isLoadingMatches = false;
+      _errorLoadingMatches = action.payload;
       HomeStore.emitChange();
       break;
 

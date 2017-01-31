@@ -6,13 +6,13 @@ import {
   View,
   Dimensions
 } from 'react-native';
-import HomeActions from '../../actions/HomeActions';
-import HomeStore from '../../stores/HomeStore';
+import MatchDetailActions from '../../actions/MatchDetailActions';
+import MatchDetailStore from '../../stores/MatchDetailStore';
 
 const MENU_WIDTH_CLOSED = 0;
 const MENU_WIDTH_OPENED = Dimensions.get('window').width * 0.8;
 
-export default class Menu extends Component {
+export default class MatchDetailMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -25,11 +25,11 @@ export default class Menu extends Component {
   }
 
   componentDidMount() {
-    HomeStore.addChangeListener(this._onStoreChange);
+    MatchDetailStore.addChangeListener(this._onStoreChange);
   }
 
   componentWillUnmount() {
-    HomeStore.removeChangeListener(this._onStoreChange);
+    MatchDetailStore.removeChangeListener(this._onStoreChange);
   }
 
   render() {
@@ -43,11 +43,11 @@ export default class Menu extends Component {
   }
 
   _back() {
-    HomeActions.hideMenu();
+    MatchDetailActions.hideMenu();
   }
 
   _onStoreChange() {
-    this.setState({ menuWidth: HomeStore.mustShowMenu() ? MENU_WIDTH_OPENED : MENU_WIDTH_CLOSED });
+    this.setState({ menuWidth: MatchDetailStore.mustShowMenu() ? MENU_WIDTH_OPENED : MENU_WIDTH_CLOSED });
   }
 }
 

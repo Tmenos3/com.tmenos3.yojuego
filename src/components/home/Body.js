@@ -4,11 +4,15 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 import HomeActions from '../../actions/HomeActions';
+import NavigationActions from '../../actions/NavigationActions';
 import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
+import moment from 'moment';
+import Swiper from 'react-native-swiper';
 
 export default class Body extends Component {
   constructor(props) {
@@ -16,24 +20,18 @@ export default class Body extends Component {
 
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      dataSource: ds.cloneWithRows([
-        { id: 1, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 2, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 3, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 4, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 5, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 6, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 7, date: { day: '21', month: 'OCT' }, desc: 'One match.' },
-        { id: 8, date: { day: '21', month: 'OCT' }, desc: 'One match.' }]),
+      matches: ds.cloneWithRows([]),
       loadingMatches: false,
+      errorLoadingMatches: null,
       showCreateMatch: false,
       showMatchDetail: false,
-      idMatch: null
+      match: null
     };
 
     this._renderRow = this._renderRow.bind(this);
     this._rowPreseed = this._rowPreseed.bind(this);
     this._onStoreChange = this._onStoreChange.bind(this);
+    this._renderDot = this._renderDot.bind(this);
     // this._showMatchDetail = this._showMatchDetail.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
     this._newMatch = this._newMatch.bind(this);
@@ -50,17 +48,26 @@ export default class Body extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          style={styles.listView}
-          />
-        <TouchableOpacity style={styles.button} onPress={this._newMatch}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableOpacity>
-        {this._renderLoading()}
-      </View>
+      <Swiper style={styles.container} showsButtons={false} showsPagination={true} dot={this._renderDot()}>
+        <View style={styles.container}>
+          {this._renderLoading()}
+          <ListView
+            dataSource={this.state.matches}
+            renderRow={this._renderRow}
+            style={styles.listView}
+            enableEmptySections={true}
+            />
+          <TouchableOpacity style={styles.button} onPress={this._newMatch}>
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.slide}>
+          <Text style={styles.text}>Amigos y grupos</Text>
+        </View>
+        <View style={styles.slide}>
+          <Text style={styles.text}>Notificaciones</Text>
+        </View>
+      </Swiper>
     );
   }
 
@@ -71,29 +78,30 @@ export default class Body extends Component {
   _renderRow(rowData) {
     return (
       <View style={{ borderRadius: 10 }}>
-        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowPreseed(rowData.id)}>
+        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowPreseed(rowData)}>
           <View style={styles.dataRowLeft}>
-            <Text style={{ fontSize: 26 }}>{rowData.date.day}</Text>
-            <Text style={{ fontSize: 13 }}>{rowData.date.month}</Text>
+            <Text style={{ fontSize: 26 }}>{moment(rowData.date).format("DD")}</Text>
+            <Text style={{ fontSize: 13 }}>{moment(rowData.date).format("MM")}</Text>
           </View>
           <View style={styles.dataRowRight}>
-            <Text style={{ fontSize: 20 }}>{rowData.desc}</Text>
+            <Text style={{ fontSize: 20 }}>{rowData.title}</Text>
           </View>
         </TouchableOpacity>
       </View>
     );
   }
 
-  _rowPreseed(idMatch) {
-    HomeActions.showMatchDetail(idMatch);
+  _rowPreseed(match) {
+    HomeActions.showMatchDetail(match);
   }
 
   _onStoreChange() {
     this.setState({
       showCreateMatch: HomeStore.mustShowCreateMatch(),
       showMatchDetail: HomeStore.mustShowMatchDetail(),
-      idMatch: HomeStore.getIdMatch(),
-      loadingMatches: HomeStore.isLoadingMatches()
+      match: HomeStore.getMatch(),
+      loadingMatches: HomeStore.isLoadingMatches(),
+      errorLoadingMatches: HomeStore.getErrorLoadingMatches(),
     }, () => {
       if (this.state.showCreateMatch) {
         NavigationActions.replaceRoute({
@@ -102,8 +110,10 @@ export default class Body extends Component {
       } else if (this.state.showMatchDetail) {
         NavigationActions.replaceRoute({
           id: RouteConstants.ROUTE_MATCH_DETAIL,
-          payload: this.state.idMatch
+          payload: this.state.match
         });
+      } else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
+        this.setState({ matches: this.state.matches.cloneWithRows(HomeStore.getMatches()) });
       }
     });
   }
@@ -123,6 +133,24 @@ export default class Body extends Component {
         </View>
       )
     }
+
+    return null;
+  }
+
+  _renderDot() {
+    return (
+      <View style={{
+        backgroundColor: 'rgba(0,0,0,.2)',
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 3,
+        marginBottom: 3,
+      }}
+        />
+    );
   }
 }
 
@@ -175,13 +203,19 @@ const styles = StyleSheet.create({
     borderColor: 'grey'
   },
   loading: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.25)'
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text: {
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center'
   }
 });

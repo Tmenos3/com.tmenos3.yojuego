@@ -16,7 +16,7 @@ export default class NavigationActions {
     });
   }
 
-  static back(route) {
+  static back() {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.BACK
     });
