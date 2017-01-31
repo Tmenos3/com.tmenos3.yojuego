@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  View
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Text
 } from 'react-native';
 import Body from './Body';
 import Header from './Header';
+import Menu from './Menu';
 
 export default class Home extends Component {
   constructor(props) {
@@ -16,6 +20,7 @@ export default class Home extends Component {
       <View style={styles.container}>
         <Header />
         <Body />
+        <Menu />
       </View>
     );
   }

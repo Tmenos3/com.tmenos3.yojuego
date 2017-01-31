@@ -7,19 +7,11 @@ import MatchDetailBody from './MatchDetailBody';
 import MatchDetailHeader from './MatchDetailHeader';
 
 export default class MatchDetail extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      match: props.match
-    }
-  }
-
   render() {
     return (
       <View style={styles.container}>
-        <MatchDetailHeader match={this.state.match} />
-        <MatchDetailBody match={this.state.match} />
+        <MatchDetailHeader />
+        <MatchDetailBody />
       </View>
     );
   }
