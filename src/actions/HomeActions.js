@@ -54,4 +54,68 @@ export default class HomeActions {
         });
       });
   }
+
+  static loadPlayerFriends() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_PLAYER_FRIENDS
+    });
+
+    LocalService.getPlayerFriends()
+      .then((response) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.PLAYER_FRIENDS_LOADED,
+          payload: response.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_PLAYER_FRIENDS,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_PLAYER_FRIENDS,
+          payload: error.message
+        });
+      });
+  }
+
+  static loadPlayerGroups() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_PLAYER_GROUPS
+    });
+
+    LocalService.getPlayerGroups()
+      .then((response) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.PLAYER_GROUPS_LOADED,
+          payload: response.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_PLAYER_GROUPS,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_PLAYER_GROUPS,
+          payload: error.message
+        });
+      });
+  }
+
+  static showFriend(friendId){
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.SHOW_FRIEND,
+      payload: friendId
+    });
+  }
+
+  static showGroupd(groupId){
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.SHOW_GROUP,
+      payload: groupId
+    });
+  }
 };

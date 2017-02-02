@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   ListView,
   StyleSheet,
+  Dimensions,
   Text,
   TouchableOpacity,
   View,
@@ -11,6 +12,7 @@ import HomeActions from '../../actions/HomeActions';
 import NavigationActions from '../../actions/NavigationActions';
 import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
+import FriendsAndGroups from './FriendsAndGroups';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
 
@@ -25,14 +27,12 @@ export default class Body extends Component {
       errorLoadingMatches: null,
       showCreateMatch: false,
       showMatchDetail: false,
-      match: null
     };
 
     this._renderRow = this._renderRow.bind(this);
     this._rowPreseed = this._rowPreseed.bind(this);
     this._onStoreChange = this._onStoreChange.bind(this);
     this._renderDot = this._renderDot.bind(this);
-    // this._showMatchDetail = this._showMatchDetail.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
     this._newMatch = this._newMatch.bind(this);
   }
@@ -61,9 +61,9 @@ export default class Body extends Component {
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.slide}>
-          <Text style={styles.text}>Amigos y grupos</Text>
-        </View>
+
+        <FriendsAndGroups />
+
         <View style={styles.slide}>
           <Text style={styles.text}>Notificaciones</Text>
         </View>
@@ -118,12 +118,6 @@ export default class Body extends Component {
     });
   }
 
-  // _showMatchDetail(match) {
-  //   NavigationActions.replaceRoute({
-  //     id: RouteConstants.CREATE_NEW_MATCH,
-  //     payload: match
-  //   });
-  // }
 
   _renderLoading() {
     if (this.state.loadingMatches) {
