@@ -14,7 +14,7 @@ export default class MatchDetailHeader extends Component {
   constructor(props) {
     super(props);
 
-    this._showMenu = this._showMenu.bind(this);
+    this._confirm = this._confirm.bind(this);
     this._back = this._back.bind(this);
   }
 
@@ -28,8 +28,8 @@ export default class MatchDetailHeader extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this._showMenu} style={styles.menuButton}>
-          <Text style={styles.menuText}>Menu</Text>
+        <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
+          <Text style={styles.menuText}>OK</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this._back} style={styles.menuButton}>
           <Text style={styles.menuText}>Atras</Text>
@@ -38,8 +38,8 @@ export default class MatchDetailHeader extends Component {
     );
   }
 
-  _showMenu() {
-    MatchDetailActions.showMenu();
+  _confirm() {
+    MatchDetailActions.confirm();
   }
 
   _back() {

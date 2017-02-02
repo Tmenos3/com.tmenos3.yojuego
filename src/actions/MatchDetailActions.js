@@ -3,15 +3,9 @@ import MatchDetailConstants from '../constants/MatchDetailConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 
 export default class MatchDetailActions {
-  static showMenu() {
+  static confirm() {
     Dispatcher.handleViewAction({
-      actionType: MatchDetailConstants.SHOW_MATCH_DETAIL_MENU
-    });
-  }
-
-  static hideMenu() {
-    Dispatcher.handleViewAction({
-      actionType: MatchDetailConstants.HIDE_MATCH_DETAIL_MENU
+      actionType: MatchDetailConstants.MATCH_DETAIL_CONFIRM_INTENT
     });
   }
 };

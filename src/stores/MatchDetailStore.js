@@ -5,7 +5,8 @@ import assign from 'object-assign';
 import MatchDetailConstants from '../constants/MatchDetailConstants';
 
 const CHANGE_EVENT = 'change';
-let _showMenu = false;
+let _savingMatch = false;
+let _errorSavingMatch = null;
 
 let MatchDetailStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -20,23 +21,35 @@ let MatchDetailStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  mustShowMenu() {
-    return _showMenu;
+  isSavingMatch() {
+    return _savingMatch;
+  },
+
+  getErrorSavingMatch() {
+    return _errorSavingMatch;
   }
 });
 
 MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
-    case MatchDetailConstants.SHOW_HOME_MENU:
-      _showMenu = true;
+    case MatchDetailConstants.MATCH_DETAIL_CONFIRM_INTENT:
+      _savingMatch = true;
+      _errorSavingMatch = null;
       MatchDetailStore.emitChange();
       break;
 
-    case MatchDetailConstants.HIDE_HOME_MENU:
-      _showMenu = false;
+    case MatchDetailConstants.MATCH_DETAIL_CONFIRM_RESOLVED:
+      _savingMatch = false;
+      _errorSavingMatch = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.MATCH_DETAIL_CONFIRM_REJECTED:
+      _savingMatch = false;
+      _errorSavingMatch = action.payload;
       MatchDetailStore.emitChange();
       break;
   }
 });
 
-//module.exports = MatchDetailStore;
+module.exports = MatchDetailStore;

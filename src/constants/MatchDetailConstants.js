@@ -1,4 +1,5 @@
 export default class MatchDetailConstants {
-  static get SHOW_MATCH_DETAIL_MENU() { return 'SHOW_MATCH_DETAIL_MENU'; }
-  static get HIDE_MATCH_DETAIL_MENU() { return 'HIDE_MATCH_DETAIL_MENU'; }
+  static get MATCH_DETAIL_CONFIRM_INTENT() { return 'MATCH_DETAIL_CONFIRM_INTENT'; }
+  static get MATCH_DETAIL_CONFIRM_RESOLVED() { return 'MATCH_DETAIL_CONFIRM_RESOLVED'; }
+  static get MATCH_DETAIL_CONFIRM_REJECTED() { return 'MATCH_DETAIL_CONFIRM_REJECTED'; }
 }
