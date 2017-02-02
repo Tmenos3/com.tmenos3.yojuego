@@ -3,15 +3,15 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import NewFriendBody from './NewFriendBody';
-import NewFriendHeader from './NewFriendHeader';
+import NewGroupBody from './NewGroupBody';
+import NewGroupHeader from './NewGroupHeader';
 
-export default class NewFriend extends Component {
+export default class NewGroup extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <NewFriendBody />
-        <NewFriendHeader />
+        <NewGroupBody />
+        <NewGroupHeader />
       </View>
     );
   }

@@ -143,13 +143,13 @@ export default class FriendsAndGroups extends Component {
       errorLoadingPlayerGroups: HomeStore.getErrorLoadingPlayerGroups(),
     }, () => {
       // if (this.state.showCreateMatch) {
-      //   NavigationActions.replaceRoute({
+      //   NavigationActions.addRoute({
       //     id: RouteConstants.ROUTE_CREATE_MATCH,
       //   });
       // } else if (this.state.showMatchDetail) {
-      //   NavigationActions.replaceRoute({
+      //   NavigationActions.addRoute({
       //     id: RouteConstants.ROUTE_MATCH_DETAIL,
-      //     payload: this.state.match
+      //     data: this.state.match
       //   });
       // } else {}
 

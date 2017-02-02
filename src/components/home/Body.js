@@ -104,13 +104,13 @@ export default class Body extends Component {
       errorLoadingMatches: HomeStore.getErrorLoadingMatches(),
     }, () => {
       if (this.state.showCreateMatch) {
-        NavigationActions.replaceRoute({
+        NavigationActions.addRoute({
           id: RouteConstants.ROUTE_CREATE_MATCH,
         });
       } else if (this.state.showMatchDetail) {
-        NavigationActions.replaceRoute({
+        NavigationActions.addRoute({
           id: RouteConstants.ROUTE_MATCH_DETAIL,
-          payload: this.state.match
+          data: this.state.match
         });
       } else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
         this.setState({ matches: this.state.matches.cloneWithRows(HomeStore.getMatches()) });

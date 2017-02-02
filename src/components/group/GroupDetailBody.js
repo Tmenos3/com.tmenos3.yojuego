@@ -8,18 +8,18 @@ import {
   View,
   ActivityIndicator
 } from 'react-native';
-import FriendActions from '../../actions/FriendActions';
+import GroupActions from '../../actions/GroupActions';
 import NavigationActions from '../../actions/NavigationActions';
-import FriendStore from '../../stores/FriendStore';
+import GroupStore from '../../stores/GroupStore';
 import RouteConstants from '../../constants/RouteConstants';
 
-export default class FriendDetailBody extends Component {
+export default class GroupDetailBody extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoadingFriend: false,
-      errorLoadingFriend: null,
+      isLoadingGroup: false,
+      errorLoadingGroup: null,
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -28,8 +28,8 @@ export default class FriendDetailBody extends Component {
   }
 
   componentDidMount() {
-    FriendStore.addChangeListener(this._onStoreChange);
-    FriendActions.loadFriend(this.props.friendId);
+    GroupStore.addChangeListener(this._onStoreChange);
+    GroupActions.loadGroup(this.props.groupId);
   }
 
   componentWillUnmount() {
@@ -40,9 +40,9 @@ export default class FriendDetailBody extends Component {
     return (
       <View style={styles.container}>
         {this._renderLoading()}
-        <Text style={styles.text}>Amigo</Text>
+        <Text style={styles.text}>Grupo</Text>
         <TouchableOpacity style={styles.dataRow} onPress={this._delete}>
-          <Text style={styles.text}>Eliminar Amigo</Text>
+          <Text style={styles.text}>Eliminar Grupo</Text>
         </TouchableOpacity>
       </View>
     );
@@ -50,14 +50,14 @@ export default class FriendDetailBody extends Component {
 
   _onStoreChange() {
     this.setState({
-      isLoadingFriend: FriendStore.isLoadingFriend(),
-      errorLoadingFriend: FriendStore.getErrorLoadingFriend(),
+      isLoadingGroup: GroupStore.isLoadingGroup(),
+      errorLoadingGroup: GroupStore.getErrorLoadingGroup(),
     });
   }
 
 
   _renderLoading() {
-    if (this.state.isLoadingFriend) {
+    if (this.state.isLoadingGroup) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />
@@ -81,7 +81,7 @@ export default class FriendDetailBody extends Component {
   }
 
   _delete() {
-    FriendActions.delete(this.props.friendId);
+    GroupActions.delete(this.props.groupId);
   }
 }
 
