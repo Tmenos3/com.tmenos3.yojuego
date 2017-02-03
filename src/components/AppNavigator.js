@@ -16,6 +16,7 @@ import PlayerTour from './playerTour/PlayerTour';
 import RouteConstants from '../constants/RouteConstants';
 import SignUp from './auth/SignUp';
 import Splash from './Splash';
+import NewFriend from './friend/NewFriend';
 
 let _navigator;
 
@@ -114,6 +115,10 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_FIELD_SEARCH:
         return (
           <FieldSearch title={route.data.title} date={route.data.date} />
+        );
+      case RouteConstants.ROUTE_NEW_FRIEND:
+        return (
+          <NewFriend  />
         );
     }
   }

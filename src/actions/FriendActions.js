@@ -8,4 +8,10 @@ export default class FriendActions {
       actionType: FriendConstants.LOADING_FRIEND
     });
   }
+
+  static deleteFriend(friendId) {
+    Dispatcher.handleViewAction({
+      actionType: FriendConstants.DELETING_FRIEND
+    });
+  }
 }

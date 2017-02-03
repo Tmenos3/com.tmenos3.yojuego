@@ -10,8 +10,8 @@ export default class NewFriend extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <NewFriendBody />
         <NewFriendHeader />
+        <NewFriendBody />
       </View>
     );
   }
@@ -20,7 +20,6 @@ export default class NewFriend extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     flexDirection: 'column',
   }
 });

@@ -5,6 +5,7 @@ import FriendConstants from '../constants/FriendConstants';
 
 const CHANGE_EVENT = 'change';
 let _isLoadingFriend = false;
+let _errorLoadingFriend = null;
 
 let FriendStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -21,6 +22,10 @@ let FriendStore = assign({}, EventEmitter.prototype, {
 
   isLoadingFriend() {
     return _isLoadingFriend;
+  },
+
+  getErrorLoadingFriend() {
+    return _errorLoadingFriend;
   }
 });
 
@@ -28,6 +33,7 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
     case FriendConstants.LOADING_FRIEND:
       _isLoadingFriend = true;
+      _errorLoadingFriend = null;
       FriendStore.emitChange();
       break;
 

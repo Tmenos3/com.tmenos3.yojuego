@@ -13,13 +13,12 @@ import NavigationActions from '../../actions/NavigationActions';
 import FriendStore from '../../stores/FriendStore';
 import RouteConstants from '../../constants/RouteConstants';
 
-export default class FriendDetailBody extends Component {
+export default class NewFriendBody extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoadingFriend: false,
-      errorLoadingFriend: null,
+
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -29,7 +28,6 @@ export default class FriendDetailBody extends Component {
 
   componentDidMount() {
     FriendStore.addChangeListener(this._onStoreChange);
-    FriendActions.loadFriend(this.props.friendId);
   }
 
   componentWillUnmount() {
@@ -41,18 +39,12 @@ export default class FriendDetailBody extends Component {
       <View style={styles.container}>
         {this._renderLoading()}
         <Text style={styles.text}>Amigo</Text>
-        <TouchableOpacity style={styles.deleteButton} onPress={this._delete}>
-          <Text style={styles.text}>Eliminar Amigo</Text>
-        </TouchableOpacity>
       </View>
     );
   }
 
   _onStoreChange() {
-    this.setState({
-      isLoadingFriend: FriendStore.isLoadingFriend(),
-      errorLoadingFriend: FriendStore.getErrorLoadingFriend(),
-    });
+
   }
 
 

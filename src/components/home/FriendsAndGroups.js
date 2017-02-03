@@ -42,8 +42,8 @@ export default class FriendsAndGroups extends Component {
 
   componentDidMount() {
     HomeStore.addChangeListener(this._onStoreChange);
-    HomeActions.loadPlayerFriends();
-    HomeActions.loadPlayerGroups();
+    // HomeActions.loadPlayerFriends();
+    // HomeActions.loadPlayerGroups();
   }
 
   componentWillUnmount() {
@@ -57,16 +57,16 @@ export default class FriendsAndGroups extends Component {
     return (
       <View style={styles.slide}>
         <Text style={{ fontSize: 20 }}>Amigos y grupos</Text>
-        <View style={{ flexDirection: 'row', width: Dimensions.get('window').width * 0.9, height: 50 }}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={this._showFriends}>
+        <View style={{ flexDirection: 'row', width: Dimensions.get('window').width, height: 50 }}>
+          <TouchableOpacity style={styles.button} onPress={this._showFriends}>
             <Text style={styles.buttonText}>Amigos</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1 }} onPress={this._showGroups}>
+          <TouchableOpacity style={styles.button} onPress={this._showGroups}>
             <Text style={styles.buttonText}>Grupos</Text>
           </TouchableOpacity>
         </View>
-        <View>
-          <View style={this.state.showFriendOrGroup == 'F' ? showContainer : hideContainer}>
+        <View style={{ flexDirection: 'column', width: Dimensions.get('window').width, flex: 1 }}>
+          <View style={[{ backgroundColor: 'blue', width: Dimensions.get('window').width }, this.state.showFriendOrGroup == 'F' ? showContainer : hideContainer]}>
             {this._renderLoading(this.state.isLoadingPlayerFriends)}
             {this._renderErrorMessage(this.state.errorLoadingPlayerFriends)}
             <ListView
@@ -75,11 +75,11 @@ export default class FriendsAndGroups extends Component {
               style={styles.listView}
               enableEmptySections={true}
               />
-            <TouchableOpacity style={styles.button} onPress={this._newFriend}>
+            <TouchableOpacity style={styles.buttonFloat} onPress={this._newFriend}>
               <Text style={styles.buttonText}>+F</Text>
             </TouchableOpacity>
           </View>
-          <View style={this.state.showFriendOrGroup == 'G' ? showContainer : hideContainer}>
+          <View style={[{ backgroundColor: 'red', width: Dimensions.get('window').width}, this.state.showFriendOrGroup == 'G' ? showContainer : hideContainer]}>
             {this._renderLoading(this.state.isLoadingPlayerGroups)}
             {this._renderErrorMessage(this.state.errorLoadingPlayerGroups)}
             <ListView
@@ -88,7 +88,7 @@ export default class FriendsAndGroups extends Component {
               style={styles.listView}
               enableEmptySections={true}
               />
-            <TouchableOpacity style={styles.button} onPress={this._newGroup}>
+            <TouchableOpacity style={styles.buttonFloat} onPress={this._newGroup}>
               <Text style={styles.buttonText}>+G</Text>
             </TouchableOpacity>
           </View>
@@ -172,13 +172,13 @@ export default class FriendsAndGroups extends Component {
   }
 
   _newFriend() {
-    NavigationActions.replaceRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_NEW_FRIEND,
     });
   }
 
   _newGroup() {
-    NavigationActions.replaceRoute({
+    NavigationActions.addRoute({
       id: RouteConstants.ROUTE_NEW_GROUP,
     });
   }
@@ -228,13 +228,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#d9d9d9',
   },
   button: {
-    backgroundColor: '#009900',
+    backgroundColor: 'gray',
     width: 60,
     height: 60,
-    borderRadius: 30,
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1
@@ -244,6 +241,17 @@ const styles = StyleSheet.create({
     fontSize: 45,
     backgroundColor: 'transparent',
     flex: 1
+  },
+  buttonFloat: {
+    backgroundColor: 'gray',
+    width: 60,
+    height: 60,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 30,
+    bottom: 100
   },
   dataRow: {
     marginTop: 6,
