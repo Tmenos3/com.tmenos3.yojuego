@@ -37,7 +37,7 @@ export default class NewFriendHeader extends Component {
   }
 
   _confirm() {
-    FriendActions.confirm();
+    FriendActions.newFriendConfirmed();
   }
 
   _back() {

@@ -118,4 +118,70 @@ export default class HomeActions {
       payload: groupId
     });
   }
+
+  static updateFriends() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_FRIENDS
+    });
+
+    ApiService.getMyFriends(LocalService.getToken())
+      .then((resp) => {
+        LocalService.saveFriends(resp.resp);
+
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.FRIENDS_LOADED,
+          payload: resp.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_FRIENDS_FAILED,
+          payload: {
+            code: cause.code,
+            message: cause.message
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_FRIENDS_FAILED,
+          payload: {
+            code: error.code,
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static updateGroups() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_GROUPS
+    });
+
+    ApiService.getMyGroups(LocalService.getToken())
+      .then((resp) => {
+        LocalService.saveGroups(resp.resp);
+
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.GROUPS_LOADED,
+          payload: resp.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_GROUPS_FAILED,
+          payload: {
+            code: cause.code,
+            message: cause.message
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_GROUPS_FAILED,
+          payload: {
+            code: error.code,
+            message: error.message
+          }
+        });
+      });
+  }
 };

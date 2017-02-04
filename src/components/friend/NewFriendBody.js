@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
   ActivityIndicator
 } from 'react-native';
 import FriendActions from '../../actions/FriendActions';
@@ -18,12 +19,17 @@ export default class NewFriendBody extends Component {
     super(props);
 
     this.state = {
-
+      isSavingNewFriend: false,
+      errorSavingNewFriend: null,
+      errorMessage: '',
+      email: '',
+      phone: ''
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
-    this._delete = this._delete.bind(this);
+    this._onEmailTextChanged = this._onEmailTextChanged.bind(this);
+    this._onPhoneTextChanged = this._onPhoneTextChanged.bind(this);
   }
 
   componentDidMount() {
@@ -38,18 +44,57 @@ export default class NewFriendBody extends Component {
     return (
       <View style={styles.container}>
         {this._renderLoading()}
-        <Text style={styles.text}>Amigo</Text>
+        <Text style={styles.text}>Nuevo Amigo</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder={"Email"}
+            style={styles.input}
+            onChangeText={this._onEmailTextChanged}
+            text={this.state.email}
+            underlineColorAndroid={'transparent'}
+            />
+        </View>
+        <View style={[styles.inputContainer, {
+          borderTopWidth: 0,
+          marginBottom: Dimensions.get('window').width * 0.06
+        }]}>
+          <TextInput
+            placeholder={"Phone"}
+            style={styles.input}
+            onChangeText={this._onPhoneTextChanged}
+            text={this.state.email}
+            underlineColorAndroid={'transparent'}
+            />
+        </View>
+        {this._renderError()}
       </View>
     );
   }
 
   _onStoreChange() {
-
+    this.setState({
+      isSavingNewFriend: FriendStore.isSavingNewFriend(),
+      errorSavingNewFriend: FriendStore.getErrorSavingNewFriend()
+    }, () => {
+      if (FriendStore.isNewFriendConfirmed()) {
+        if (!this.state.email && !this.state.phone) {
+          this.setState({ errorSavingNewFriend: 'Completa al menos un dato.' });
+        } else {
+          FriendActions.confirmNewFriend(this.state.email, this.state.phone);
+        }
+      } else if (!this.state.isSavingNewFriend && !this.state.errorSavingNewFriend) {
+        this.setState({ errorSavingNewFriend: 'Amigo guardado.' }, () => {
+          setTimeout(() => {
+            NavigationActions.back();
+          }, 3000);
+        });
+      }
+    });
   }
 
 
   _renderLoading() {
-    if (this.state.isLoadingFriend) {
+    if (this.state.isSavingNewFriend) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />
@@ -60,11 +105,11 @@ export default class NewFriendBody extends Component {
     return null;
   }
 
-  _renderError(errorMessage) {
-    if (errorMessage) {
+  _renderError() {
+    if (this.state.errorSavingNewFriend) {
       return (
         <View>
-          <Text style={styles.text}>{errorMessage}</Text>
+          <Text style={[styles.text, { color: 'red' }]}>{this.state.errorSavingNewFriend}</Text>
         </View>
       )
     }
@@ -72,8 +117,16 @@ export default class NewFriendBody extends Component {
     return null;
   }
 
-  _delete() {
-    FriendActions.deleteFriend(this.props.friendId);
+  _onEmailTextChanged(text) {
+    this.setState({
+      email: text
+    });
+  }
+
+  _onPhoneTextChanged(text) {
+    this.setState({
+      phone: text
+    });
   }
 }
 
@@ -87,11 +140,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center'
   },
-  deleteButton: {
-    position: 'absolute',
-    width: Dimensions.get('window').width,
-    backgroundColor: 'red',
-    height: 50,
-    bottom: 0
-  }
+  inputContainer: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    height: 40
+  },
+  input: {
+    width: Dimensions.get('window').width * 0.94
+  },
 });

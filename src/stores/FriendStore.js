@@ -6,6 +6,13 @@ import FriendConstants from '../constants/FriendConstants';
 const CHANGE_EVENT = 'change';
 let _isLoadingFriend = false;
 let _errorLoadingFriend = null;
+let _newFriendConfirmed = false;
+let _savingNewFriend = false;
+let _savingNewFriendError = null;
+let _loadingFriends = false;
+let _errorLoadingFriends = null;
+let _loadingGroups = false;
+let _errorLoadingGroups = null;
 
 let FriendStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -24,8 +31,20 @@ let FriendStore = assign({}, EventEmitter.prototype, {
     return _isLoadingFriend;
   },
 
+  isSavingNewFriend() {
+    return _savingNewFriend;
+  },
+
   getErrorLoadingFriend() {
     return _errorLoadingFriend;
+  },
+
+  getErrorSavingNewFriend() {
+    return _savingNewFriendError;
+  },
+
+  isNewFriendConfirmed() {
+    return _newFriendConfirmed;
   }
 });
 
@@ -34,6 +53,33 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
     case FriendConstants.LOADING_FRIEND:
       _isLoadingFriend = true;
       _errorLoadingFriend = null;
+      _newFriendConfirmed = false;
+      FriendStore.emitChange();
+      break;
+
+    case FriendConstants.NEW_FRIEND_CONFIRMED:
+      _newFriendConfirmed = true;
+      FriendStore.emitChange();
+      break;
+
+    case FriendConstants.SAVING_NEW_FRIEND:
+      _savingNewFriend = true;
+      _savingNewFriendError = null;
+      _newFriendConfirmed = false;
+      FriendStore.emitChange();
+      break;
+
+    case FriendConstants.NEW_FRIEND_SAVED:
+      _savingNewFriend = false;
+      _savingNewFriendError = null;
+      _newFriendConfirmed = false;
+      FriendStore.emitChange();
+      break;
+
+    case FriendConstants.SAVING_NEW_FRIEND_FAILED:
+      _savingNewFriend = false;
+      _savingNewFriendError = action.payload.message;
+      _newFriendConfirmed = false;
       FriendStore.emitChange();
       break;
 

@@ -11,12 +11,12 @@ let _match = null;
 let _isLoadingMatches = false;
 let _matches = null;
 let _errorLoadingMatches = null;
-let _isLoadingPlayerFriends = false;
-let _errorLoadingPlayerFriends = null;
-let _playerFriends = [];
-let _isLoadingPlayerGroups = false;
-let _errorLoadingPlayerGroups = null;
-let _playerGroups = [];
+let _loadingFriends = false;
+let _errorLoadingFriends = null;
+let _friends = [];
+let _loadingGroups = false;
+let _errorLoadingGroups = null;
+let _groups = [];
 let _showFriend = false;
 let _friendId = null;
 let _showGroup = false;
@@ -63,28 +63,28 @@ let HomeStore = assign({}, EventEmitter.prototype, {
     return _errorLoadingMatches;
   },
 
-  isLoadingPlayerFriends() {
-    return _isLoadingPlayerFriends;
+  isLoadingFriends() {
+    return _loadingFriends;
   },
 
-  getPlayerFriends() {
-    return _playerFriends;
+  getFriends() {
+    return _friends;
   },
 
-  getErrorLoadingPlayerFriends() {
-    return _errorLoadingPlayerFriends;
+  getErrorLoadingFriends() {
+    return _errorLoadingFriends;
   },
 
-  isLoadingPlayerGroups() {
-    return _isLoadingPlayerGroups;
+  isLoadingGroups() {
+    return _loadingGroups;
   },
 
-  getPlayerGroups() {
-    return _playerGroups;
+  getGroups() {
+    return _groups;
   },
 
-  getErrorLoadingPlayerGroups() {
-    return _errorLoadingPlayerGroups;
+  getErrorLoadingGroups() {
+    return _errorLoadingGroups;
   },
 
   showFriend() {
@@ -165,44 +165,6 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
-    case HomeConstants.LOADING_PLAYER_FRIENDS:
-      _isLoadingPlayerFriends = true;
-      _errorLoadingPlayerFriends = null;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.PLAYER_FRIENDS_LOADED:
-      _isLoadingPlayerFriends = false;
-      _errorLoadingPlayerFriends = null;
-      _playerFriends = action.payload;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.ERROR_LOADING_PLAYER_FRIENDS:
-      _isLoadingPlayerFriends = false;
-      _errorLoadingPlayerFriends = action.payload;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.LOADING_PLAYER_GROUPS:
-      _isLoadingPlayerGroups = true;
-      _errorLoadingPlayerGroups = null;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.PLAYER_GROUPS_LOADED:
-      _isLoadingPlayerGroups = false;
-      _errorLoadingPlayerGroups = null;
-      _playerGroups = action.payload;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.ERROR_LOADING_PLAYER_GROUPS:
-      _isLoadingPlayerGroups = false;
-      _errorLoadingPlayerGroups = action.payload;
-      HomeStore.emitChange();
-      break;
-
     case HomeConstants.SHOW_FRIEND:
       _showFriend = true;
       _friendId = action.payload;
@@ -212,6 +174,44 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
     case HomeConstants.SHOW_GROUP:
       _showGroup = true;
       _groupId = action.payload;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_FRIENDS:
+      _loadingFriends = true;
+      _errorLoadingFriends = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.FRIENDS_LOADED:
+      _friends = action.payload;
+      _loadingFriends = false;
+      _errorLoadingFriends = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_FRIENDS_FAILED:
+      _loadingFriends = false;
+      _errorLoadingFriends = action.payload.message;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_GROUPS:
+      _loadingGroups = true;
+      _errorLoadingGroups = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.GROUPS_LOADED:
+      _groups = action.payload;
+      _loadingGroups = false;
+      _errorLoadingGroups = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_GROUPS_FAILED:
+      _loadingGroups = false;
+      _errorLoadingGroups = action.payload.message;
       HomeStore.emitChange();
       break;
 

@@ -38,6 +38,8 @@ export default class FriendsAndGroups extends Component {
     this._renderLoading = this._renderLoading.bind(this);
     this._newFriend = this._newFriend.bind(this);
     this._newGroup = this._newGroup.bind(this);
+    this._updateFriends = this._updateFriends.bind(this);
+    this._updateGroups = this._updateGroups.bind(this);
   }
 
   componentDidMount() {
@@ -78,8 +80,11 @@ export default class FriendsAndGroups extends Component {
             <TouchableOpacity style={styles.buttonFloat} onPress={this._newFriend}>
               <Text style={styles.buttonText}>+F</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.buttonFloat, { left: 30, right: 0 }]} onPress={this._updateFriends}>
+              <Text style={styles.buttonText}>Up</Text>
+            </TouchableOpacity>
           </View>
-          <View style={[{ backgroundColor: 'red', width: Dimensions.get('window').width}, this.state.showFriendOrGroup == 'G' ? showContainer : hideContainer]}>
+          <View style={[{ backgroundColor: 'red', width: Dimensions.get('window').width }, this.state.showFriendOrGroup == 'G' ? showContainer : hideContainer]}>
             {this._renderLoading(this.state.isLoadingPlayerGroups)}
             {this._renderErrorMessage(this.state.errorLoadingPlayerGroups)}
             <ListView
@@ -90,6 +95,9 @@ export default class FriendsAndGroups extends Component {
               />
             <TouchableOpacity style={styles.buttonFloat} onPress={this._newGroup}>
               <Text style={styles.buttonText}>+G</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.buttonFloat, { left: 30, right: 0 }]} onPress={this._updateGroups}>
+              <Text style={styles.buttonText}>Up</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -137,10 +145,10 @@ export default class FriendsAndGroups extends Component {
 
   _onStoreChange() {
     this.setState({
-      isLoadingPlayerFriends: HomeStore.isLoadingPlayerFriends(),
-      errorLoadingPlayerFriends: HomeStore.getErrorLoadingPlayerFriends(),
-      isLoadingPlayerGroups: HomeStore.isLoadingPlayerGroups(),
-      errorLoadingPlayerGroups: HomeStore.getErrorLoadingPlayerGroups(),
+      isLoadingFriends: HomeStore.isLoadingFriends(),
+      errorLoadingFriends: HomeStore.getErrorLoadingFriends(),
+      isLoadingGroups: HomeStore.isLoadingGroups(),
+      errorLoadingGroups: HomeStore.getErrorLoadingGroups(),
     }, () => {
       // if (this.state.showCreateMatch) {
       //   NavigationActions.addRoute({
@@ -153,12 +161,12 @@ export default class FriendsAndGroups extends Component {
       //   });
       // } else {}
 
-      if (!this.state.isLoadingPlayerFriends && !this.state.errorLoadingPlayerFriends) {
-        this.setState({ friends: this.state.friends.cloneWithRows(HomeStore.getPlayerFriends()) });
+      if (!this.state.isLoadingFriends && !this.state.errorLoadingFriends) {
+        this.setState({ friends: this.state.friends.cloneWithRows(HomeStore.getFriends()) });
       }
 
-      if (!this.state.isLoadingPlayerGroups && !this.state.errorLoadingPlayerGroups) {
-        this.setState({ groups: this.state.groups.cloneWithRows(HomeStore.getPlayerGroups()) });
+      if (!this.state.isLoadingGroups && !this.state.errorLoadingGroups) {
+        this.setState({ groups: this.state.groups.cloneWithRows(HomeStore.getGroups()) });
       }
     });
   }
@@ -181,6 +189,14 @@ export default class FriendsAndGroups extends Component {
     NavigationActions.addRoute({
       id: RouteConstants.ROUTE_NEW_GROUP,
     });
+  }
+
+  _updateFriends() {
+    HomeActions.updateFriends();
+  }
+
+  _updateGroups() {
+    HomeActions.updateGroups();
   }
 
   _renderLoading(loading) {

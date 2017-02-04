@@ -115,4 +115,85 @@ export default class ApiService {
 
       });
   }
+
+  static saveNewFriend(email, phone, token){
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+    _headers.append('Authorization', "Bearer " + token);
+
+    let form = {
+      "email": email,
+      "phone": phone
+    };
+
+    return fetch(BASEURL + "/friendship/create", {
+      method: 'post',
+      headers: _headers,
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
+      });
+  }
+
+  static getMyFriends(token) {
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+    _headers.append('Authorization', "Bearer " + token);
+
+    return fetch(BASEURL + "/friendship", {
+      method: 'get',
+      headers: _headers
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
+      });
+  }
+
+  static getMyGroups(token) {
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+    _headers.append('Authorization', "Bearer " + token);
+
+    return fetch(BASEURL + "/groups", {
+      method: 'get',
+      headers: _headers
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
+      });
+  }
 }
