@@ -160,10 +160,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     position: 'absolute',
     right: 20,
-    bottom: 20,
+    bottom: 110,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1
   },
   buttonText: {
     color: 'black',

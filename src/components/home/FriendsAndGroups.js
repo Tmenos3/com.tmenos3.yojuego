@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
   ActivityIndicator
 } from 'react-native';
 import HomeActions from '../../actions/HomeActions';
@@ -40,12 +41,14 @@ export default class FriendsAndGroups extends Component {
     this._newGroup = this._newGroup.bind(this);
     this._updateFriends = this._updateFriends.bind(this);
     this._updateGroups = this._updateGroups.bind(this);
+    this._renderPhoto = this._renderPhoto.bind(this);
+    this._renderInfo = this._renderInfo.bind(this);
   }
 
   componentDidMount() {
     HomeStore.addChangeListener(this._onStoreChange);
-    // HomeActions.loadPlayerFriends();
-    // HomeActions.loadPlayerGroups();
+    HomeActions.loadPlayerFriends();
+    HomeActions.loadPlayerGroups();
   }
 
   componentWillUnmount() {
@@ -104,26 +107,55 @@ export default class FriendsAndGroups extends Component {
       </View>
     );
   }
-
   _renderRowFriend(rowData) {
     return (
-      <View style={{ borderRadius: 10 }}>
-        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowFriendPreseed(rowData.id)}>
+      <View key={rowData._id} style={{ borderRadius: 10 }}>
+        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowFriendPreseed(rowData._id)}>
           <View style={styles.dataRowLeft}>
-            <Text style={{ fontSize: 26 }}>{rowData.photo}</Text>
+            {this._renderPhoto(rowData.info.photo)}
           </View>
           <View style={styles.dataRowRight}>
-            <Text style={{ fontSize: 20 }}>{rowData.firstName + ' ' + rowData.lastName}</Text>
+            {this._renderInfo(rowData.info)}
           </View>
         </TouchableOpacity>
       </View>
     );
   }
 
+  _renderPhoto(photo) {
+    if (photo)
+      return (
+        <Image style={styles.friendPhoto} source={require('../../statics/no_photo_friend.png')}></Image>
+      );
+
+    return (
+      <Image style={styles.friendPhoto} source={require('../../statics/no_photo_friend.png')}></Image>
+    );
+  }
+
+  _renderInfo(info) {
+    let ret = [];
+    if (info.firstName && info.lastName) {
+      ret.push(<Text key={1} style={{ fontSize: 20 }}>{info.firstName + ' ' + info.lastName}</Text>);
+      ret.push(<Text key={2} style={{ fontSize: 16, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
+      ret.push(<Text key={3} style={{ fontSize: 16, textAlign: 'left' }}>{!info.phone ? '' : info.phone}</Text>);
+    }
+    else {
+      ret.push(<Text key={1} style={{ fontSize: 20, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
+      ret.push(<Text key={2} style={{ fontSize: 16, textAlign: 'left' }}>{!info.phone ? '' : info.phone}</Text>);
+    }
+
+    return (
+      <View>
+        {ret}
+      </View>
+    );
+  }
+
   _renderRowGroup(rowData) {
     return (
-      <View style={{ borderRadius: 10 }}>
-        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowGroupPreseed(rowData.id)}>
+      <View key={rowData._id} style={{ borderRadius: 10 }}>
+        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowGroupPreseed(rowData._id)}>
           <View style={styles.dataRowLeft}>
             <Text style={{ fontSize: 26 }}>{rowData.photo}</Text>
           </View>
@@ -150,17 +182,6 @@ export default class FriendsAndGroups extends Component {
       isLoadingGroups: HomeStore.isLoadingGroups(),
       errorLoadingGroups: HomeStore.getErrorLoadingGroups(),
     }, () => {
-      // if (this.state.showCreateMatch) {
-      //   NavigationActions.addRoute({
-      //     id: RouteConstants.ROUTE_CREATE_MATCH,
-      //   });
-      // } else if (this.state.showMatchDetail) {
-      //   NavigationActions.addRoute({
-      //     id: RouteConstants.ROUTE_MATCH_DETAIL,
-      //     data: this.state.match
-      //   });
-      // } else {}
-
       if (!this.state.isLoadingFriends && !this.state.errorLoadingFriends) {
         this.setState({ friends: this.state.friends.cloneWithRows(HomeStore.getFriends()) });
       }
@@ -309,5 +330,9 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 30,
     textAlign: 'center'
+  },
+  friendPhoto: {
+    width: 60,
+    height: 60
   }
 });

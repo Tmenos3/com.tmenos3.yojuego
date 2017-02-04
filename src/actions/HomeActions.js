@@ -55,51 +55,51 @@ export default class HomeActions {
       });
   }
 
-  static loadPlayerFriends() {
+  static loadFriends() {
     Dispatcher.handleViewAction({
-      actionType: HomeConstants.LOADING_PLAYER_FRIENDS
+      actionType: HomeConstants.LOADING_FRIENDS
     });
 
-    LocalService.getPlayerFriends()
+    LocalService.getFriends()
       .then((response) => {
         Dispatcher.handleViewAction({
-          actionType: HomeConstants.PLAYER_FRIENDS_LOADED,
-          payload: response.resp
+          actionType: HomeConstants.FRIENDS_LOADED,
+          payload: response
         });
       }, (cause) => {
         Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_PLAYER_FRIENDS,
+          actionType: HomeConstants.ERROR_LOADING_FRIENDS,
           payload: cause.message
         });
       })
       .catch((error) => {
         Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_PLAYER_FRIENDS,
+          actionType: HomeConstants.ERROR_LOADING_FRIENDS,
           payload: error.message
         });
       });
   }
 
-  static loadPlayerGroups() {
+  static loadGroups() {
     Dispatcher.handleViewAction({
-      actionType: HomeConstants.LOADING_PLAYER_GROUPS
+      actionType: HomeConstants.LOADING_GROUPS
     });
 
-    LocalService.getPlayerGroups()
+    LocalService.getGroups()
       .then((response) => {
         Dispatcher.handleViewAction({
-          actionType: HomeConstants.PLAYER_GROUPS_LOADED,
+          actionType: HomeConstants.GROUPS_LOADED,
           payload: response.resp
         });
       }, (cause) => {
         Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_PLAYER_GROUPS,
+          actionType: HomeConstants.ERROR_LOADING_GROUPS,
           payload: cause.message
         });
       })
       .catch((error) => {
         Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_PLAYER_GROUPS,
+          actionType: HomeConstants.ERROR_LOADING_GROUPS,
           payload: error.message
         });
       });
@@ -112,7 +112,7 @@ export default class HomeActions {
     });
   }
 
-  static showGroupd(groupId){
+  static showGroups(groupId){
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_GROUP,
       payload: groupId

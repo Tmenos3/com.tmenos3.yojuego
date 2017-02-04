@@ -11,8 +11,6 @@ let _savingNewFriend = false;
 let _savingNewFriendError = null;
 let _loadingFriends = false;
 let _errorLoadingFriends = null;
-let _loadingGroups = false;
-let _errorLoadingGroups = null;
 
 let FriendStore = assign({}, EventEmitter.prototype, {
   emitChange() {

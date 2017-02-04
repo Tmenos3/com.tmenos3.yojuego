@@ -86,6 +86,7 @@ export default class NewFriendBody extends Component {
         this.setState({ errorSavingNewFriend: 'Amigo guardado.' }, () => {
           setTimeout(() => {
             NavigationActions.back();
+            FriendActions.friendsUpdated();
           }, 3000);
         });
       }

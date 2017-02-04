@@ -1,4 +1,5 @@
 import FriendConstants from '../constants/FriendConstants';
+import HomeActions from '../actions/HomeActions';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
@@ -29,11 +30,11 @@ export default class FriendActions {
 
     ApiService.saveNewFriend(email, phone, LocalService.getToken())
       .then((resp) => {
-        LocalService.saveNewFriend(resp.resp);
-
         Dispatcher.handleViewAction({
           actionType: FriendConstants.NEW_FRIEND_SAVED
         });
+
+        LocalService.saveNewFriend(resp.resp);
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: FriendConstants.SAVING_NEW_FRIEND_FAILED,
@@ -52,5 +53,9 @@ export default class FriendActions {
           }
         });
       });
+  }
+
+  static friendsUpdated() {
+    HomeActions.loadFriends();
   }
 }

@@ -17,6 +17,7 @@ import RouteConstants from '../constants/RouteConstants';
 import SignUp from './auth/SignUp';
 import Splash from './Splash';
 import NewFriend from './friend/NewFriend';
+import NewGroup from './group/NewGroup';
 
 let _navigator;
 
@@ -119,6 +120,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_NEW_FRIEND:
         return (
           <NewFriend  />
+        );
+
+      case RouteConstants.ROUTE_NEW_GROUP:
+        return (
+          <NewGroup  />
         );
     }
   }

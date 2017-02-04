@@ -143,7 +143,35 @@ export default class ApiService {
           then((error) => {
             return Promise.reject(error);
           });
+      });
+  }
 
+  static saveNewGroup(description, token){
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+    _headers.append('Authorization', "Bearer " + token);
+
+    let form = {
+      "description": description
+    };
+
+    return fetch(BASEURL + "/group/create", {
+      method: 'post',
+      headers: _headers,
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
       });
   }
 
@@ -168,7 +196,6 @@ export default class ApiService {
           then((error) => {
             return Promise.reject(error);
           });
-
       });
   }
 
@@ -177,7 +204,7 @@ export default class ApiService {
     _headers.append('Content-Type', 'application/json');
     _headers.append('Authorization', "Bearer " + token);
 
-    return fetch(BASEURL + "/groups", {
+    return fetch(BASEURL + "/group", {
       method: 'get',
       headers: _headers
     })
@@ -193,7 +220,6 @@ export default class ApiService {
           then((error) => {
             return Promise.reject(error);
           });
-
       });
   }
 }
