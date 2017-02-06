@@ -105,14 +105,14 @@ export default class HomeActions {
       });
   }
 
-  static showFriend(friendId){
+  static showFriend(friendId) {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_FRIEND,
       payload: friendId
     });
   }
 
-  static showGroups(groupId){
+  static showGroups(groupId) {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_GROUP,
       payload: groupId
@@ -126,12 +126,30 @@ export default class HomeActions {
 
     ApiService.getMyFriends(LocalService.getToken())
       .then((resp) => {
-        LocalService.saveFriends(resp.resp);
-
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.FRIENDS_LOADED,
-          payload: resp.resp
-        });
+        LocalService.saveFriends(resp.resp)
+          .then((friends) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.FRIENDS_LOADED,
+              payload: friends
+            });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_FRIENDS_FAILED,
+              payload: {
+                code: cause.code,
+                message: cause.message
+              }
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_FRIENDS_FAILED,
+              payload: {
+                code: error.code,
+                message: error.message
+              }
+            });
+          });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.LOADING_FRIENDS_FAILED,
@@ -159,12 +177,30 @@ export default class HomeActions {
 
     ApiService.getMyGroups(LocalService.getToken())
       .then((resp) => {
-        LocalService.saveGroups(resp.resp);
-
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.GROUPS_LOADED,
-          payload: resp.resp
-        });
+        LocalService.saveGroups(resp.resp)
+          .then((groups) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.GROUPS_LOADED,
+              payload: groups
+            });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_GROUPS_FAILED,
+              payload: {
+                code: cause.code,
+                message: cause.message
+              }
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_GROUPS_FAILED,
+              payload: {
+                code: error.code,
+                message: error.message
+              }
+            });
+          });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.LOADING_GROUPS_FAILED,

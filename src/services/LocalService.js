@@ -9,61 +9,61 @@ export default class LocalService {
 
   static saveToken(token) {
     return new Promise((resolve, reject) => {
-      _token = token;
+      LocalService._token = token;
       return resolve();
     });
   }
 
   static saveNewFriend(newFriend) {
     return new Promise((resolve, reject) => {
-      _friends.push(newFriend);
-      return resolve();
+      LocalService._friends.push(newFriend);
+      return resolve(LocalService._friends);
     });
   }
 
   static saveNewGroup(newGroup) {
     return new Promise((resolve, reject) => {
-      _groups.push(newGroup);
-      return resolve();
+      LocalService._groups.push(newGroup);
+      return resolve(LocalService._groups);
     });
   }
 
   static saveFriends(friends) {
     return new Promise((resolve, reject) => {
-      _friends = friends;
-      return resolve();
+      LocalService._friends = friends;
+      return resolve(LocalService._friends);
     });
   }
 
   static saveGroups(groups) {
     return new Promise((resolve, reject) => {
-      _groups = groups;
-      return resolve();
+      LocalService._groups = groups;
+      return resolve(LocalService._groups);
     });
   }
 
   static tourCompleted() {
-    _tourCompleted = true;
+    LocalService._tourCompleted = true;
   }
 
   static saveUserId(userid) {
-    _userid = userid;
+    LocalService._userid = userid;
   }
 
   static savePlayer(player) {
-    _player = player;
+    LocalService._player = player;
   }
 
   static getToken() {
-    return _token;
+    return LocalService._token;
   }
 
   static getUserId() {
-    return _userid;
+    return LocalService._userid;
   }
 
   static getPlayer() {
-    return _player;
+    return LocalService._player;
   }
 
   static isFirstLogin() {
@@ -72,18 +72,18 @@ export default class LocalService {
   }
 
   static firstLoginDone() {
-    _isFirstLogin = true;
+    LocalService._isFirstLogin = true;
   }
 
   static getFriends() {
     return new Promise((resolve, reject) => {
-      return resolve(_friends);
+      return resolve(LocalService._friends);
     });
   }
 
   static getGroups() {
     return new Promise((resolve, reject) => {
-      return resolve(_groups);
+      return resolve(LocalService._groups);
     });
   }
 };

@@ -113,7 +113,9 @@ export default class Body extends Component {
           data: this.state.match
         });
       } else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
-        this.setState({ matches: this.state.matches.cloneWithRows(HomeStore.getMatches()) });
+        let matches = HomeStore.getMatches();
+        if (matches)
+          this.setState({ matches: this.state.matches.cloneWithRows(matches) });
       }
     });
   }

@@ -119,12 +119,12 @@ export default class AppNavigator extends Component {
         );
       case RouteConstants.ROUTE_NEW_FRIEND:
         return (
-          <NewFriend  />
+          <NewFriend />
         );
 
       case RouteConstants.ROUTE_NEW_GROUP:
         return (
-          <NewGroup  />
+          <NewGroup friends={route.data} />
         );
     }
   }

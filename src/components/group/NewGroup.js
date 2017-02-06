@@ -10,8 +10,8 @@ export default class NewGroup extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <NewGroupBody />
         <NewGroupHeader />
+        <NewGroupBody friends={this.props.friends}/>
       </View>
     );
   }

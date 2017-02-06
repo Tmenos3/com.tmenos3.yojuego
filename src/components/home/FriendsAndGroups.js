@@ -47,8 +47,8 @@ export default class FriendsAndGroups extends Component {
 
   componentDidMount() {
     HomeStore.addChangeListener(this._onStoreChange);
-    HomeActions.loadPlayerFriends();
-    HomeActions.loadPlayerGroups();
+    HomeActions.loadFriends();
+    HomeActions.loadGroups();
   }
 
   componentWillUnmount() {
@@ -107,6 +107,7 @@ export default class FriendsAndGroups extends Component {
       </View>
     );
   }
+
   _renderRowFriend(rowData) {
     return (
       <View key={rowData._id} style={{ borderRadius: 10 }}>
@@ -183,11 +184,15 @@ export default class FriendsAndGroups extends Component {
       errorLoadingGroups: HomeStore.getErrorLoadingGroups(),
     }, () => {
       if (!this.state.isLoadingFriends && !this.state.errorLoadingFriends) {
-        this.setState({ friends: this.state.friends.cloneWithRows(HomeStore.getFriends()) });
+        let friends = HomeStore.getFriends();
+        if (friends)
+          this.setState({ friends: this.state.friends.cloneWithRows(friends) });
       }
 
       if (!this.state.isLoadingGroups && !this.state.errorLoadingGroups) {
-        this.setState({ groups: this.state.groups.cloneWithRows(HomeStore.getGroups()) });
+        let groups = HomeStore.getGroups();
+        if (groups)
+          this.setState({ groups: this.state.groups.cloneWithRows(groups) });
       }
     });
   }
@@ -209,6 +214,7 @@ export default class FriendsAndGroups extends Component {
   _newGroup() {
     NavigationActions.addRoute({
       id: RouteConstants.ROUTE_NEW_GROUP,
+      data: HomeStore.getFriends()
     });
   }
 
