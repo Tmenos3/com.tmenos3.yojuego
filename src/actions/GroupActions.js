@@ -1,6 +1,8 @@
 import GroupConstants from '../constants/GroupConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
+import ApiService from '../services/ApiService';
+import HomeActions from '../actions/HomeActions';
 
 export default class GroupActions {
   static loadGroup(groupId) {
@@ -21,12 +23,12 @@ export default class GroupActions {
     });
   }
 
-  static confirmNewGroup(description) {
+  static confirmNewGroup(description, friends, photo) {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.SAVING_NEW_GROUP
     });
 
-    ApiService.saveNewGroup(description, LocalService.getToken())
+    ApiService.saveNewGroup(description, friends, photo, LocalService.getToken())
       .then((resp) => {
         Dispatcher.handleViewAction({
           actionType: GroupConstants.NEW_GROUP_SAVED

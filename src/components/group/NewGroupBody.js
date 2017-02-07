@@ -31,6 +31,7 @@ export default class NewGroupBody extends Component {
       errorSavingNewGroup: null,
       errorMessage: '',
       description: '',
+      photo: '',
       friends: dict,
       rows: ds.cloneWithRows(dict),
     }
@@ -42,7 +43,7 @@ export default class NewGroupBody extends Component {
     this._renderRowFriend = this._renderRowFriend.bind(this);
     this._switchChanged = this._switchChanged.bind(this);
     this._renderInfo = this._renderInfo.bind(this);
-    this._checkRow = this._checkRow.bind(this);
+    this._getFriendsSelected = this._getFriendsSelected.bind(this);
   }
 
   componentDidMount() {
@@ -87,7 +88,7 @@ export default class NewGroupBody extends Component {
         if (!this.state.description) {
           this.setState({ errorSavingNewGroup: 'Completa al menos un dato.' });
         } else {
-          GroupActions.confirmNewGroup(this.state.description);
+          GroupActions.confirmNewGroup(this.state.description, this._getFriendsSelected(), this.state.photo);
         }
       } else if (!this.state.isSavingNewGroup && !this.state.errorSavingNewGroup) {
         this.setState({ errorSavingNewGroup: 'Amigo guardado.' }, () => {
@@ -152,23 +153,20 @@ export default class NewGroupBody extends Component {
   }
 
   _switchChanged(value, rowData) {
-    let members = this.state.friends;
+    let newArray = this.state.friends.slice();
     let position = -1;
-    for (let i = 0; i < members.length; i++) {
-      if (members[i].key == rowData.key) {
+    for (let i = 0; i < newArray.length; i++) {
+      if (newArray[i].key == rowData.key) {
         position = i;
         break;
       }
     }
 
-    members[position].checked = value;
-
-    this.setState({ rows: this.state.rows.cloneWithRows(members) });
-  }
-
-  _checkRow(id) {
-    let x = this.state.selectedMembers[id];
-    return x;
+    newArray[position] = { ...this.state.friends[position], checked: value };
+    this.setState({
+      rows: this.state.rows.cloneWithRows(newArray),
+      friends: newArray
+    });
   }
 
   _renderPhoto(photo) {
@@ -199,6 +197,17 @@ export default class NewGroupBody extends Component {
         {ret}
       </View>
     );
+  }
+
+  _getFriendsSelected() {
+    let ret = [];
+
+    for (let i = 0; i < this.state.friends.length; i++) {
+      if (this.state.friends[i].checked)
+        ret.push(this.state.friends[i].data.friendId);
+    }
+
+    return ret;
   }
 }
 

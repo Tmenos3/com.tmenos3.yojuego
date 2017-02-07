@@ -146,13 +146,15 @@ export default class ApiService {
       });
   }
 
-  static saveNewGroup(description, token){
+  static saveNewGroup(description, players, photo, token){
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
     _headers.append('Authorization', "Bearer " + token);
 
     let form = {
-      "description": description
+      "description": description,
+      "players": players,
+      "photo": photo
     };
 
     return fetch(BASEURL + "/group/create", {
