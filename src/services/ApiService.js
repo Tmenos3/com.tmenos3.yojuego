@@ -116,14 +116,13 @@ export default class ApiService {
       });
   }
 
-  static saveNewFriend(email, phone, token){
+  static saveNewFriend(email, token){
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
     _headers.append('Authorization', "Bearer " + token);
 
     let form = {
-      "email": email,
-      "phone": phone
+      "email": email
     };
 
     return fetch(BASEURL + "/friendship/create", {

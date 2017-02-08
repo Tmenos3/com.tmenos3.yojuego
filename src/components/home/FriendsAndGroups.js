@@ -143,7 +143,6 @@ export default class FriendsAndGroups extends Component {
     }
     else {
       ret.push(<Text key={1} style={{ fontSize: 20, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
-      ret.push(<Text key={2} style={{ fontSize: 16, textAlign: 'left' }}>{!info.phone ? '' : info.phone}</Text>);
     }
 
     return (

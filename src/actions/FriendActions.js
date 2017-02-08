@@ -23,12 +23,12 @@ export default class FriendActions {
     });
   }
 
-  static confirmNewFriend(email, phone) {
+  static confirmNewFriend(email) {
     Dispatcher.handleViewAction({
       actionType: FriendConstants.SAVING_NEW_FRIEND
     });
 
-    ApiService.saveNewFriend(email, phone, LocalService.getToken())
+    ApiService.saveNewFriend(email, LocalService.getToken())
       .then((resp) => {
         Dispatcher.handleViewAction({
           actionType: FriendConstants.NEW_FRIEND_SAVED

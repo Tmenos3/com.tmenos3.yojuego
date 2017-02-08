@@ -204,7 +204,10 @@ export default class NewGroupBody extends Component {
 
     for (let i = 0; i < this.state.friends.length; i++) {
       if (this.state.friends[i].checked)
-        ret.push(this.state.friends[i].data.friendId);
+        if (this.state.friends[i].data.friendId)
+          ret.push({ type: 'id', value: this.state.friends[i].data.friendId });
+        else
+          ret.push({ type: 'email', value: this.state.friends[i].data.info.email });
     }
 
     return ret;

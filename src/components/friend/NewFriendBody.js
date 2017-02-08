@@ -22,14 +22,12 @@ export default class NewFriendBody extends Component {
       isSavingNewFriend: false,
       errorSavingNewFriend: null,
       errorMessage: '',
-      email: '',
-      phone: ''
+      email: ''
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
     this._onEmailTextChanged = this._onEmailTextChanged.bind(this);
-    this._onPhoneTextChanged = this._onPhoneTextChanged.bind(this);
   }
 
   componentDidMount() {
@@ -54,18 +52,6 @@ export default class NewFriendBody extends Component {
             underlineColorAndroid={'transparent'}
             />
         </View>
-        <View style={[styles.inputContainer, {
-          borderTopWidth: 0,
-          marginBottom: Dimensions.get('window').width * 0.06
-        }]}>
-          <TextInput
-            placeholder={"Phone"}
-            style={styles.input}
-            onChangeText={this._onPhoneTextChanged}
-            text={this.state.email}
-            underlineColorAndroid={'transparent'}
-            />
-        </View>
         {this._renderError()}
       </View>
     );
@@ -77,10 +63,10 @@ export default class NewFriendBody extends Component {
       errorSavingNewFriend: FriendStore.getErrorSavingNewFriend()
     }, () => {
       if (FriendStore.isNewFriendConfirmed()) {
-        if (!this.state.email && !this.state.phone) {
-          this.setState({ errorSavingNewFriend: 'Completa al menos un dato.' });
+        if (!this.state.email) {
+          this.setState({ errorSavingNewFriend: 'Completa el mail.' });
         } else {
-          FriendActions.confirmNewFriend(this.state.email, this.state.phone);
+          FriendActions.confirmNewFriend(this.state.email);
         }
       } else if (!this.state.isSavingNewFriend && !this.state.errorSavingNewFriend) {
         this.setState({ errorSavingNewFriend: 'Amigo guardado.' }, () => {

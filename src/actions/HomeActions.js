@@ -60,11 +60,11 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_FRIENDS
     });
 
-    LocalService.getFriends()
+    ApiService.getMyFriends(LocalService.getToken())
       .then((response) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.FRIENDS_LOADED,
-          payload: response
+          payload: response.resp
         });
       }, (cause) => {
         Dispatcher.handleViewAction({
@@ -85,7 +85,7 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_GROUPS
     });
 
-    LocalService.getGroups()
+    ApiService.getMyGroups(LocalService.getToken())
       .then((response) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.GROUPS_LOADED,
@@ -112,7 +112,7 @@ export default class HomeActions {
     });
   }
 
-  static showGroups(groupId) {
+  static showGroup(groupId) {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_GROUP,
       payload: groupId
