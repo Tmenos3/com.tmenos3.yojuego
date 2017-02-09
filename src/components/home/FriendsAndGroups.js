@@ -24,8 +24,8 @@ export default class FriendsAndGroups extends Component {
       groups: ds.cloneWithRows([]),
       showFriendOrGroup: 'F',
       isLoadingPlayerFriends: false,
-      errorLoadingPlayerFriends: false,
-      isLoadingPlayerGroups: null,
+      errorLoadingPlayerFriends: null,
+      isLoadingPlayerGroups: false,
       errorLoadingPlayerGroups: null,
     };
 

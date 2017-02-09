@@ -116,7 +116,7 @@ export default class ApiService {
       });
   }
 
-  static saveNewFriend(email, token){
+  static saveNewFriend(email, token) {
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
     _headers.append('Authorization', "Bearer " + token);
@@ -145,7 +145,7 @@ export default class ApiService {
       });
   }
 
-  static saveNewGroup(description, players, photo, token){
+  static saveNewGroup(description, players, photo, token) {
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
     _headers.append('Authorization', "Bearer " + token);
@@ -206,6 +206,30 @@ export default class ApiService {
     _headers.append('Authorization', "Bearer " + token);
 
     return fetch(BASEURL + "/group", {
+      method: 'get',
+      headers: _headers
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
+  static getFriendshipRequest(token) {
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+    _headers.append('Authorization', "Bearer " + token);
+
+    return fetch(BASEURL + "/notifications/frienshipRequest", {
       method: 'get',
       headers: _headers
     })

@@ -16,4 +16,5 @@ export default class RouteConstants {
   static get ROUTE_MATCH_DETAIL() { return 'ROUTE_MATCH_DETAIL'; }
   static get ROUTE_NEW_FRIEND() { return 'ROUTE_NEW_FRIEND'; }
   static get ROUTE_NEW_GROUP() { return 'ROUTE_NEW_GROUP'; }
+  static get ROUTE_FRIENDSHIP_REQUEST() { return 'ROUTE_FRIENDSHIP_REQUEST'; }
 }

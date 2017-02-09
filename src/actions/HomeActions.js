@@ -55,6 +55,31 @@ export default class HomeActions {
       });
   }
 
+  static loadFriendshipRequest() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST
+    });
+
+    ApiService.getFriendshipRequest(LocalService.getToken())
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.FRIENDSHIP_REQUEST_LOADED,
+          payload: resp.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
+          payload: error.message
+        });
+      });
+  }
+
   static loadFriends() {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.LOADING_FRIENDS

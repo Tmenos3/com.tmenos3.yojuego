@@ -13,6 +13,7 @@ import NavigationActions from '../../actions/NavigationActions';
 import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
 import FriendsAndGroups from './FriendsAndGroups';
+import HomeNotifications from './HomeNotifications';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
 
@@ -63,10 +64,7 @@ export default class Body extends Component {
         </View>
 
         <FriendsAndGroups />
-
-        <View style={styles.slide}>
-          <Text style={styles.text}>Notificaciones</Text>
-        </View>
+        <HomeNotifications />
       </Swiper>
     );
   }
@@ -101,7 +99,7 @@ export default class Body extends Component {
       showMatchDetail: HomeStore.mustShowMatchDetail(),
       match: HomeStore.getMatch(),
       loadingMatches: HomeStore.isLoadingMatches(),
-      errorLoadingMatches: HomeStore.getErrorLoadingMatches(),
+      errorLoadingMatches: HomeStore.getErrorLoadingMatches()
     }, () => {
       if (this.state.showCreateMatch) {
         NavigationActions.addRoute({

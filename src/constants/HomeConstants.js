@@ -20,4 +20,7 @@ export default class HomeConstants {
   static get UPDATING_GROUPS() { return 'UPDATING_GROUPS'; }
   static get GROUPS_UPDATED() { return 'GROUPS_UPDATED'; }
   static get UPDATING_GROUPS_FAILED() { return 'UPDATING_GROUPS_FAILED'; }
+  static get LOADING_FRIENDSHIP_REQUEST() { return 'LOADING_FRIENDSHIP_REQUEST'; }
+  static get FRIENDSHIP_REQUEST_LOADED() { return 'FRIENDSHIP_REQUEST_LOADED'; }
+  static get LOADING_FRIENDSHIP_REQUEST_FAILED() { return 'LOADING_FRIENDSHIP_REQUEST_FAILED'; }
 }

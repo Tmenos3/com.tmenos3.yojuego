@@ -21,6 +21,9 @@ let _showFriend = false;
 let _friendId = null;
 let _showGroup = false;
 let _groupId = null;
+let _loadingFriendshipRequest = false;
+let _errorLoadingFriendshipRequest = null;
+let _friendshipRequests = [];
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -101,6 +104,18 @@ let HomeStore = assign({}, EventEmitter.prototype, {
 
   getGroupId() {
     return _groupId;
+  },
+
+  isLoadingFriendshipRequest() {
+    return _loadingFriendshipRequest;
+  },
+
+  getFriendshipRequests() {
+    return _friendshipRequests;
+  },
+
+  getErrorLoadingFriendshipRequest() {
+    return _errorLoadingFriendshipRequest;
   }
 });
 
@@ -212,6 +227,25 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
     case HomeConstants.LOADING_GROUPS_FAILED:
       _loadingGroups = false;
       _errorLoadingGroups = action.payload.message;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_FRIENDSHIP_REQUEST:
+      _loadingFriendshipRequest = true;
+      _errorLoadingFriendshipRequest = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.FRIENDSHIP_REQUEST_LOADED:
+      _loadingFriendshipRequest = false;
+      _errorLoadingFriendshipRequest = null;
+      _friendshipRequests = action.payload;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED:
+      _loadingFriendshipRequest = false;
+      _errorLoadingFriendshipRequest = action.payload.message;
       HomeStore.emitChange();
       break;
 
