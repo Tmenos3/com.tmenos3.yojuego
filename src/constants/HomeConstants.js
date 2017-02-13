@@ -23,4 +23,7 @@ export default class HomeConstants {
   static get LOADING_FRIENDSHIP_REQUEST() { return 'LOADING_FRIENDSHIP_REQUEST'; }
   static get FRIENDSHIP_REQUEST_LOADED() { return 'FRIENDSHIP_REQUEST_LOADED'; }
   static get LOADING_FRIENDSHIP_REQUEST_FAILED() { return 'LOADING_FRIENDSHIP_REQUEST_FAILED'; }
+  static get MARK_AS_READ_INTENT() { return 'MARK_AS_READ_INTENT'; }
+  static get MARK_AS_READ_RESOLVED() { return 'MARK_AS_READ_RESOLVED'; }
+  static get MARK_AS_READ_FAILED() { return 'MARK_AS_READ_FAILED'; }
 }

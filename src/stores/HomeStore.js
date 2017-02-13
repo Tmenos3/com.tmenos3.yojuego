@@ -24,6 +24,7 @@ let _groupId = null;
 let _loadingFriendshipRequest = false;
 let _errorLoadingFriendshipRequest = null;
 let _friendshipRequests = [];
+let _shouldRefreshFriendshipRequestList = false;
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -116,6 +117,10 @@ let HomeStore = assign({}, EventEmitter.prototype, {
 
   getErrorLoadingFriendshipRequest() {
     return _errorLoadingFriendshipRequest;
+  },
+
+  shouldRefreshFriendshipRequestList() {
+    return _shouldRefreshFriendshipRequestList;
   }
 });
 
@@ -245,7 +250,22 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
 
     case HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED:
       _loadingFriendshipRequest = false;
-      _errorLoadingFriendshipRequest = action.payload.message;
+      _errorLoadingFriendshipRequest = action.payload;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.MARK_AS_READ_INTENT:
+      _shouldRefreshFriendshipRequestList = false;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.MARK_AS_READ_RESOLVED:
+      _shouldRefreshFriendshipRequestList = true;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.MARK_AS_READ_FAILED:
+      _shouldRefreshFriendshipRequestList = false;
       HomeStore.emitChange();
       break;
 

@@ -18,6 +18,7 @@ import SignUp from './auth/SignUp';
 import Splash from './Splash';
 import NewFriend from './friend/NewFriend';
 import NewGroup from './group/NewGroup';
+import FriendshipRequest from './friendshipRequest/FriendshipRequest';
 
 let _navigator;
 
@@ -53,7 +54,7 @@ export default class AppNavigator extends Component {
         ref={this._setNavigator}
         renderScene={this._renderComponent}
         style={{ flex: 1 }}
-        />
+      />
     );
   }
 
@@ -125,6 +126,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_NEW_GROUP:
         return (
           <NewGroup friends={route.data} />
+        );
+
+      case RouteConstants.ROUTE_FRIENDSHIP_REQUEST:
+        return (
+          <FriendshipRequest friendshipRequest={route.data} />
         );
     }
   }
