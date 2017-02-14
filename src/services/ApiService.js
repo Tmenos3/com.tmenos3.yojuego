@@ -61,10 +61,6 @@ export default class ApiService {
   }
 
   static completeProfileInfo(firstName, lastName, nickName, token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     let form = {
       "firstName": firstName,
       "lastName": lastName,
@@ -92,10 +88,6 @@ export default class ApiService {
   }
 
   static getUpcomingPlayerMatches(token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     return fetch(BASEURL + "/match/upcoming", {
       method: 'get',
       headers: ApiService._getHeader(token)
@@ -117,10 +109,6 @@ export default class ApiService {
   }
 
   static saveNewFriend(email, token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     let form = {
       "email": email
     };
@@ -146,10 +134,6 @@ export default class ApiService {
   }
 
   static saveNewGroup(description, players, photo, token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     let form = {
       "description": description,
       "players": players,
@@ -177,10 +161,6 @@ export default class ApiService {
   }
 
   static getMyFriends(token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     return fetch(BASEURL + "/friendship", {
       method: 'get',
       headers: ApiService._getHeader(token)
@@ -201,10 +181,6 @@ export default class ApiService {
   }
 
   static getMyGroups(token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     return fetch(BASEURL + "/group", {
       method: 'get',
       headers: ApiService._getHeader(token)
@@ -225,10 +201,6 @@ export default class ApiService {
   }
 
   static getFriendshipRequest(token) {
-    // var _headers = new Headers();
-    // _headers.append('Content-Type', 'application/json');
-    // _headers.append('Authorization', "Bearer " + token);
-
     return fetch(BASEURL + "/notifications/friendshiprequest", {
       method: 'get',
       headers: ApiService._getHeader(token)
@@ -307,6 +279,26 @@ export default class ApiService {
       method: 'post',
       headers: ApiService._getHeader(token),
       body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
+  static logOut(token) {
+    return fetch(BASEURL + "/logout", {
+      method: 'post',
+      headers: ApiService._getHeader(token)
     })
       .then((response) => {
         if (response.ok) {

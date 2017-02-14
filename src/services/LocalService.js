@@ -14,6 +14,13 @@ export default class LocalService {
     });
   }
 
+  static clearToken() {
+    return new Promise((resolve, reject) => {
+      LocalService._token = null;
+      return resolve();
+    });
+  }
+
   static saveNewFriend(newFriend) {
     return new Promise((resolve, reject) => {
       LocalService._friends.push(newFriend);

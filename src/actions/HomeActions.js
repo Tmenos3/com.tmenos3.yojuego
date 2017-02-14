@@ -245,4 +245,37 @@ export default class HomeActions {
         });
       });
   }
+
+  static logOut() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOGOUT_INTENT
+    });
+
+    ApiService.logOut(LocalService.getToken())
+      .then((resp) => {
+        return LocalService.clearToken();
+      })
+      .then(() => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOGOUT_RESOLVED
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOGOUT_FAILED,
+          payload: {
+            code: cause.code,
+            message: cause.message
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOGOUT_FAILED,
+          payload: {
+            code: error.code,
+            message: error.message
+          }
+        });
+      });
+  }
 };

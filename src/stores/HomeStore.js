@@ -25,6 +25,9 @@ let _loadingFriendshipRequest = false;
 let _errorLoadingFriendshipRequest = null;
 let _friendshipRequests = [];
 let _shouldRefreshFriendshipRequestList = false;
+let _isLoggingOut = false;
+let _errorLoggingOut = null;
+let _logOutDone = false;
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -121,7 +124,19 @@ let HomeStore = assign({}, EventEmitter.prototype, {
 
   shouldRefreshFriendshipRequestList() {
     return _shouldRefreshFriendshipRequestList;
-  }
+  },
+
+  isLoggingOut() {
+    return _isLoggingOut;
+  },
+
+  getErrorLoggingOut() {
+    return _errorLoggingOut;
+  },
+
+  logOutDone() {
+    return _logOutDone;
+  },
 });
 
 HomeStore.dispatchToken = AppDispatcher.register((action) => {
@@ -266,6 +281,27 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
 
     case HomeConstants.MARK_AS_READ_FAILED:
       _shouldRefreshFriendshipRequestList = false;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOGOUT_INTENT:
+      _isLoggingOut = true;
+      _errorLoggingOut = null;
+      _logOutDone = false;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOGOUT_RESOLVED:
+      _isLoggingOut = false;
+      _errorLoggingOut = null;
+      _logOutDone = true;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOGOUT_FAILED:
+      _isLoggingOut = false;
+      _errorLoggingOut = action.payload.message;
+      _logOutDone = false;
       HomeStore.emitChange();
       break;
 
