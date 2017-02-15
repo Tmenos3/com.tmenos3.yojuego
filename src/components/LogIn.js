@@ -59,7 +59,8 @@ export default class LogIn extends Component {
           });
         } else {
           NavigationActions.replaceRoute({
-            id: RouteConstants.ROUTE_HOME
+            id: RouteConstants.ROUTE_HOME,
+            data: { player: LoginStore.getPlayer() }
           });
         }
       }
@@ -85,8 +86,8 @@ export default class LogIn extends Component {
             style={styles.input}
             onChangeText={this._onEmailTextChanged}
             text={this.state.email}
-            underlineColorAndroid={'transparent'}            
-            />
+            underlineColorAndroid={'transparent'}
+          />
         </View>
         <View style={[styles.inputContainer, {
           borderTopWidth: 0,
@@ -98,7 +99,7 @@ export default class LogIn extends Component {
             onChangeText={this._onPasswordTextChanged}
             text={this.state.password}
             underlineColorAndroid={'transparent'}
-            />
+          />
         </View>
         <View style={styles.loginContainer}>
           <TouchableOpacity onPress={this._forgetPassword}>

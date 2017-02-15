@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import assign from 'object-assign';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import FacebookConstants from '../constants/FacebookConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isAuthCompleted = false;
@@ -35,6 +36,14 @@ FacebookStore.dispatchToken = AppDispatcher.register((action) => {
       _isAuthCompleted = true;
       _isFirstLogin = action.payload.isFirstLogin;
       FacebookStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isAuthCompleted = false;
+      _isFirstLogin = false;
+      // FacebookStore.emitChange();
+      break;
+
     default:
       break;
   }

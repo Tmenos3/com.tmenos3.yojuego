@@ -44,6 +44,7 @@ export default class FriendshipRequestBody extends Component {
   render() {
     return (
       <View style={styles.container}>
+        {this._renderError(this.state.errorSaving)}
         {this._renderPhoto(this.props.friendshipRequest.sender.photo)}
         <Text key={1} style={{ fontSize: 20 }}>{this.props.friendshipRequest.sender.firstName + ' ' + this.props.friendshipRequest.sender.lastName}</Text>
         <Text key={2} style={{ fontSize: 16, textAlign: 'left' }}>{!this.props.friendshipRequest.sender.email ? '' : this.props.friendshipRequest.sender.email}</Text>
@@ -56,19 +57,20 @@ export default class FriendshipRequestBody extends Component {
             <Text style={styles.menuText}>Reject</Text>
           </TouchableOpacity>
         </View>
+        {this._renderLoading(this.state.isSaving)}
       </View>
     );
   }
 
   _reject() {
     this.setState({ action: 'reject' }, () => {
-      FriendshipRequestActions.reject(this.props.friendshipRequest.friendship._id);
+      FriendshipRequestActions.reject(this.props.friendshipRequest);
     });
   }
 
   _accetp() {
     this.setState({ action: 'accetp' }, () => {
-      FriendshipRequestActions.accept(this.props.friendshipRequest.friendship._id);
+      FriendshipRequestActions.accept(this.props.friendshipRequest);
     });
   }
 
@@ -99,8 +101,8 @@ export default class FriendshipRequestBody extends Component {
     );
   }
 
-  _renderLoading() {
-    if (this.state.loadingMatches) {
+  _renderLoading(show) {
+    if (show) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />

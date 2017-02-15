@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import SignUpConstants from '../constants/SignUpConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isWorking = false;
@@ -55,6 +56,13 @@ SignUpStore.dispatchToken = AppDispatcher.register((action) => {
       _isSignUpCompleted = true;
       _signUpErrorReturn = action.payload.message;
       SignUpStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isWorking = false;
+      _isSignUpCompleted = false;
+      _signUpErrorReturn = null;
+      // SignUpStore.emitChange();
       break;
 
     default:

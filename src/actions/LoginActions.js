@@ -1,8 +1,8 @@
 import LoginConstants from '../constants/LoginConstants';
-import AppConstants from '../constants/AppConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import ApiService from '../services/ApiService';
 import LocalService from '../services/LocalService';
+import AppActions from '../actions/AppActions';
 
 
 export default class LoginActions {
@@ -13,13 +13,18 @@ export default class LoginActions {
 
     ApiService.login(email, password)
       .then((resp) => {
-        LoginActions.setToken(resp.token);
-        LocalService.saveUserId(resp.userid);
+        AppActions.setToken(resp.token);
+        LocalService.saveUser(resp.user);
+        LocalService.savePlayer(resp.player);
+
         let isFirstLogin = LocalService.isFirstLogin();
 
         Dispatcher.handleViewAction({
           actionType: LoginConstants.LOGIN_RESOLVED,
-          payload: { isFirstLogin: isFirstLogin }
+          payload: {
+            isFirstLogin: isFirstLogin,
+            player: resp.player
+          }
         });
       }, (cause) => {
         Dispatcher.handleViewAction({
@@ -36,18 +41,6 @@ export default class LoginActions {
           payload: {
             code: error.code,
             message: error.message
-          }
-        });
-      });
-  }
-
-  static setToken(token) {
-    LocalService.saveToken(token)
-      .then(() => {
-        Dispatcher.handleViewAction({
-          actionType: AppConstants.TOKEN_CHANGE,
-          payload: {
-            token: token
           }
         });
       });

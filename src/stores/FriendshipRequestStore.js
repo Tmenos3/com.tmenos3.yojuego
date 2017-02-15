@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import FriendshipRequestConstants from '../constants/FriendshipRequestConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isSaving = false;
@@ -65,6 +66,12 @@ FriendshipRequestStore.dispatchToken = AppDispatcher.register((action) => {
       _isSaving = false;
       _errorSaving = action.payload.message;
       FriendshipRequestStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isSaving = false;
+      _errorSaving = null;
+      // FriendshipRequestStore.emitChange();
       break;
 
     default:

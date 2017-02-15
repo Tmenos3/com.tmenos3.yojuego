@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import PlayerTourConstants from '../constants/PlayerTourConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isTourCompleted = false;
@@ -29,6 +30,11 @@ PlayerTourStore.dispatchToken = AppDispatcher.register((action) => {
     case PlayerTourConstants.TOUR_COMPLETED:
       _isTourCompleted = true;
       PlayerTourStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isTourCompleted = false;
+      // PlayerTourStore.emitChange();
       break;
 
     default:

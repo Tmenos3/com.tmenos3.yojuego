@@ -46,6 +46,13 @@ NavigationStore.dispatchToken = AppDispatcher.register((action) => {
       NavigationStore.emitChange();
       break;
 
+    case NavigationConstants.RESET_TO_ROUTE:
+      _currentRoute.id = action.data.id;
+      _currentRoute.data = action.data.data;
+      _currentAction = NavigationConstants.RESET_TO_ROUTE;
+      NavigationStore.emitChange();
+      break;
+
     case NavigationConstants.BACK:
       _currentAction = NavigationConstants.BACK;
       NavigationStore.emitChange();

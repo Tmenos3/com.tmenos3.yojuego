@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import HomeConstants from '../constants/HomeConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _showMenu = false;
@@ -269,24 +270,16 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
-    case HomeConstants.MARK_AS_READ_INTENT:
-      _shouldRefreshFriendshipRequestList = false;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.MARK_AS_READ_RESOLVED:
-      _shouldRefreshFriendshipRequestList = true;
-      HomeStore.emitChange();
-      break;
-
-    case HomeConstants.MARK_AS_READ_FAILED:
-      _shouldRefreshFriendshipRequestList = false;
-      HomeStore.emitChange();
-      break;
-
     case HomeConstants.LOGOUT_INTENT:
       _isLoggingOut = true;
       _errorLoggingOut = null;
+      _logOutDone = false;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOGOUT_FAILED:
+      _isLoggingOut = false;
+      _errorLoggingOut = action.payload.message;
       _logOutDone = false;
       HomeStore.emitChange();
       break;
@@ -298,11 +291,32 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
-    case HomeConstants.LOGOUT_FAILED:
+    case AppConstants.RESET_APP:
+      _showMenu = false;
+      _showCreateMatch = false;
+      _showMatchDetail = false;
+      _match = null;
+      _isLoadingMatches = false;
+      _matches = [];
+      _errorLoadingMatches = null;
+      _loadingFriends = false;
+      _errorLoadingFriends = null;
+      _friends = [];
+      _loadingGroups = false;
+      _errorLoadingGroups = null;
+      _groups = [];
+      _showFriend = false;
+      _friendId = null;
+      _showGroup = false;
+      _groupId = null;
+      _loadingFriendshipRequest = false;
+      _errorLoadingFriendshipRequest = null;
+      _friendshipRequests = [];
+      _shouldRefreshFriendshipRequestList = false;
       _isLoggingOut = false;
-      _errorLoggingOut = action.payload.message;
+      _errorLoggingOut = null;
       _logOutDone = false;
-      HomeStore.emitChange();
+      // HomeStore.emitChange();
       break;
 
     default:

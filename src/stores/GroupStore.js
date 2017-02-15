@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import GroupConstants from '../constants/GroupConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isLoadingGroup = false;
@@ -79,6 +80,17 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       _savingNewGroupError = action.payload.message;
       _newGroupConfirmed = false;
       GroupStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isLoadingGroup = false;
+      _errorLoadingGroup = null;
+      _newGroupConfirmed = false;
+      _savingNewGroup = false;
+      _savingNewGroupError = null;
+      _loadingGroups = false;
+      _errorLoadingGroups = null;
+      // GroupStore.emitChange();
       break;
 
     default:

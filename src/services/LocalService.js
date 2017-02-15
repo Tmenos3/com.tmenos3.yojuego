@@ -1,6 +1,6 @@
 export default class LocalService {
   static _token;
-  static _userid;
+  static _user;
   static _player;
   static _tourCompleted;
   static _isFirstLogin;
@@ -53,8 +53,8 @@ export default class LocalService {
     LocalService._tourCompleted = true;
   }
 
-  static saveUserId(userid) {
-    LocalService._userid = userid;
+  static saveUser(user) {
+    LocalService._user = user;
   }
 
   static savePlayer(player) {
@@ -65,8 +65,8 @@ export default class LocalService {
     return LocalService._token;
   }
 
-  static getUserId() {
-    return LocalService._userid;
+  static getUser() {
+    return LocalService._user;
   }
 
   static getPlayer() {

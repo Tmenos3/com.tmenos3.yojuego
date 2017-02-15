@@ -49,6 +49,15 @@ MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
       _errorSavingMatch = action.payload;
       MatchDetailStore.emitChange();
       break;
+
+    case AppConstants.RESET_APP:
+      _savingMatch = false;
+      _errorSavingMatch = null;
+      // MatchDetailStore.emitChange();
+      break;
+
+    default:
+      break;
   }
 });
 

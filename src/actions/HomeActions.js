@@ -3,6 +3,8 @@ import Dispatcher from '../dispatcher/Dispatcher';
 import ApiService from '../services/ApiService';
 import LocalService from '../services/LocalService';
 import LoginConstants from '../constants/LoginConstants';
+import AppConstants from '../constants/AppConstants';
+import AppActions from '../actions/AppActions';
 
 export default class HomeActions {
   static showMenu() {
@@ -259,6 +261,8 @@ export default class HomeActions {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.LOGOUT_RESOLVED
         });
+
+        AppActions.resetApp();
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.LOGOUT_FAILED,

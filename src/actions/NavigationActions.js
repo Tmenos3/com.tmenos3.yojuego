@@ -16,6 +16,13 @@ export default class NavigationActions {
     });
   }
 
+  static resetToRoute(route) {
+    Dispatcher.handleViewAction({
+      actionType: NavigationConstants.RESET_TO_ROUTE,
+      data: route
+    });
+  }
+
   static back() {
     Dispatcher.handleViewAction({
       actionType: NavigationConstants.BACK

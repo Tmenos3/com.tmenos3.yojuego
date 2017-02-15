@@ -41,6 +41,12 @@ export default class AppNavigator extends Component {
           data: NavigationStore.getCurrentRoute().data
         });
         break;
+      case NavigationConstants.RESET_TO_ROUTE:
+        _navigator.resetTo({
+          id: NavigationStore.getCurrentRoute().id,
+          data: NavigationStore.getCurrentRoute().data
+        });
+        break;
       case NavigationConstants.BACK:
         _navigator.pop();
         break;
@@ -100,7 +106,7 @@ export default class AppNavigator extends Component {
         );
       case RouteConstants.ROUTE_HOME:
         return (
-          <Home />
+          <Home player={route.data.player}/>
         );
       case RouteConstants.ROUTE_MATCH_DETAIL:
         return (

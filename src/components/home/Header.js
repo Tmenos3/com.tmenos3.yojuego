@@ -26,6 +26,7 @@ export default class Header extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text style={styles.playerName}>{this.props.player.firstName + ' ' + this.props.player.lastName}</Text>
         <TouchableOpacity onPress={this._showMenu} style={styles.menuButton}>
           <Text style={styles.menuText}>Menu</Text>
         </TouchableOpacity>
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#009900',
     height: 60,
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center'
   },
   menuButton: {
@@ -51,12 +52,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: Dimensions.get('window').width * 0.012,
     backgroundColor: '#33adff',
-    marginRight: Dimensions.get('window').width * 0.05
+    marginRight: Dimensions.get('window').width * 0.05,
+    position: 'absolute',
+    right: 10,
+    top: 10
   },
   menuText: {
     color: 'white',
     fontSize: 15,
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  playerName: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginLeft: 10
   }
 });

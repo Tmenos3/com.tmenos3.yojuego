@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import FriendConstants from '../constants/FriendConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isLoadingFriend = false;
@@ -79,6 +80,17 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
       _savingNewFriendError = action.payload.message;
       _newFriendConfirmed = false;
       FriendStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isLoadingFriend = false;
+      _errorLoadingFriend = null;
+      _newFriendConfirmed = false;
+      _savingNewFriend = false;
+      _savingNewFriendError = null;
+      _loadingFriends = false;
+      _errorLoadingFriends = null;
+      // FriendStore.emitChange();
       break;
 
     default:

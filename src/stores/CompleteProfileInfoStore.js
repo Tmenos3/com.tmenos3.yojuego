@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import CompleteProfileInfoConstants from '../constants/CompleteProfileInfoConstants';
+import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isWorking = false;
@@ -55,6 +56,13 @@ CompleteProfileInfoStore.dispatchToken = AppDispatcher.register((action) => {
       _isProccessCompleted = true;
       _proccessErrorReturn = action.payload.message;
       CompleteProfileInfoStore.emitChange();
+      break;
+
+    case AppConstants.RESET_APP:
+      _isWorking = false;
+      _isProccessCompleted = false;
+      _proccessErrorReturn = null;
+      // CompleteProfileInfoStore.emitChange();
       break;
 
     default:

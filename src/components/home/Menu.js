@@ -8,11 +8,13 @@ import {
 } from 'react-native';
 import HomeActions from '../../actions/HomeActions';
 import HomeStore from '../../stores/HomeStore';
-import NavigationActions from '../actions/NavigationActions';
-import RouteConstants from '../constants/RouteConstants';
+import NavigationActions from '../../actions/NavigationActions';
+import RouteConstants from '../../constants/RouteConstants';
 
 const MENU_WIDTH_CLOSED = 0;
 const MENU_WIDTH_OPENED = Dimensions.get('window').width * 0.8;
+const BACKGROUND_MENU_WIDTH_CLOSED = 0;
+const BACKGROUND_MENU_WIDTH_OPENED = Dimensions.get('window').width;
 
 export default class Menu extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ export default class Menu extends Component {
 
     this.state = {
       menuWidth: MENU_WIDTH_CLOSED,
+      backgroundMenuWidth: BACKGROUND_MENU_WIDTH_CLOSED,
       isLoggingOut: false,
       logOutDone: false,
       errorLoggingOut: null
@@ -40,13 +43,22 @@ export default class Menu extends Component {
 
   render() {
     return (
-      <View style={styles.menuBackground}>
+      <View style={[styles.menuBackground, { width: this.state.backgroundMenuWidth }]}>
         <View style={[styles.menuList, { width: this.state.menuWidth }]}>
           <TouchableOpacity onPress={this._back} style={styles.menuBtnBack}>
             <Text style={styles.menuBtnBackText}>Atras</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._logOut} style={styles.menuBtnBack}>
-            <Text style={styles.menuBtnBackText}>Log Out</Text>
+          <TouchableOpacity onPress={this._logOut} style={[styles.menuOption, {marginTop: 10}]}>
+            <Text style={styles.menuOptionText}>Account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._logOut} style={styles.menuOption}>
+            <Text style={styles.menuOptionText}>Notifications</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._logOut} style={styles.menuOption}>
+            <Text style={styles.menuOptionText}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._logOut} style={[styles.menuOption, {borderBottomWidth: 1, borderBottomColor: 'white'}]}>
+            <Text style={styles.menuOptionText}>Log Out</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -64,12 +76,13 @@ export default class Menu extends Component {
   _onStoreChange() {
     this.setState({
       menuWidth: HomeStore.mustShowMenu() ? MENU_WIDTH_OPENED : MENU_WIDTH_CLOSED,
+      backgroundMenuWidth: HomeStore.mustShowMenu() ? BACKGROUND_MENU_WIDTH_OPENED : BACKGROUND_MENU_WIDTH_CLOSED,
       isLoggingOut: HomeStore.isLoggingOut(),
       logOutDone: HomeStore.logOutDone(),
-      errorLoggingOut: HomeStore.errorLoggingOut()
+      errorLoggingOut: HomeStore.getErrorLoggingOut()
     }, () => {
       if (this.state.logOutDone)
-        NavigationActions.replaceRoute({
+        NavigationActions.resetToRoute({
           id: RouteConstants.ROUTE_LOGIN
         });
     });
@@ -80,7 +93,7 @@ const styles = StyleSheet.create({
   menuBackground: {
     position: 'absolute',
     height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width,
+    right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.25)',
   },
   menuList: {
@@ -102,5 +115,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  menuOption: {
+    width: Dimensions.get('window').width * 0.8,
+    height: 50,
+    justifyContent: 'center',
+    marginRight: Dimensions.get('window').width * 0.05,
+    borderTopWidth: 1,
+    borderTopColor: 'white'
+  },
+  menuOptionText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
   }
 });
