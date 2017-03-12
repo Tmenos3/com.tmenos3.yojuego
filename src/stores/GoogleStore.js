@@ -41,7 +41,6 @@ GoogleStore.dispatchToken = AppDispatcher.register((action) => {
     case AppConstants.RESET_APP:
       _isAuthCompleted = false;
       _isFirstLogin = false;
-      // GoogleStore.emitChange();
       break;
 
     default:

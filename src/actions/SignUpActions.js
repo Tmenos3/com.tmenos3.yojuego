@@ -13,7 +13,7 @@ export default class SignUpActions {
     ApiService.signUp(email, password)
       .then((resp) => {
         AppActions.setToken(resp.token);
-        LocalService.saveUserId(resp.userid);
+        // LocalService.saveUserId(resp.userid);
 
         Dispatcher.handleViewAction({
           actionType: SignUpConstants.SIGNUP_RESOLVED

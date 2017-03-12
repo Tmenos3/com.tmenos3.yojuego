@@ -282,4 +282,29 @@ export default class HomeActions {
         });
       });
   }
+
+  static loadPlayer() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_PLAYER
+    });
+
+    LocalService.getPlayer()
+      .then((player) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.PLAYER_LOADED,
+          payload: player
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_PLAYER,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.ERROR_LOADING_PLAYER,
+          payload: error.message
+        });
+      });
+  }
 };

@@ -8,7 +8,6 @@ let logConsole = function (actor, value) {
     '-';
 
   let message = value == null ? '' : value.toString() == '[object Object]' ? JSON.stringify(value) : value;
-  console.log(datetime + actor + " - " + message);
 };
 
 export default class LocalStorage {

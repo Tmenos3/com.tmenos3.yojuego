@@ -55,7 +55,6 @@ export default class FriendDetailBody extends Component {
     });
   }
 
-
   _renderLoading() {
     if (this.state.isLoadingFriend) {
       return (

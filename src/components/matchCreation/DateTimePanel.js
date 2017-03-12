@@ -56,7 +56,6 @@ export default class DateTimePanel extends Component {
       }
     }
 
-    console.log("prevState:" + JSON.stringify(prevState));
     this.state.animation.setValue(initialValue);
     Animated.spring(
       this.state.animation,

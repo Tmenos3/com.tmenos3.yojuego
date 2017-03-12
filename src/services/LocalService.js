@@ -51,6 +51,10 @@ export default class LocalService {
 
   static tourCompleted() {
     LocalService._tourCompleted = true;
+
+    return new Promise((resolve, reject) => {
+      return resolve();
+    });
   }
 
   static saveUser(user) {
@@ -70,7 +74,9 @@ export default class LocalService {
   }
 
   static getPlayer() {
-    return LocalService._player;
+    return new Promise((resolve, reject) => {
+      return resolve(LocalService._player);
+    });
   }
 
   static isFirstLogin() {

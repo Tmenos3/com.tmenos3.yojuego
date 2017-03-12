@@ -19,12 +19,17 @@ import Splash from './Splash';
 import NewFriend from './friend/NewFriend';
 import NewGroup from './group/NewGroup';
 import FriendshipRequest from './friendshipRequest/FriendshipRequest';
+import FriendList from './common/friendList/FriendList';
 
 let _navigator;
 
 export default class AppNavigator extends Component {
   componentDidMount() {
     NavigationStore.addChangeListener(this._onNavigationStoreChange);
+  }
+
+  componentWillUnmount() {
+    NavigationStore.removeChangeListener(this._onNavigationStoreChange);
   }
 
   _onNavigationStoreChange() {
@@ -106,7 +111,7 @@ export default class AppNavigator extends Component {
         );
       case RouteConstants.ROUTE_HOME:
         return (
-          <Home player={route.data.player}/>
+          <Home player={route.data.player} />
         );
       case RouteConstants.ROUTE_MATCH_DETAIL:
         return (
@@ -137,6 +142,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_FRIENDSHIP_REQUEST:
         return (
           <FriendshipRequest friendshipRequest={route.data} />
+        );
+
+      case RouteConstants.ROUTE_FRIEND_LIST:
+        return (
+          <FriendList friends={route.data.friends} onBack={route.data.onBack} onConfirm={route.data.onConfirm} />
         );
     }
   }

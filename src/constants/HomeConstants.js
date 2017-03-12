@@ -26,4 +26,7 @@ export default class HomeConstants {
   static get LOGOUT_INTENT() { return 'LOGOUT_INTENT'; }
   static get LOGOUT_RESOLVED() { return 'LOGOUT_RESOLVED'; }
   static get LOGOUT_FAILED() { return 'LOGOUT_FAILED'; }
+  static get LOADING_PLAYER() { return 'LOADING_PLAYER'; }
+  static get PLAYER_LOADED() { return 'PLAYER_LOADED'; }
+  static get ERROR_LOADING_PLAYER() { return 'ERROR_LOADING_PLAYER'; }
 }

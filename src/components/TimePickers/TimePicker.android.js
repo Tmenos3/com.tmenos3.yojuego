@@ -34,7 +34,7 @@ export default class TimePicker extends Component {
       }
       this.setState(newState);
     } catch ({code, message}) {
-      console.warn(`Error in example '${stateKey}': `, message);
+
     }
   };
 

@@ -29,6 +29,9 @@ let _shouldRefreshFriendshipRequestList = false;
 let _isLoggingOut = false;
 let _errorLoggingOut = null;
 let _logOutDone = false;
+let _isLoadingPlayer = false;
+let _errorLoadingPlayer = null;
+let _player = null;
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -137,6 +140,18 @@ let HomeStore = assign({}, EventEmitter.prototype, {
 
   logOutDone() {
     return _logOutDone;
+  },
+
+  isLoadingPlayer() {
+    return _isLoadingPlayer;
+  },
+
+  getPlayer() {
+    return _player;
+  },
+
+  getErrorLoadingPlayer() {
+    return _errorLoadingPlayer;
   },
 });
 
@@ -291,6 +306,25 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
+    case HomeConstants.LOADING_PLAYER:
+      _isLoadingPlayer = true;
+      _errorLoadingPlayer = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.ERROR_LOADING_PLAYER:
+      _isLoadingPlayer = false;
+      _errorLoadingPlayer = action.payload.message;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.PLAYER_LOADED:
+      _isLoadingPlayer = false;
+      _errorLoadingPlayer = null;
+      _player = action.payload;
+      HomeStore.emitChange();
+      break;
+
     case AppConstants.RESET_APP:
       _showMenu = false;
       _showCreateMatch = false;
@@ -316,7 +350,9 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _isLoggingOut = false;
       _errorLoggingOut = null;
       _logOutDone = false;
-      // HomeStore.emitChange();
+      _isLoadingPlayer = false;
+      _errorLoadingPlayer = null;
+      _player = null;
       break;
 
     default:

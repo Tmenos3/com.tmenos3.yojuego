@@ -64,7 +64,8 @@ export default class PlayerTour extends Component {
     }, () => {
       if (this.state.isTourCompleted) {
         NavigationActions.replaceRoute({
-          id: RouteConstants.ROUTE_HOME
+          id: RouteConstants.ROUTE_HOME,
+          data: { player: PlayerTourStore.getPlayer() }
         });
       }
     });

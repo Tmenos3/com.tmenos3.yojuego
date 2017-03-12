@@ -17,7 +17,7 @@ export default class PlayerActions {
         PlayerActions.setPlayer(null);
       })
       .catch((error) => {
-        console.log(error);
+
       });
   }
 

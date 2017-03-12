@@ -23,6 +23,9 @@ export default class Menu extends Component {
     this._onStoreChange = this._onStoreChange.bind(this);
     this._back = this._back.bind(this);
     this._logOut = this._logOut.bind(this);
+    this._account = this._account.bind(this);
+    this._settings = this._settings.bind(this);
+    this._notifications = this._notifications.bind(this);
 
     this.state = {
       menuWidth: MENU_WIDTH_CLOSED,
@@ -48,13 +51,13 @@ export default class Menu extends Component {
           <TouchableOpacity onPress={this._back} style={styles.menuBtnBack}>
             <Text style={styles.menuBtnBackText}>Atras</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._logOut} style={[styles.menuOption, {marginTop: 10}]}>
+          <TouchableOpacity onPress={this._account} style={[styles.menuOption, {marginTop: 10}]}>
             <Text style={styles.menuOptionText}>Account</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._logOut} style={styles.menuOption}>
+          <TouchableOpacity onPress={this._notifications} style={styles.menuOption}>
             <Text style={styles.menuOptionText}>Notifications</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._logOut} style={styles.menuOption}>
+          <TouchableOpacity onPress={this._settings} style={styles.menuOption}>
             <Text style={styles.menuOptionText}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._logOut} style={[styles.menuOption, {borderBottomWidth: 1, borderBottomColor: 'white'}]}>
@@ -70,6 +73,18 @@ export default class Menu extends Component {
   }
 
   _logOut() {
+    HomeActions.logOut();
+  }
+
+  _settings() {
+    HomeActions.settings();
+  }
+
+  _account() {
+    HomeActions.account();
+  }
+
+  _notifications() {
     HomeActions.logOut();
   }
 

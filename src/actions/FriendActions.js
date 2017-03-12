@@ -30,11 +30,21 @@ export default class FriendActions {
 
     ApiService.saveNewFriend(email, LocalService.getToken())
       .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: FriendConstants.NEW_FRIEND_SAVED
-        });
-
-        LocalService.saveNewFriend(resp.resp);
+        LocalService.saveNewFriend(resp.resp)
+          .then(() => {
+            Dispatcher.handleViewAction({
+              actionType: FriendConstants.NEW_FRIEND_SAVED
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: FriendConstants.SAVING_NEW_FRIEND_FAILED,
+              payload: {
+                code: error.code,
+                message: error.message
+              }
+            });
+          });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: FriendConstants.SAVING_NEW_FRIEND_FAILED,
