@@ -89,10 +89,24 @@ export default class HomeActions {
 
     ApiService.getMyFriends(LocalService.getToken())
       .then((response) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.FRIENDS_LOADED,
-          payload: response.resp
-        });
+        LocalService.saveFriends(response.resp)
+          .then(() => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.FRIENDS_LOADED,
+              payload: response.resp
+            });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.ERROR_LOADING_FRIENDS,
+              payload: cause.message
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.ERROR_LOADING_FRIENDS,
+              payload: error.message
+            });
+          });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.ERROR_LOADING_FRIENDS,

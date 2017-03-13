@@ -10,7 +10,6 @@ export default class FriendList extends Component {
   constructor(props) {
     super(props);
 
-    // this._back = this._back.bind(this);
     this._confirm = this._confirm.bind(this);
     this._addFriend = this._addFriend.bind(this);
     this._removeFriend = this._removeFriend.bind(this);
@@ -30,10 +29,6 @@ export default class FriendList extends Component {
     );
   }
 
-  // _back() {
-  //   this.props.onBack();
-  // }
-
   _confirm() {
     this.props.onConfirm(this.state.selectedFriends);
   }
@@ -48,14 +43,14 @@ export default class FriendList extends Component {
 
     if (pos > -1) {
       let newList = this.state.selectedFriends.slice();
-      newList.slice(pos, 1);
+      newList.splice(pos, 1);
       this.setState({ selectedFriends: newList });
     }
   }
 
   _exists(friend) {
     for (let i = 0; i < this.state.selectedFriends.length; i++) {
-      if (this.state.selectedFriends[i].id === friend.id)
+      if (this.state.selectedFriends[i].friendId === friend.friendId)
         return i;
     }
 

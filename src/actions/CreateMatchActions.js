@@ -1,6 +1,8 @@
 import CreateMatchConstants from '../constants/CreateMatchConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
+import ApiService from '../services/ApiService';
+import HomeActions from '../actions/HomeActions';
 
 export default class CreateMatchActions {
   static confirm() {
@@ -15,11 +17,28 @@ export default class CreateMatchActions {
     });
   }
 
-  static createMatch(matchInfo) {
+  static createMatch(title, date, fromTime, toTime, location, matchType, friends) {
     Dispatcher.handleViewAction({
-      actionType: CreateMatchConstants.CREATE_MATCH,
-      matchInfo
+      actionType: CreateMatchConstants.SAVING_MATCH
     });
+
+    ApiService.createMatch(title, date, fromTime, toTime, location, matchType, friends.map(friend => { return friend.friendId }), LocalService.getToken())
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: CreateMatchConstants.MATCH_SAVED
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: CreateMatchConstants.ERROR_SAVING_MATCH,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: CreateMatchConstants.ERROR_SAVING_MATCH,
+          payload: error.message
+        });
+      });
   }
 
   static loadFriends() {
@@ -51,5 +70,9 @@ export default class CreateMatchActions {
           }
         });
       });
+  }
+
+  static matceshUpdated() {
+    HomeActions.loadPlayerMatches();
   }
 }

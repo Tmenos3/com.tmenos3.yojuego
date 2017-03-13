@@ -5,4 +5,7 @@ export default class CreateMatchConstants {
   static get FRIENDS_LOADED() { return 'CREATE_MATCH_FRIENDS_LOADED'; }
   static get LOADING_FRIENDS() { return 'CREATE_MATCH_LOADING_FRIENDS'; }
   static get ERROR_LOADING_FRIENDS() { return 'CREATE_MATCH_ERROR_LOADING_FRIENDS'; }
+  static get MATCH_SAVED() { return 'CREATE_MATCH_MATCH_SAVED'; }
+  static get SAVING_MATCH() { return 'CREATE_MATCH_SAVING_MATCH'; }
+  static get ERROR_SAVING_MATCH() { return 'CREATE_MATCH_ERROR_SAVING_MATCH'; }
 }

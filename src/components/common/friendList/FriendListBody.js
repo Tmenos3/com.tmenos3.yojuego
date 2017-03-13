@@ -7,10 +7,8 @@ import {
   Switch,
   ListView
 } from 'react-native';
-// import LoginActions from '../actions/LoginActions';
-// import LoginStore from '../stores/LoginStore';
-// import NavigationActions from '../actions/NavigationActions';
-// import RouteConstants from '../constants/RouteConstants';
+
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 export default class FriendListBody extends Component {
   constructor(props) {
@@ -23,15 +21,14 @@ export default class FriendListBody extends Component {
       }
     });
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      friends: ds.cloneWithRows(friends)
+      datasource: ds.cloneWithRows(friends),
+      friends
     };
 
     this._renderRowFriend = this._renderRowFriend.bind(this);
     this._renderPhoto = this._renderPhoto.bind(this);
     this._renderInfo = this._renderInfo.bind(this);
-    this._getValue = this._getValue.bind(this);
     this._setValue = this._setValue.bind(this);
   }
 
@@ -39,7 +36,7 @@ export default class FriendListBody extends Component {
     return (
       <View style={styles.container}>
         <ListView
-          dataSource={this.state.friends}
+          dataSource={this.state.datasource}
           renderRow={this._renderRowFriend}
           style={styles.listView}
           enableEmptySections={true}
@@ -50,29 +47,22 @@ export default class FriendListBody extends Component {
 
   _setValue(id, value) {
     let newList = this.state.friends.slice();
-    let pos = -a;
+    let pos = -1;
 
     for (let i = 0; i < this.state.friends.length; i++) {
-      if (id === this.state.friends[i].id) {
+      if (id === this.state.friends[i]._id) {
         pos = i;
         break;
       }
     }
 
-    newList[i].selected = value;
-    this.setState({ friends: ds.cloneWithRows(newList) }, () => {
+    newList[pos].selected = value;
+    this.setState({ friends: newList, datasource: ds.cloneWithRows(newList) }, () => {
       if (value)
-        this.props.onSelect(newList[i]);
+        this.props.onSelect(newList[pos]);
       else
-        this.props.onUnselect(newList[i]);
+        this.props.onUnselect(newList[pos]);
     });
-  }
-
-  _getValue(id) {
-    for (let i = 0; i < this.state.friends.length; i++) {
-      if (id === this.state.friends[i].id)
-        return this.state.friends[i].selected;
-    }
   }
 
   _renderRowFriend(rowData) {
@@ -85,9 +75,9 @@ export default class FriendListBody extends Component {
           {this._renderInfo(rowData.info)}
         </View>
         <Switch
-          onValueChange={(value) => this._setValue(rowData.id, value)}
+          onValueChange={(value) => this._setValue(rowData._id, value)}
           style={{ marginBottom: 10 }}
-          value={this._getValue(rowData.id)} />
+          value={rowData.selected} />
       </View>
     );
   }

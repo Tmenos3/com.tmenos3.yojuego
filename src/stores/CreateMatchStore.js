@@ -8,6 +8,10 @@ const CHANGE_EVENT = 'change';
 let _friends = [];
 let _isGettingFriends = false;
 let _errorGettingFriends = null;
+let _isNewMatchConfirmed = false;
+let _isSavingMatch = false;
+let _errorSavingMatch = null;
+let _isMatchSaved = false;
 
 let CreateMatchStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -32,12 +36,29 @@ let CreateMatchStore = assign({}, EventEmitter.prototype, {
 
   getErrorGettingFriends() {
     return _errorGettingFriends;
+  },
+
+  isNewMatchConfirmed() {
+    return _isNewMatchConfirmed;
+  },
+
+  isSavingMatch() {
+    return _isSavingMatch;
+  },
+
+  getErrorSavingMatch() {
+    return _errorSavingMatch;
+  },
+
+  isMatchSaved() {
+    return _isMatchSaved;
   }
 });
 
 CreateMatchStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
     case CreateMatchConstants.CONFIRM:
+      _isNewMatchConfirmed = true;
       CreateMatchStore.emitChange();
       break;
 
@@ -67,10 +88,38 @@ CreateMatchStore.dispatchToken = AppDispatcher.register((action) => {
       CreateMatchStore.emitChange();
       break;
 
+    case CreateMatchConstants.MATCH_SAVED:
+      _isSavingMatch = false;
+      _errorSavingMatch = null;
+      _isMatchSaved = true;
+      _isNewMatchConfirmed = false;
+      CreateMatchStore.emitChange();
+      break;
+
+    case CreateMatchConstants.SAVING_MATCH:
+      _isSavingMatch = true;
+      _errorSavingMatch = null;
+      _isMatchSaved = false;
+      _isNewMatchConfirmed = false;
+      CreateMatchStore.emitChange();
+      break;
+
+    case CreateMatchConstants.ERROR_SAVING_MATCH:
+      _isSavingMatch = false;
+      _errorSavingMatch = action.payload.message;
+      _isNewMatchConfirmed = false;
+      _isMatchSaved = false;
+      CreateMatchStore.emitChange();
+      break;
+
     case AppConstants.RESET_APP:
       _friends = [];
       _isGettingFriends = false;
       _errorGettingFriends = null;
+      _isNewMatchConfirmed = false;
+      _isSavingMatch = false;
+      _errorSavingMatch = null;
+      _isMatchSaved = false;
       break;
 
     default:

@@ -10,6 +10,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import NavigationActions from '../../actions/NavigationActions';
+import HomeActions from '../../actions/HomeActions';
 import CreateMatchActions from '../../actions/CreateMatchActions';
 import RouteConstants from '../../constants/RouteConstants';
 import CreateMatchStore from '../../stores/CreateMatchStore';
@@ -23,6 +24,7 @@ export default class CreateMatchBody extends Component {
     this._renderLoadingFriends = this._renderLoadingFriends.bind(this);
     this._selectingFriendsBack = this._selectingFriendsBack.bind(this);
     this._selectingFriendsConfirm = this._selectingFriendsConfirm.bind(this);
+    this._processConfirmation = this._processConfirmation.bind(this);
 
     this.state = {
       matchType: 5,
@@ -30,8 +32,20 @@ export default class CreateMatchBody extends Component {
       date: '',
       hourFrom: '',
       hourTo: '',
-      field: '',
-      friends: []
+      location: '',
+      friends: [],
+      descriptionRequired: '',
+      dateRequired: '',
+      hourFromRequired: '',
+      hourToRequired: '',
+      locationRequired: '',
+      matchTypeRequired: '',
+      isGettingFriends: false,
+      errorGettingFriends: null,
+      isNewMatchConfirmed: false,
+      isSavingMatch: false,
+      errorSavingMatch: null,
+      matchSaved: false
     }
   }
 
@@ -47,11 +61,11 @@ export default class CreateMatchBody extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput placeholder={'Descripcion'} text={this.state.description} style={styles.textInput} onChangeText={(description) => this.setState({ description })} underlineColorAndroid={'transparent'} />
-        <TextInput placeholder={'Fecha'} text={this.state.date} style={styles.textInput} onChangeText={(date) => this.setState({ date })} underlineColorAndroid={'transparent'} />
-        <TextInput placeholder={'Hora desde'} text={this.state.hourFrom} style={styles.textInput} onChangeText={(hourFrom) => this.setState({ hourFrom })} underlineColorAndroid={'transparent'} />
-        <TextInput placeholder={'Hora hasta'} text={this.state.hourTo} style={styles.textInput} onChangeText={(hourTo) => this.setState({ hourTo })} underlineColorAndroid={'transparent'} />
-        <TextInput placeholder={'Cancha'} text={this.state.field} style={styles.textInput} onChangeText={(field) => this.setState({ field })} underlineColorAndroid={'transparent'} />
+        <TextInput placeholder={'Descripcion'} text={this.state.description} style={[styles.textInput, { borderColor: this.state.descriptionRequired ? 'red' : 'gray' }]} onChangeText={(description) => this.setState({ description })} underlineColorAndroid={'transparent'} />
+        <TextInput placeholder={'Fecha'} text={this.state.date} style={[styles.textInput, { borderColor: this.state.dateRequired ? 'red' : 'gray' }]} onChangeText={(date) => this.setState({ date })} underlineColorAndroid={'transparent'} />
+        <TextInput placeholder={'Hora desde'} text={this.state.hourFrom} style={[styles.textInput, { borderColor: this.state.hourFromRequired ? 'red' : 'gray' }]} onChangeText={(hourFrom) => this.setState({ hourFrom })} underlineColorAndroid={'transparent'} />
+        <TextInput placeholder={'Hora hasta'} text={this.state.hourTo} style={[styles.textInput, { borderColor: this.state.hourToRequired ? 'red' : 'gray' }]} onChangeText={(hourTo) => this.setState({ hourTo })} underlineColorAndroid={'transparent'} />
+        <TextInput placeholder={'Cancha'} text={this.state.location} style={[styles.textInput, { borderColor: this.state.locationRequired ? 'red' : 'gray' }]} onChangeText={(location) => this.setState({ location })} underlineColorAndroid={'transparent'} />
         <Picker selectedValue={this.state.matchType} onValueChange={(matchType) => this.setState({ matchType })}>
           <Picker.Item label="11 vs 11" value="11" />
           <Picker.Item label="9 vs 9" value="9" />
@@ -70,22 +84,43 @@ export default class CreateMatchBody extends Component {
   _onStoreChange() {
     this.setState({
       isGettingFriends: CreateMatchStore.isGettingFriends(),
-      errorGettingFriends: CreateMatchStore.getErrorGettingFriends()
+      errorGettingFriends: CreateMatchStore.getErrorGettingFriends(),
+      isNewMatchConfirmed: CreateMatchStore.isNewMatchConfirmed(),
+      isSavingMatch: CreateMatchStore.isSavingMatch(),
+      errorSavingMatch: CreateMatchStore.getErrorSavingMatch(),
+      matchSaved: CreateMatchStore.isMatchSaved()
     }, () => {
-      // if (CreateMatchStore.isNewMatchConfirmed()) {
-      //   if (!this.state.email) {
-      //     this.setState({ errorSavingNewFriend: 'Completa el mail.' });
-      //   } else {
-      //     CreateMatchStore.confirmNewFriend(this.state.email);
-      //   }
-      // } else if (!this.state.isGettingFriends && !this.state.errorGettingFriends) {
-      //   // this.setState({ errorSavingNewFriend: 'Amigo guardado.' }, () => {
-      //   //   setTimeout(() => {
-      //   //     // NavigationActions.back();
-      //   //     // FriendActions.friendsUpdated();
-      //   //   }, 3000);
-      //   // });
-      // }
+      if (this.state.isNewMatchConfirmed) {
+        this._processConfirmation();
+      } else if (this.state.matchSaved && !this.state.isSavingMatch && !this.state.errorSavingMatch) {
+        this.setState({ errorSavingNewFriend: 'Partido guardado.' }, () => {
+          setTimeout(() => {
+            CreateMatchActions.matceshUpdated();
+            NavigationActions.back();
+          }, 3000);
+        });
+      }
+    });
+  }
+
+  _processConfirmation() {
+    let descriptionRequired = !this.state.description ? 'Completa la descripcion.' : null;
+    let dateRequired = !this.state.date ? 'Completa fecha.' : null;
+    let hourFromRequired = !this.state.hourFrom ? 'Completa la hora de inicio.' : null;
+    let hourToRequired = !this.state.hourTo ? 'Completa la hora de finlaizacion.' : null;
+    let locationRequired = false;
+    let matchTypeRequired = !this.state.matchType ? 'Completa el tipo de partido.' : null;
+
+    this.setState({
+      descriptionRequired,
+      dateRequired,
+      hourFromRequired,
+      hourToRequired,
+      locationRequired,
+      matchTypeRequired
+    }, () => {
+      if (!descriptionRequired && !dateRequired && !hourFromRequired && !hourToRequired && !locationRequired && !matchTypeRequired)
+        CreateMatchActions.createMatch(this.state.description, this.state.date, this.state.hourFrom, this.state.hourTo, this.state.location, this.state.matchType, this.state.friends)
     });
   }
 

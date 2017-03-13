@@ -31,6 +31,37 @@ export default class ApiService {
       });
   }
 
+  static createMatch(title, date, fromTime, toTime, location, matchType, pendingPlayers, token) {
+    let form = {
+      "title": title,
+      "date": date,
+      "fromTime": fromTime,
+      "toTime": toTime,
+      "location": location,
+      "matchType": matchType,
+      "pendingPlayers": pendingPlayers
+    };
+    return fetch(BASEURL + "/match", {
+      method: 'put',
+      headers: ApiService._getHeader(token),
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
+      });
+  }
+
   static signUp(email, password) {
     var _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
