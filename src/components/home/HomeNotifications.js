@@ -13,6 +13,8 @@ import HomeActions from '../../actions/HomeActions';
 import NavigationActions from '../../actions/NavigationActions';
 import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
+import FriendshipRequestRow from './FriendshipRequestRow';
+import MatchInvitationRow from './MatchInvitationRow';
 
 export default class HomeNotifications extends Component {
   constructor(props) {
@@ -20,11 +22,15 @@ export default class HomeNotifications extends Component {
 
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      friendshipRequests: ds.cloneWithRows([]),
+      friendshipRequests: [],
+      matchInvitations: [],
       isLoadingFriendshipRequest: false,
+      isLoadingMatchInvitations: false,
       errorLoadingFriendshipRequest: null,
+      errorLoadingMatchInvitations: null,
       isMarkingAsRead: false,
-      errorMarkinAsRead: null
+      errorMarkinAsRead: null,
+      notifications: ds.cloneWithRows([])
     };
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -32,13 +38,13 @@ export default class HomeNotifications extends Component {
     this._renderErrorMessage = this._renderErrorMessage.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
     this._update = this._update.bind(this);
-    this._renderPhoto = this._renderPhoto.bind(this);
-    this._renderInfo = this._renderInfo.bind(this);
+    this._setAllNotifications = this._setAllNotifications.bind(this);
   }
 
   componentDidMount() {
     HomeStore.addChangeListener(this._onStoreChange);
     HomeActions.loadFriendshipRequest();
+    HomeActions.loadMatchInvitations();
   }
 
   componentWillUnmount() {
@@ -51,7 +57,7 @@ export default class HomeNotifications extends Component {
         {this._renderLoading(this.state.isLoadingFriendshipRequest)}
         <Text style={styles.text}>Notificaciones</Text>
         <ListView
-          dataSource={this.state.friendshipRequests}
+          dataSource={this.state.notifications}
           renderRow={this._renderRow}
           style={styles.listView}
           enableEmptySections={true}
@@ -73,7 +79,13 @@ export default class HomeNotifications extends Component {
       if (!this.state.isLoadingFriendshipRequest && !this.state.errorLoadingFriendshipRequest) {
         let friendshipRequests = HomeStore.getFriendshipRequests();
         if (friendshipRequests)
-          this.setState({ friendshipRequests: this.state.friendshipRequests.cloneWithRows(friendshipRequests) });
+          this.setState({ friendshipRequests: friendshipRequests }, () => { this._setAllNotifications() });
+      }
+
+      if (!this.state.isLoadingMatchInvitations && !this.state.errorLoadingMatchInvitations) {
+        let matchInvitations = HomeStore.getMatchInvitations();
+        if (matchInvitations)
+          this.setState({ matchInvitations: matchInvitations }, () => { this._setAllNotifications() });
       }
 
       if (this.state.refreshFriendshipRequestList) {
@@ -82,60 +94,58 @@ export default class HomeNotifications extends Component {
     });
   }
 
-  _renderRow(rowData) {
-    return (
-      <View key={rowData._id} style={{ borderRadius: 10 }}>
-        <TouchableOpacity style={styles.dataRow} onPress={() => this._rowPreseed(rowData)}>
-          <View style={styles.dataRowLeft}>
-            {this._renderPhoto(rowData.sender.photo)}
-          </View>
-          <View style={styles.dataRowRight}>
-            {this._renderInfo(rowData.sender)}
-            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{'Solicitud de amistad'}</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
+  _setAllNotifications() {
+    let ret = [];
+    if (this.state.friendshipRequests) {
+      ret = ret.concat(this.state.friendshipRequests.map((elem) => {
+        return {
+          type: 'FRIENDSHIP_REQUEST',
+          ...elem
+        };
+      }));
+    }
+
+    if (this.state.matchInvitations) {
+      ret = ret.concat(this.state.matchInvitations.map((elem) => {
+        return {
+          type: 'MATCH_INVITATION',
+          ...elem
+        };
+      }));
+    }
+
+    this.setState({ notifications: this.state.notifications.cloneWithRows(ret) });
   }
 
-  _rowPreseed(friendshipRequest) {
+  _renderRow(rowData) {
+    switch (rowData.type) {
+      case 'FRIENDSHIP_REQUEST':
+        return <FriendshipRequestRow data={rowData} onPress={this._rowFriendshipRequestPreseed} />
+
+      case 'MATCH_INVITATION':
+        return <MatchInvitationRow data={rowData} onPress={this._rowMatchInvitationPreseed} />
+
+      default:
+        return null;
+    }
+  }
+
+  _rowFriendshipRequestPreseed(friendshipRequest) {
     NavigationActions.addRoute({
       id: RouteConstants.ROUTE_FRIENDSHIP_REQUEST,
       data: friendshipRequest
     });
   }
 
+  _rowMatchInvitationPreseed(matchInvitation) {
+    NavigationActions.addRoute({
+      id: RouteConstants.ROUTE_MATCH_INVITATION,
+      data: matchInvitation
+    });
+  }
+
   _update() {
     HomeActions.loadFriendshipRequest();
-  }
-
-  _renderPhoto(photo) {
-    if (photo)
-      return (
-        <Image style={styles.friendPhoto} source={require('../../statics/no_photo_friend.png')}></Image>
-      );
-
-    return (
-      <Image style={styles.friendPhoto} source={require('../../statics/no_photo_friend.png')}></Image>
-    );
-  }
-
-  _renderInfo(info) {
-    let ret = [];
-    if (info.firstName && info.lastName) {
-      ret.push(<Text key={1} style={{ fontSize: 20 }}>{info.firstName + ' ' + info.lastName}</Text>);
-      ret.push(<Text key={2} style={{ fontSize: 16, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
-      ret.push(<Text key={3} style={{ fontSize: 16, textAlign: 'left' }}>{!info.phone ? '' : info.phone}</Text>);
-    }
-    else {
-      ret.push(<Text key={1} style={{ fontSize: 20, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
-    }
-
-    return (
-      <View>
-        {ret}
-      </View>
-    );
   }
 
   _renderLoading(loading) {
@@ -176,16 +186,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: 'grey'
   },
-  dataRow: {
-    marginTop: 6,
-    marginHorizontal: 6,
-    borderBottomWidth: 0.5,
-    height: 100,
-    backgroundColor: '#F6F6F6',
-    flexDirection: 'row',
-    borderRadius: 5,
-    width: Dimensions.get('window').width * 0.94
-  },
   buttonFloat: {
     backgroundColor: 'gray',
     width: 60,
@@ -202,21 +202,5 @@ const styles = StyleSheet.create({
     fontSize: 45,
     backgroundColor: 'transparent',
     flex: 1
-  },
-  dataRowLeft: {
-    width: 80,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  dataRowRight: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    paddingLeft: 10,
-  },
-  friendPhoto: {
-    width: 70,
-    height: 70
   }
 });

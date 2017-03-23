@@ -251,6 +251,26 @@ export default class ApiService {
       });
   }
 
+  static getMatchInvitations(token) {
+    return fetch(BASEURL + "/notifications/matchinvitation", {
+      method: 'get',
+      headers: ApiService._getHeader(token)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
   static acceptFriendshipRequest(id, token) {
     let form = {
       "id": id
@@ -301,12 +321,81 @@ export default class ApiService {
       });
   }
 
+  static acceptMatchInvitation(id, token) {
+    let form = { "matchId": id };
+    return fetch(BASEURL + '/match/confirmPlayer', {
+      method: 'post',
+      headers: ApiService._getHeader(token),
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
+  static rejectMatchInvitation(id, token) {
+    let form = { "matchId": id };
+    return fetch(BASEURL + '/match/rejectPlayer', {
+      method: 'post',
+      headers: ApiService._getHeader(token),
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
   static markAsReadFriendshipRequest(id, token) {
     let form = {
       "id": id
     };
 
     return fetch(BASEURL + "/notifications/friendshiprequest/markasread", {
+      method: 'post',
+      headers: ApiService._getHeader(token),
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
+  static markAsReadMatchInvitation(id, token) {
+    let form = {
+      "id": id
+    };
+
+    return fetch(BASEURL + "/notifications/matchinvitation/markasread", {
       method: 'post',
       headers: ApiService._getHeader(token),
       body: JSON.stringify(form)

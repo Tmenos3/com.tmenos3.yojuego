@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import HomeConstants from '../constants/HomeConstants';
+import CreateMatchConstants from '../constants/CreateMatchConstants'
 import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
@@ -32,6 +33,9 @@ let _logOutDone = false;
 let _isLoadingPlayer = false;
 let _errorLoadingPlayer = null;
 let _player = null;
+let _loadingMatchInvitations = false;
+let _errorLoadingMatchInvitations = null;
+let _matchInvitations = null;
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -153,6 +157,18 @@ let HomeStore = assign({}, EventEmitter.prototype, {
   getErrorLoadingPlayer() {
     return _errorLoadingPlayer;
   },
+
+  isLoadingMatchInvitations() {
+    return _loadingMatchInvitations;
+  },
+
+  getMatchInvitations() {
+    return _matchInvitations;
+  },
+
+  getErrorLoadingMatchInvitations() {
+    return _errorLoadingMatchInvitations;
+  }
 });
 
 HomeStore.dispatchToken = AppDispatcher.register((action) => {
@@ -285,6 +301,25 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
+    case HomeConstants.LOADING_MATCH_INVITATIONS:
+      _loadingMatchInvitations = true;
+      _errorLoadingMatchInvitations = null;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.MATCH_INVITATIONS_LOADED:
+      _loadingMatchInvitations = false;
+      _errorLoadingMatchInvitations = null;
+      _matchInvitations = action.payload;
+      HomeStore.emitChange();
+      break;
+
+    case HomeConstants.LOADING_MATCH_INVITATIONS_FAILED:
+      _loadingMatchInvitations = false;
+      _errorLoadingMatchInvitations = action.payload;
+      HomeStore.emitChange();
+      break;
+
     case HomeConstants.LOGOUT_INTENT:
       _isLoggingOut = true;
       _errorLoggingOut = null;
@@ -323,6 +358,10 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _errorLoadingPlayer = null;
       _player = action.payload;
       HomeStore.emitChange();
+      break;
+
+    case CreateMatchConstants.CLEAN_CREATE_MATCH:
+      _showCreateMatch = false;
       break;
 
     case AppConstants.RESET_APP:

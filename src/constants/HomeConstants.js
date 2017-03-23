@@ -29,4 +29,7 @@ export default class HomeConstants {
   static get LOADING_PLAYER() { return 'LOADING_PLAYER'; }
   static get PLAYER_LOADED() { return 'PLAYER_LOADED'; }
   static get ERROR_LOADING_PLAYER() { return 'ERROR_LOADING_PLAYER'; }
+  static get LOADING_MATCH_INVITATIONS() { return 'LOADING_MATCH_INVITATIONS'; }
+  static get MATCH_INVITATIONS_LOADED() { return 'MATCH_INVITATIONS_LOADED'; }
+  static get LOADING_MATCH_INVITATIONS_FAILED() { return 'LOADING_MATCH_INVITATIONS_FAILED'; }
 }

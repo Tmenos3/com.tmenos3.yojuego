@@ -8,4 +8,5 @@ export default class CreateMatchConstants {
   static get MATCH_SAVED() { return 'CREATE_MATCH_MATCH_SAVED'; }
   static get SAVING_MATCH() { return 'CREATE_MATCH_SAVING_MATCH'; }
   static get ERROR_SAVING_MATCH() { return 'CREATE_MATCH_ERROR_SAVING_MATCH'; }
+  static get CLEAN_CREATE_MATCH() {return 'CLEAN_CREATE_MATCH'; }
 }

@@ -82,6 +82,31 @@ export default class HomeActions {
       });
   }
 
+  static loadMatchInvitations(){
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.LOADING_MATCH_INVITATIONS
+    });
+
+    ApiService.getMatchInvitations(LocalService.getToken())
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.MATCH_INVITATIONS_LOADED,
+          payload: resp.resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_MATCH_INVITATIONS_FAILED,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_MATCH_INVITATIONST_FAILED,
+          payload: error.message
+        });
+      });
+  }
+
   static loadFriends() {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.LOADING_FRIENDS

@@ -16,6 +16,8 @@ const MENU_WIDTH_CLOSED = 0;
 const MENU_WIDTH_OPENED = Dimensions.get('window').width * 0.8;
 const BACKGROUND_MENU_WIDTH_CLOSED = 0;
 const BACKGROUND_MENU_WIDTH_OPENED = Dimensions.get('window').width;
+const SIDE_MENU_WIDTH_CLOSED = 0;
+const SIDE_MENU_WIDTH_OPENED = Dimensions.get('window').width * 0.2;
 
 export default class Menu extends Component {
   constructor(props) {
@@ -31,6 +33,7 @@ export default class Menu extends Component {
     this.state = {
       menuWidth: MENU_WIDTH_CLOSED,
       backgroundMenuWidth: BACKGROUND_MENU_WIDTH_CLOSED,
+      sideWidth: SIDE_MENU_WIDTH_CLOSED,
       isLoggingOut: false,
       logOutDone: false,
       errorLoggingOut: null
@@ -50,6 +53,9 @@ export default class Menu extends Component {
   render() {
     return (
       <View style={[styles.menuBackground, { width: this.state.backgroundMenuWidth }]}>
+        <View style={[styles.sideList, { width: this.state.sideWidth }]}>
+          <TouchableOpacity onPress={this._back} style={styles.sideListButton}></TouchableOpacity>
+        </View>
         <View style={[styles.menuList, { width: this.state.menuWidth }]}>
           <TouchableOpacity onPress={this._back} style={styles.menuBtnBack}>
             <Text style={styles.menuBtnBackText}>Atras</Text>
@@ -95,6 +101,7 @@ export default class Menu extends Component {
     this.setState({
       menuWidth: HomeStore.mustShowMenu() ? MENU_WIDTH_OPENED : MENU_WIDTH_CLOSED,
       backgroundMenuWidth: HomeStore.mustShowMenu() ? BACKGROUND_MENU_WIDTH_OPENED : BACKGROUND_MENU_WIDTH_CLOSED,
+      sideWidth: HomeStore.mustShowMenu() ? SIDE_MENU_WIDTH_OPENED : SIDE_MENU_WIDTH_CLOSED,
       isLoggingOut: HomeStore.isLoggingOut(),
       logOutDone: HomeStore.logOutDone(),
       errorLoggingOut: HomeStore.getErrorLoggingOut()
@@ -146,5 +153,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
+  },
+  sideList: {
+    backgroundColor: 'transparent',
+    height: Dimensions.get('window').height,
+    position: 'absolute',
+    left: 0
+  },
+  sideListButton: {
+    flex: 1,
+    backgroundColor: 'transparent'
   }
 });

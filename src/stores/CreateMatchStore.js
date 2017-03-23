@@ -112,6 +112,7 @@ CreateMatchStore.dispatchToken = AppDispatcher.register((action) => {
       CreateMatchStore.emitChange();
       break;
 
+    case CreateMatchConstants.CLEAN_CREATE_MATCH:
     case AppConstants.RESET_APP:
       _friends = [];
       _isGettingFriends = false;

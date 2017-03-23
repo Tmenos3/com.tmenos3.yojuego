@@ -19,6 +19,7 @@ import Splash from './Splash';
 import NewFriend from './friend/NewFriend';
 import NewGroup from './group/NewGroup';
 import FriendshipRequest from './friendshipRequest/FriendshipRequest';
+import MatchInvitation from './matchInvitation/MatchInvitation';
 import FriendList from './common/friendList/FriendList';
 
 let _navigator;
@@ -151,6 +152,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_FRIENDSHIP_REQUEST:
         return (
           <FriendshipRequest friendshipRequest={route.data} />
+        );
+
+      case RouteConstants.ROUTE_MATCH_INVITATION:
+        return (
+          <MatchInvitation matchInvitation={route.data} />
         );
 
       case RouteConstants.ROUTE_FRIEND_LIST:

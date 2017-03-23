@@ -72,7 +72,11 @@ export default class CreateMatchActions {
       });
   }
 
-  static matceshUpdated() {
+  static matchesUpdated() {
+    Dispatcher.handleViewAction({
+      actionType: CreateMatchConstants.CLEAN_CREATE_MATCH
+    });
+
     HomeActions.loadPlayerMatches();
   }
 }

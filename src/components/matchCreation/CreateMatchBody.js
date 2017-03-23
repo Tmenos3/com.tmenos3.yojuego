@@ -95,8 +95,8 @@ export default class CreateMatchBody extends Component {
       } else if (this.state.matchSaved && !this.state.isSavingMatch && !this.state.errorSavingMatch) {
         this.setState({ errorSavingNewFriend: 'Partido guardado.' }, () => {
           setTimeout(() => {
-            CreateMatchActions.matceshUpdated();
             NavigationActions.back();
+            CreateMatchActions.matchesUpdated();
           }, 3000);
         });
       }
