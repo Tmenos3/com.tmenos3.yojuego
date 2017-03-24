@@ -14,6 +14,8 @@ import LoginActions from '../actions/LoginActions';
 import LoginStore from '../stores/LoginStore';
 import NavigationActions from '../actions/NavigationActions';
 import RouteConstants from '../constants/RouteConstants';
+import Styles from '../constants/Styles';
+import FullActivityIndicator from './common/FullActivityIndicator';
 
 export default class LogIn extends Component {
   constructor(props) {
@@ -79,7 +81,7 @@ export default class LogIn extends Component {
           <Text style={styles.buttonText}>Google+</Text>
           <Image style={styles.googleImage} source={require('../statics/google-plus-logo-white.png')}></Image>
         </TouchableOpacity>
-        <View style={styles.line}></View>
+        <View style={styles.line} />
         <View style={styles.inputContainer}>
           <TextInput
             placeholder={"Email"}
@@ -87,10 +89,11 @@ export default class LogIn extends Component {
             onChangeText={this._onEmailTextChanged}
             text={this.state.email}
             underlineColorAndroid={'transparent'}
+            keyboardType={'email-address'}
+            placeholderTextColor={'gray'}
           />
         </View>
         <View style={[styles.inputContainer, {
-          borderTopWidth: 0,
           marginBottom: Dimensions.get('window').width * 0.06
         }]}>
           <TextInput
@@ -99,6 +102,8 @@ export default class LogIn extends Component {
             onChangeText={this._onPasswordTextChanged}
             text={this.state.password}
             underlineColorAndroid={'transparent'}
+            placeholderTextColor={'gray'}
+            secureTextEntry={true}
           />
         </View>
         <View style={styles.loginContainer}>
@@ -119,11 +124,7 @@ export default class LogIn extends Component {
 
   _renderLoading() {
     if (this.state.loading) {
-      return (
-        <View style={styles.loading}>
-          <ActivityIndicator animating={true} size='large' />
-        </View>
-      )
+      return (<FullActivityIndicator />)
     }
     return null;
   }
@@ -186,16 +187,27 @@ export default class LogIn extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Styles.MAIN_COLOR,
     justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 0,
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    marginTop: 20
+  },
+  title: {
+    fontSize: 40,
+    color: 'white',
+    fontWeight: 'bold'
   },
   facebookButtton: {
     width: Dimensions.get('window').width * 0.94,
     height: 40,
     backgroundColor: '#3b5998',
-    marginTop: Dimensions.get('window').width * 0.03,
     justifyContent: 'center',
     borderRadius: Dimensions.get('window').width * 0.012
   },
@@ -209,7 +221,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 25,
     textAlign: 'center',
     fontWeight: 'bold'
   },
@@ -217,17 +229,22 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.94,
     height: Dimensions.get('window').height * 0.03,
     borderBottomWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'dimgray',
+    marginTop: Dimensions.get('window').width * 0.06,
     marginBottom: Dimensions.get('window').width * 0.06
   },
   inputContainer: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    height: 40
+    marginTop: 10,
+    height: 45,
+    borderWidth: 2,
+    borderColor: 'white',
+    backgroundColor: 'white'
   },
   input: {
     width: Dimensions.get('window').width * 0.94,
     flex: 1,
+    fontSize: 20,
+    color: 'black'
   },
   loginContainer: {
     width: Dimensions.get('window').width * 0.94,
@@ -241,10 +258,12 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     borderRadius: Dimensions.get('window').width * 0.012,
-    backgroundColor: '#33adff'
+    backgroundColor: 'rgb(0, 100, 0)'
   },
   text: {
-    color: 'grey'
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'
   },
   errorText: {
     color: 'red'
@@ -262,15 +281,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 10,
     bottom: 9
-  },
-  loading: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.25)'
   }
 });

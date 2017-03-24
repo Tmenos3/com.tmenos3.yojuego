@@ -7,6 +7,7 @@ import {
   Text
 } from 'react-native';
 import HomeActions from '../../actions/HomeActions';
+import Styles from '../../constants/Styles';
 
 export default class Header extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class Header extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={Styles.HEADER_STYLE}>
         <Text style={styles.playerName}>{this.props.player.firstName + ' ' + this.props.player.lastName}</Text>
         <TouchableOpacity onPress={this._showMenu} style={styles.menuButton}>
           <Text style={styles.menuText}>Menu</Text>
@@ -40,12 +41,6 @@ export default class Header extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#009900',
-    height: 60,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
   menuButton: {
     width: Dimensions.get('window').width * 0.2,
     height: 40,

@@ -15,7 +15,7 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <Header player={this.props.player} />
-        <Body />
+        <Body player={this.props.player}/>
         <Menu />
       </View>
     );

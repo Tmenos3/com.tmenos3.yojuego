@@ -13,10 +13,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import CollapsablePanel from '../CollapsablePanel';
 import MatchDetailActions from '../../actions/MatchDetailActions';
-// import MatchDetailStore from '../../stores/MatchDetailStore';
+import PlayersList from './PlayersList';
 import Swiper from 'react-native-swiper';
+import Styles from '../../constants/Styles'
 
 export default class MatchDetailBody extends Component {
   constructor(props) {
@@ -27,8 +27,6 @@ export default class MatchDetailBody extends Component {
 
     this._renderDetail = this._renderDetail.bind(this);
     this._renderClothing = this._renderClothing.bind(this);
-    this._renderTeam = this._renderTeam.bind(this);
-    this._renderRow = this._renderRow.bind(this);
 
     this.state = {
       match: this.props.match,
@@ -37,76 +35,38 @@ export default class MatchDetailBody extends Component {
     }
   }
 
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
-  /*
-        <View style={styles.container}>
-          <ScrollView
-            ref={(scrollView) => { _scrollView = scrollView; } }
-            automaticallyAdjustContentInsets={true}
-            scrollEventThrottle={200}
-            style={styles.scrollView}>
-            {this._renderPlayers()}
-            {this._renderStadium()}
-            {this._renderComments()}
-          </ScrollView>
-          {this._renderLoading()}
-        </View>
-  */
-
   render() {
     return (
       <Swiper style={styles.container} showsButtons={false}>
         {this._renderDetail()}
         {this._renderClothing()}
-        {this._renderTeam()}
+        <PlayersList confirmedPlayers={this.props.match.confirmedPlayers} pendingPlayers={this.props.match.pendingPlayers} />
       </Swiper>
     );
   }
 
   _renderDetail() {
+    let confirmados = this.props.match.confirmedPlayers.length;
+    let needed = this.props.match.matchType * 2;
+    let total = this.props.match.confirmedPlayers.length + this.props.match.pendingPlayers.length;
+    let pending = this.props.match.pendingPlayers.length;
     return (
       <View style={styles.container}>
-        <View style={styles.matchTitle}>
-          <Text style={styles.titleText}>Los pibes - Jueves 22hs</Text>
-        </View>
-        <View style={styles.dateContainer}>
-          <View style={styles.dayContainer}>
-            <Text style={styles.dayText}>22</Text>
-            <Text style={styles.monthText}>Feb</Text>
-          </View>
-          <View style={styles.dayOfWeekContainer}>
-            <Text style={styles.dayOfWeekText}>Jueves</Text>
-          </View>
-          <View style={styles.timeContainer}>
-            <Text style={styles.dayText}>18</Text>
-            <Text style={styles.monthText}>hs</Text>
-          </View>
-        </View>
-        <View style={styles.playersContainer}>
-          <View style={styles.counts}>
-            <View style={styles.confirmed}>
-              <Text style={styles.countText}>Confirmados 8/10</Text>
-            </View>
-            <View style={styles.pending}>
-              <Text style={styles.countText}>Pendientes 12/20</Text>
-            </View>
-          </View>
-          <View style={styles.status}>
-
-          </View>
-        </View>
-        <View style={styles.clubContainer}>
-          <Text style={styles.titleText}>Cancha</Text>
-        </View>
+        <Text style={styles.titleText}>{this.props.match.title}</Text>
+        <Text style={styles.text}>{'Día: ' + this.props.match.date}</Text>
+        <Text style={styles.text}>{'Hora: ' + this.props.match.fromTime + ' - ' + this.props.match.toTime}</Text>
+        <Text style={styles.text}>{'Tipo: ' + this._getMatchType(this.props.match.matchType)}</Text>
+        <Text style={styles.text}>{'Confirmados: ' + confirmados + ' / ' + needed}</Text>
+        <Text style={styles.text}>{'Pendientes: ' + pending + ' / ' + total}</Text>
+        <TouchableOpacity style={styles.club}>
+          <Text style={styles.text}>{'Cancha: ' + this.props.match.location}</Text>
+        </TouchableOpacity>
       </View>
     );
+  }
+
+  _getMatchType(matchType) {
+    return matchType + ' vs ' + matchType;
   }
 
   _renderClothing() {
@@ -121,36 +81,6 @@ export default class MatchDetailBody extends Component {
       </View>
     );
   }
-
-  _renderTeam() {
-    return (
-      <View style={styles.teamContainer}>
-        <ListView
-          dataSource={this.state.confirmedPlayers}
-          renderRow={this._renderRow}
-          style={styles.confirmedView}
-          enableEmptySections={true}
-          />
-        <ListView
-          dataSource={this.state.pendingPlayers}
-          renderRow={this._renderRow}
-          style={styles.pendingView}
-          enableEmptySections={true}
-          />
-        <TouchableOpacity style={styles.inviteBtn} onPress={this._newMatch}>
-          <Text style={styles.buttonText}>Invitar</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
-  _renderRow(rowData) {
-    return (
-      <View>
-        <Text style={{ fontSize: 20 }}>{rowData}</Text>
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -161,7 +91,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'black',
-    fontSize: 50,
+    fontSize: 20,
     textAlign: 'center'
   },
   button: {
@@ -184,7 +114,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   dateContainer: {
-    height: 70,
     flexDirection: 'row',
     width: Dimensions.get('window').width * 0.9,
     marginTop: 20
@@ -233,38 +162,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.9,
     marginTop: 10
   },
-  clubContainer: {
-    flex: 2,
-    flexDirection: 'row',
+  club: {
     width: Dimensions.get('window').width * 0.9,
     marginTop: 10,
-    backgroundColor: 'gray',
-    borderRadius: 20
-  },
-  counts: {
-    flex: 4,
-    flexDirection: 'column',
-    width: Dimensions.get('window').width * 0.9,
-    marginRight: 10
-  },
-  confirmed: {
-    flex: 1,
-    height: 20,
-    backgroundColor: 'green',
-    borderRadius: 20
-  },
-  pending: {
-    flex: 1,
-    height: 20,
-    backgroundColor: 'yellow',
-    borderRadius: 20
-  },
-  status: {
-    flex: 1,
-    flexDirection: 'column',
-    width: Dimensions.get('window').width * 0.9,
-    backgroundColor: 'red',
-    borderRadius: 20
+    backgroundColor: Styles.MAIN_COLOR,
+    height: 30
   },
   countText: {
     color: 'black',

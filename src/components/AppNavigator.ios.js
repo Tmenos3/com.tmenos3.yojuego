@@ -115,7 +115,7 @@ export default class AppNavigator extends Component {
         );
       case RouteConstants.ROUTE_MATCH_DETAIL:
         return (
-          <MatchDetail />
+          <MatchDetail match={route.data}/>
         );
       case RouteConstants.ROUTE_CREATE_MATCH:
         return (

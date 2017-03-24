@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import MatchDetailActions from '../../actions/MatchDetailActions';
 import NavigationActions from '../../actions/NavigationActions';
-
+import Styles from '../../constants/Styles';
 
 export default class MatchDetailHeader extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ export default class MatchDetailHeader extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[Styles.HEADER_STYLE, styles.container]}>
         <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
           <Text style={styles.menuText}>OK</Text>
         </TouchableOpacity>
@@ -49,8 +49,6 @@ export default class MatchDetailHeader extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#009900',
-    height: 60,
     flexDirection: 'row-reverse',
     alignItems: 'center'
   },

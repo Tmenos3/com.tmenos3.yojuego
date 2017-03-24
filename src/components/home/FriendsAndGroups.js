@@ -13,6 +13,7 @@ import HomeActions from '../../actions/HomeActions';
 import NavigationActions from '../../actions/NavigationActions';
 import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
+import Styles from '../../constants/Styles';
 
 export default class FriendsAndGroups extends Component {
   constructor(props) {
@@ -60,7 +61,7 @@ export default class FriendsAndGroups extends Component {
     let hideContainer = { width: 0, height: 0 }
 
     return (
-      <View style={styles.slide}>
+      <View style={Styles.MAIN_CONTAINER}>
         <Text style={{ fontSize: 20 }}>Amigos y grupos</Text>
         <View style={{ flexDirection: 'row', width: Dimensions.get('window').width, height: 50 }}>
           <TouchableOpacity style={styles.button} onPress={this._showFriends}>
@@ -325,11 +326,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.25)'
-  },
-  slide: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   text: {
     color: 'black',

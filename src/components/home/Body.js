@@ -16,6 +16,8 @@ import FriendsAndGroups from './FriendsAndGroups';
 import HomeNotifications from './HomeNotifications';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
+import FullActivityIndicator from '../common/FullActivityIndicator';
+import Styles from '../../constants/Styles';
 
 export default class Body extends Component {
   constructor(props) {
@@ -49,15 +51,15 @@ export default class Body extends Component {
 
   render() {
     return (
-      <Swiper style={styles.container} showsButtons={false} showsPagination={true} dot={this._renderDot()}>
-        <View style={styles.container}>
+      <Swiper style={Styles.MAIN_CONTAINER} showsButtons={false} showsPagination={true} dot={this._renderDot()}>
+        <View style={Styles.MAIN_CONTAINER}>
           {this._renderLoading()}
           <ListView
             dataSource={this.state.matches}
             renderRow={this._renderRow}
             style={styles.listView}
             enableEmptySections={true}
-            />
+          />
           <TouchableOpacity style={styles.button} onPress={this._newMatch}>
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
@@ -75,17 +77,34 @@ export default class Body extends Component {
 
   _renderRow(rowData) {
     return (
-      <View style={{ borderRadius: 10 }}>
+      <View>
         <TouchableOpacity style={styles.dataRow} onPress={() => this._rowPreseed(rowData)}>
           <View style={styles.dataRowLeft}>
-            <Text style={{ fontSize: 26 }}>{moment(rowData.date).format("DD")}</Text>
-            <Text style={{ fontSize: 13 }}>{moment(rowData.date).format("MM")}</Text>
+            <Text style={{ fontSize: 26 }}>{moment(rowData.date, 'YYYY-MM-DDT00:00:00Z').format("DD/MM")}</Text>
+            <Text style={{ fontSize: 13 }}>{rowData.fromTime + ' - ' + rowData.toTime}</Text>
           </View>
           <View style={styles.dataRowRight}>
             <Text style={{ fontSize: 20 }}>{rowData.title}</Text>
+            <Text style={{ fontSize: 20 }}>{'Lugar: ' + rowData.location}</Text>
+            <Text style={{ fontSize: 20 }}>{'Jugadores: ' + rowData.confirmedPlayers.length + ' / ' + (rowData.matchType * 2)}</Text>
+            {this._isConfirmed(rowData)}
           </View>
         </TouchableOpacity>
       </View>
+    );
+  }
+
+  _isConfirmed(match) {
+    for (let i = 0; i < match.confirmedPlayers.length; i++) {
+      if (match.confirmedPlayers[i]._id === this.props.player._id)
+        return (
+          <Text style={{ fontSize: 20, color: 'green' }}>{'Ya Confirmaste.'}</Text>
+        );
+    }
+
+    return (
+      <Text style={{ fontSize: 20, color: 'red' }}>{'Todavía no confirmaste.'}</Text>
+
     );
   }
 
@@ -121,11 +140,7 @@ export default class Body extends Component {
 
   _renderLoading() {
     if (this.state.loadingMatches) {
-      return (
-        <View style={styles.loading}>
-          <ActivityIndicator animating={true} size='large' />
-        </View>
-      )
+      return (<FullActivityIndicator />)
     }
 
     return null;
@@ -143,18 +158,14 @@ export default class Body extends Component {
         marginTop: 3,
         marginBottom: 3,
       }}
-        />
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#d9d9d9',
-  },
   button: {
-    backgroundColor: '#009900',
+    backgroundColor: Styles.MAIN_COLOR,
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -173,22 +184,20 @@ const styles = StyleSheet.create({
   dataRow: {
     marginTop: 6,
     marginHorizontal: 6,
-    borderBottomWidth: 0.5,
-    height: 60,
-    backgroundColor: '#F6F6F6',
-    flexDirection: 'row',
-    borderRadius: 5
+    height: 120,
+    backgroundColor: 'white',
+    flexDirection: 'row'
   },
   dataRowLeft: {
-    width: 60,
+    width: 80,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center'
   },
   dataRowRight: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     paddingLeft: 10,
   },
   listView: {
