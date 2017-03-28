@@ -7,7 +7,7 @@ import {
   Text
 } from 'react-native';
 import Styles from '../../constants/Styles';
-import Friend from '../common/Friend';
+import FriendRow from '../common/FriendRow';
 
 export default class PlayersList extends Component {
   constructor(props) {
@@ -52,8 +52,9 @@ export default class PlayersList extends Component {
   }
 
   _renderRow(rowData) {
+    let backgroundColor = rowData.type === 'CONFIRMED' ? 'rgba(0, 200, 0, 0.5)' : 'white';
     return (
-      <Friend friend={rowData} />
+      <Friend friend={rowData} backgroundColor={backgroundColor} />
     );
   }
 }
@@ -62,16 +63,6 @@ const styles = StyleSheet.create({
   confirmedView: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'green',
-    marginRight: 5,
-    borderRadius: 20
-  },
-  pendingView: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'yellow',
-    marginLeft: 5,
-    borderRadius: 20
   },
   inviteBtn: {
     backgroundColor: 'black',

@@ -6,7 +6,7 @@ import {
   View
 } from 'react-native';
 
-export default class Friend extends Component {
+export default class FriendRow extends Component {
   constructor(props) {
     super(props);
 
@@ -41,9 +41,9 @@ export default class Friend extends Component {
   _renderInfo(info) {
     let ret = [];
     if (info.firstName && info.lastName) {
-      ret.push(<Text key={1} style={{ fontSize: 20 }}>{info.firstName + ' ' + info.lastName}</Text>);
-      ret.push(<Text key={2} style={{ fontSize: 16, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
-      ret.push(<Text key={3} style={{ fontSize: 16, textAlign: 'left' }}>{!info.phone ? '' : info.phone}</Text>);
+      ret.push(<Text key={1} style={styles.nameText}>{info.firstName + ' ' + info.lastName}</Text>);
+      ret.push(<Text key={2} style={styles.text}>{!info.email ? '' : info.email}</Text>);
+      ret.push(<Text key={3} style={styles.text}>{!info.phone ? '' : info.phone}</Text>);
     }
     else {
       ret.push(<Text key={1} style={{ fontSize: 20, textAlign: 'left' }}>{!info.email ? '' : info.email}</Text>);
@@ -59,20 +59,17 @@ export default class Friend extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
-    marginTop: 10,
-    marginHorizontal: 6,
-    borderBottomWidth: 0.5,
-    height: 80,
-    backgroundColor: '#F6F6F6',
-    flexDirection: 'row',
-    borderRadius: 5
+    marginTop: 15,
+    marginHorizontal: 10,
+    height: 100,
+    flexDirection: 'row'
   },
   dataRowLeft: {
-    width: 60,
+    width: 100,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingLeft: 5
   },
   dataRowRight: {
     flex: 1,
@@ -81,7 +78,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   friendPhoto: {
-    width: 60,
-    height: 60
+    width: 90,
+    height: 90
+  },
+  nameText: {
+    fontSize: 25,
+    fontWeight: 'bold'
+  },
+  text: {
+    fontSize: 18
   }
 });

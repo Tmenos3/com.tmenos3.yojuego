@@ -82,7 +82,7 @@ export default class HomeActions {
       });
   }
 
-  static loadMatchInvitations(){
+  static loadMatchInvitations() {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.LOADING_MATCH_INVITATIONS
     });
@@ -345,5 +345,25 @@ export default class HomeActions {
           payload: error.message
         });
       });
+  }
+
+  static showAccount() {
+
+  }
+
+  static showSettings() {
+
+  }
+
+  static showNotificationSettings() {
+
+  }
+
+  static showHelp() {
+
+  }
+
+  static showAboutUs() {
+
   }
 };

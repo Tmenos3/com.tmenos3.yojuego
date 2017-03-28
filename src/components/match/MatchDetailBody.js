@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import MatchDetailActions from '../../actions/MatchDetailActions';
 import PlayersList from './PlayersList';
+import ChatRoom from './ChatRoom';
 import Swiper from 'react-native-swiper';
 import Styles from '../../constants/Styles'
 
@@ -26,7 +27,6 @@ export default class MatchDetailBody extends Component {
     const pendingPlayers = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     this._renderDetail = this._renderDetail.bind(this);
-    this._renderClothing = this._renderClothing.bind(this);
 
     this.state = {
       match: this.props.match,
@@ -37,9 +37,9 @@ export default class MatchDetailBody extends Component {
 
   render() {
     return (
-      <Swiper style={styles.container} showsButtons={false}>
+      <Swiper style={Styles.MAIN_CONTAINER} showsButtons={false}>
         {this._renderDetail()}
-        {this._renderClothing()}
+        <ChatRoom matchId={this.props.match._id}/>
         <PlayersList confirmedPlayers={this.props.match.confirmedPlayers} pendingPlayers={this.props.match.pendingPlayers} />
       </Swiper>
     );
@@ -68,26 +68,12 @@ export default class MatchDetailBody extends Component {
   _getMatchType(matchType) {
     return matchType + ' vs ' + matchType;
   }
-
-  _renderClothing() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.chat}>
-
-        </View>
-        <View style={styles.message}>
-
-        </View>
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center'
+    flexDirection: 'column'
   },
   text: {
     color: 'black',
@@ -207,22 +193,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 15,
     color: 'white'
-  },
-  chat: {
-    flex: 1,
-    backgroundColor: 'gray',
-    width: Dimensions.get('window').width * 0.9,
-    borderRadius: 20
-  },
-  message: {
-    backgroundColor: 'black',
-    width: Dimensions.get('window').width * 0.9,
-    height: 40,
-    borderRadius: 30,
-    position: 'absolute',
-    alignSelf: 'center',
-    bottom: 100,
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 });

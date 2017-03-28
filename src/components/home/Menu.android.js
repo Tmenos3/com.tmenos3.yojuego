@@ -5,12 +5,14 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  BackAndroid
+  BackAndroid,
+  Image
 } from 'react-native';
 import HomeActions from '../../actions/HomeActions';
 import HomeStore from '../../stores/HomeStore';
 import NavigationActions from '../../actions/NavigationActions';
 import RouteConstants from '../../constants/RouteConstants';
+import Styles from '../../constants/Styles';
 
 const MENU_WIDTH_CLOSED = 0;
 const MENU_WIDTH_OPENED = Dimensions.get('window').width * 0.8;
@@ -57,23 +59,79 @@ export default class Menu extends Component {
           <TouchableOpacity onPress={this._back} style={styles.sideListButton}></TouchableOpacity>
         </View>
         <View style={[styles.menuList, { width: this.state.menuWidth }]}>
+          <View style={styles.header}>
+            <View style={styles.headerLeft}>
+              {this._renderPhoto(this.props.player.photo)}
+            </View>
+            <View style={styles.headerRight}>
+              <Text key={1} style={styles.nameText}>{'¡Hola ' + this.props.player.firstName + '!'}</Text>
+              <Text key={2} style={{ fontSize: 20 }}>{this.props.player.email}</Text>
+            </View>
+          </View>
+          <TouchableOpacity onPress={this._account} style={[styles.menuOption, { marginTop: 10 }]}>
+            <View style={styles.rowLeft}>
+              <Image style={styles.icon} source={require('../../statics/facebook-logo-white.png')}></Image>
+            </View>
+            <View style={styles.rowRight}>
+              <Text style={styles.menuOptionText}>Account</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._notifications} style={styles.menuOption}>
+            <View style={styles.rowLeft}>
+              <Image style={styles.icon} source={require('../../statics/facebook-logo-white.png')}></Image>
+            </View>
+            <View style={styles.rowRight}>
+              <Text style={styles.menuOptionText}>Notifications</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._settings} style={styles.menuOption}>
+            <View style={styles.rowLeft}>
+              <Image style={styles.icon} source={require('../../statics/facebook-logo-white.png')}></Image>
+            </View>
+            <View style={styles.rowRight}>
+              <Text style={styles.menuOptionText}>Settings</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._help} style={styles.menuOption}>
+            <View style={styles.rowLeft}>
+              <Image style={styles.icon} source={require('../../statics/facebook-logo-white.png')}></Image>
+            </View>
+            <View style={styles.rowRight}>
+              <Text style={styles.menuOptionText}>Help</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._aboutUs} style={styles.menuOption}>
+            <View style={styles.rowLeft}>
+              <Image style={styles.icon} source={require('../../statics/facebook-logo-white.png')}></Image>
+            </View>
+            <View style={styles.rowRight}>
+              <Text style={styles.menuOptionText}>About Us</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._logOut} style={styles.menuOption}>
+            <View style={styles.rowLeft}>
+              <Image style={styles.icon} source={require('../../statics/facebook-logo-white.png')}></Image>
+            </View>
+            <View style={styles.rowRight}>
+              <Text style={styles.menuOptionText}>Log Out</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={this._back} style={styles.menuBtnBack}>
             <Text style={styles.menuBtnBackText}>Atras</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._account} style={[styles.menuOption, { marginTop: 10 }]}>
-            <Text style={styles.menuOptionText}>Account</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._notifications} style={styles.menuOption}>
-            <Text style={styles.menuOptionText}>Notifications</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._settings} style={styles.menuOption}>
-            <Text style={styles.menuOptionText}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._logOut} style={[styles.menuOption, { borderBottomWidth: 1, borderBottomColor: 'white' }]}>
-            <Text style={styles.menuOptionText}>Log Out</Text>
-          </TouchableOpacity>
         </View>
       </View>
+    );
+  }
+
+  _renderPhoto(photo) {
+    if (photo)
+      return (
+        <Image style={styles.photo} source={require('../../statics/no_photo_friend.png')}></Image>
+      );
+
+    return (
+      <Image style={styles.photo} source={require('../../statics/no_photo_friend.png')}></Image>
     );
   }
 
@@ -86,15 +144,23 @@ export default class Menu extends Component {
   }
 
   _settings() {
-    HomeActions.settings();
+    HomeActions.showSettings();
   }
 
   _account() {
-    HomeActions.account();
+    HomeActions.showAccount();
   }
 
   _notifications() {
-    HomeActions.logOut();
+    HomeActions.showNotificationSettings();
+  }
+
+  _help() {
+    HomeActions.showHelp();
+  }
+
+  _aboutUs() {
+    HomeActions.showAboutUs();
   }
 
   _onStoreChange() {
@@ -115,6 +181,13 @@ export default class Menu extends Component {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    height: 100,
+    backgroundColor: Styles.MAIN_COLOR,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   menuBackground: {
     position: 'absolute',
     height: Dimensions.get('window').height,
@@ -125,7 +198,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: Dimensions.get('window').height,
     right: 0,
-    backgroundColor: 'gray',
+    backgroundColor: Styles.MAIN_BACKGROUND_COLOR,
   },
   menuBtnBack: {
     width: Dimensions.get('window').width * 0.2,
@@ -144,14 +217,14 @@ const styles = StyleSheet.create({
   menuOption: {
     width: Dimensions.get('window').width * 0.8,
     height: 50,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     marginRight: Dimensions.get('window').width * 0.05,
-    borderTopWidth: 1,
-    borderTopColor: 'white'
+    flexDirection: 'row',
+    marginLeft: 20
   },
   menuOptionText: {
-    color: 'white',
-    fontSize: 16,
+    color: 'dimgray',
+    fontSize: 20,
     textAlign: 'center',
   },
   sideList: {
@@ -163,5 +236,43 @@ const styles = StyleSheet.create({
   sideListButton: {
     flex: 1,
     backgroundColor: 'transparent'
+  },
+  headerLeft: {
+    width: 100,
+    height: 100,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  headerRight: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+  },
+  rowLeft: {
+    width: 50,
+    height: 50,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  rowRight: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: 15
+  },
+  photo: {
+    width: 75,
+    height: 75
+  },
+  nameText: {
+    fontSize: 30
+  },
+  icon: {
+    height: 25,
+    width: 25
   }
 });
