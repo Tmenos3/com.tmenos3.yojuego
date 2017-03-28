@@ -54,7 +54,7 @@ export default class PlayersList extends Component {
   _renderRow(rowData) {
     let backgroundColor = rowData.type === 'CONFIRMED' ? 'rgba(0, 200, 0, 0.5)' : 'white';
     return (
-      <Friend friend={rowData} backgroundColor={backgroundColor} />
+      <FriendRow friend={rowData} backgroundColor={backgroundColor} />
     );
   }
 }
