@@ -43,11 +43,21 @@ export default class LocalService {
         player: session.player
       },
       expires: null
-    })
+    });
   }
 
   static clearToken() {
-    return LocalService.saveToken(null);
+    return LocalService.getSession()
+      .then((session) => {
+        if (session) {
+          let newSession = {
+            ...session,
+            token: null
+          };
+
+          return LocalService.saveSession(newSession);
+        }
+      });
   }
 
   static saveNewFriend(newFriend) {
@@ -150,12 +160,30 @@ export default class LocalService {
   }
 
   static getToken() {
+    return LocalService.getSession()
+      .then(session => {
+        if (!session)
+          return null;
+
+        return session.token;
+      }).catch(err => {
+        throw new Error(err);
+      });
+  }
+
+  static getSession() {
     return LocalService._getStorage().load({
       key: LocalServiceConstants.SESSION
     }).then(session => {
-      return session.token;
+      return session;
     }).catch(err => {
-      throw new Error(err);
+      switch (err.name) {
+        case 'NotFoundError':
+          return null;
+
+        default:
+          throw new Exception(err);
+      }
     });
   }
 

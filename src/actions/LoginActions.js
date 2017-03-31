@@ -13,9 +13,6 @@ export default class LoginActions {
 
     ApiService.login(email, password)
       .then((resp) => {
-        // AppActions.setToken(resp.token);
-        // LocalService.saveUser(resp.user);
-        // LocalService.savePlayer(resp.player);
         LocalService.saveSession({
           token: resp.token,
           user: resp.user,

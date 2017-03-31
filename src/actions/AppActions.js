@@ -1,6 +1,7 @@
 import AppConstants from '../constants/AppConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
+import ApiService from '../services/ApiService';
 
 export default class AppActions {
   static initializeApp() {
@@ -8,11 +9,29 @@ export default class AppActions {
       actionType: AppConstants.INIT_APP
     });
 
-    setTimeout(() => {
-      Dispatcher.handleViewAction({
-        actionType: AppConstants.APP_READY
+    LocalService.getSession()
+      .then((session) => {
+        if (!session || !session.token) {
+          AppActions._callLogin();
+        } else {
+          ApiService.renewToken(session.token)
+            .then((resp) => {
+              LocalService.saveSession({
+                token: resp.token,
+                user: resp.user,
+                player: resp.player
+              })
+                .then(() => {
+                  AppActions._callHome(resp.player);
+                });
+            }, (cause) => {
+              AppActions._callLogin();
+            })
+            .catch(error => {
+              AppActions._callLogin();
+            });
+        }
       });
-    }, 3000);
   }
 
   static resetApp() {
@@ -32,5 +51,22 @@ export default class AppActions {
         });
 
       });
+  }
+
+  static _callLogin() {
+    setTimeout(() => {
+      Dispatcher.handleViewAction({
+        actionType: AppConstants.APP_READY
+      });
+    }, 3000);
+  }
+
+  static _callHome(player) {
+    setTimeout(() => {
+      Dispatcher.handleViewAction({
+        actionType: AppConstants.LOGIN_DONE,
+        payload: player
+      });
+    }, 3000);
   }
 }

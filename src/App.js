@@ -18,7 +18,8 @@ export default class App extends Component {
 
     this._onStoreChange = this._onStoreChange.bind(this);
     this.state = {
-      appReady: false
+      appReady: false,
+      loginDone: false
     }
   }
 
@@ -35,10 +36,18 @@ export default class App extends Component {
   }
 
   _onStoreChange() {
-    this.setState({ appReady: AppStore.ready() }, () => {
-      if (this.state.appReady) {
+    this.setState({
+      appReady: AppStore.ready(),
+      loginDone: AppStore.isLoginDone()
+    }, () => {
+      if (this.state.appReady && !this.state.loginDone) {
         NavigationActions.replaceRoute({
           id: RouteConstants.ROUTE_LOGIN
+        });
+      } else if (this.state.appReady && this.state.loginDone) {
+        NavigationActions.replaceRoute({
+          id: RouteConstants.ROUTE_HOME,
+          data: { player: AppStore.getPlayer() }
         });
       }
     });

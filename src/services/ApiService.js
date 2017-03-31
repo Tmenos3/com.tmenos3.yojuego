@@ -31,6 +31,34 @@ export default class ApiService {
       });
   }
 
+  static renewToken(token) {
+    var _headers = new Headers();
+    _headers.append('Content-Type', 'application/json');
+
+    let form = {
+      "token": token
+    };
+    return fetch(BASEURL + "/login/renewtoken", {
+      method: 'post',
+      headers: _headers,
+      body: JSON.stringify(form)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+
+      });
+  }
+
   static createMatch(title, date, fromTime, toTime, location, matchType, pendingPlayers, token) {
     let form = {
       "title": title,
