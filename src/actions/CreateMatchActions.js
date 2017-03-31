@@ -24,6 +24,7 @@ export default class CreateMatchActions {
 
     ApiService.createMatch(title, date, fromTime, toTime, location, matchType, friends.map(friend => { return friend.friendId }), LocalService.getToken())
       .then((resp) => {
+        //save match in local service
         Dispatcher.handleViewAction({
           actionType: CreateMatchConstants.MATCH_SAVED
         });

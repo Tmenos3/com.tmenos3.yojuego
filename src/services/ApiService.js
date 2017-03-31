@@ -1,5 +1,5 @@
 //const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
-const BASEURL = 'http://192.168.0.14:8089';
+const BASEURL = 'http://192.168.0.12:8089';
 
 export default class ApiService {
   static login(email, password) {

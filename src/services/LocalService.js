@@ -1,3 +1,7 @@
+import { AsyncStorage } from 'react-native';
+import Storage from 'react-native-storage';
+import LocalServiceConstants from '../constants/LocalServiceConstants';
+
 export default class LocalService {
   static _token;
   static _user;
@@ -7,66 +11,152 @@ export default class LocalService {
   static _friends = [];
   static _groups = [];
 
-  static saveToken(token) {
-    return new Promise((resolve, reject) => {
-      LocalService._token = token;
-      return resolve();
-    });
+  static __initLocalStorage() {
+    this._storage = new Storage({
+      size: 1000,
+      storageBackend: AsyncStorage,
+      defaultExpires: null,
+      enableCache: true,
+
+      // if data was not found in storage or expired, 
+      // the corresponding sync method will be invoked and return  
+      // the latest data. 
+      sync: {
+        // we'll talk about the details later. 
+      }
+    })
+  }
+
+  static _getStorage() {
+    if (!this._storage)
+      LocalService.__initLocalStorage();
+
+    return this._storage;
+  }
+
+  static saveSession(session) {
+    return LocalService._getStorage().save({
+      key: LocalServiceConstants.SESSION,
+      rawData: {
+        token: session.token,
+        user: session.user,
+        player: session.player
+      },
+      expires: null
+    })
   }
 
   static clearToken() {
-    return new Promise((resolve, reject) => {
-      LocalService._token = null;
-      return resolve();
-    });
+    return LocalService.saveToken(null);
   }
 
   static saveNewFriend(newFriend) {
-    return new Promise((resolve, reject) => {
-      LocalService._friends.push(newFriend);
-      return resolve(LocalService._friends);
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.FRIENDS
+    }).then(ret => {
+      let friends = ret || [];
+      friends.push(newFriend);
+
+      LocalService._getStorage().save({
+        key: LocalServiceConstants.FRIENDS,
+        rawData: friends,
+        expires: null
+      });
+
+      return Promise.resolve(friends);
+    }).catch(err => {
+      switch (err.name) {
+        case 'NotFoundError':
+          LocalService._getStorage().save({
+            key: LocalServiceConstants.FRIENDS,
+            rawData: [newFriend],
+            expires: null
+          });
+
+          return Promise.resolve([newFriend]);
+      }
     });
   }
 
   static saveNewGroup(newGroup) {
-    return new Promise((resolve, reject) => {
-      LocalService._groups.push(newGroup);
-      return resolve(LocalService._groups);
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.GROUPS
+    }).then(ret => {
+      let groups = ret || [];
+      groups.push(newGroup);
+
+      LocalService._getStorage().save({
+        key: LocalServiceConstants.GROUPS,
+        rawData: groups,
+        expires: null
+      });
+
+      return Promise.resolve(friends);
+    }).catch(err => {
+      switch (err.name) {
+        case 'NotFoundError':
+          LocalService._getStorage().save({
+            key: LocalServiceConstants.GROUPS,
+            rawData: [newGroup],
+            expires: null
+          });
+
+          return Promise.resolve([newGroup]);
+      }
     });
   }
 
   static saveFriends(friends) {
-    return new Promise((resolve, reject) => {
-      LocalService._friends = friends;
-      return resolve(LocalService._friends);
+    return LocalService._getStorage().save({
+      key: LocalServiceConstants.FRIENDS,
+      rawData: friends,
+      expires: null
     });
   }
 
   static saveGroups(groups) {
-    return new Promise((resolve, reject) => {
-      LocalService._groups = groups;
-      return resolve(LocalService._groups);
+    return LocalService._getStorage().save({
+      key: LocalServiceConstants.GROUPS,
+      rawData: groups,
+      expires: null
     });
   }
 
   static tourCompleted() {
-    LocalService._tourCompleted = true;
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.SESSION
+    }).then(session => {
+      session.tourCompleted = true;
+      LocalService._getStorage().save({
+        key: LocalServiceConstants.SESSION,
+        rawData: session,
+        expires: null
+      });
 
-    return new Promise((resolve, reject) => {
-      return resolve();
+      return Promise.resolve();
+    }).catch(err => {
+      switch (err.name) {
+        case 'NotFoundError':
+          session.tourCompleted = true;
+          LocalService._getStorage().save({
+            key: LocalServiceConstants.SESSION,
+            rawData: session,
+            expires: null
+          });
+
+          return Promise.resolve();
+      }
     });
   }
 
-  static saveUser(user) {
-    LocalService._user = user;
-  }
-
-  static savePlayer(player) {
-    LocalService._player = player;
-  }
-
   static getToken() {
-    return LocalService._token;
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.SESSION
+    }).then(session => {
+      return session.token;
+    }).catch(err => {
+      throw new Error(err);
+    });
   }
 
   static getUser() {
@@ -74,8 +164,10 @@ export default class LocalService {
   }
 
   static getPlayer() {
-    return new Promise((resolve, reject) => {
-      return resolve(LocalService._player);
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.SESSION
+    }).then(session => {
+      return session.player;
     });
   }
 
@@ -89,14 +181,30 @@ export default class LocalService {
   }
 
   static getFriends() {
-    return new Promise((resolve, reject) => {
-      return resolve(LocalService._friends);
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.FRIENDS
     });
   }
 
   static getGroups() {
-    return new Promise((resolve, reject) => {
-      return resolve(LocalService._groups);
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.GROUPS
+    });
+  }
+
+  static savePlayerMatches(matches) {
+    return LocalService._getStorage().save({
+      key: LocalServiceConstants.MATCHES,
+      rawData: matches,
+      expires: null
+    });
+  }
+
+  static saveMatchInvitations(matchInvitations) {
+    return LocalService._getStorage().save({
+      key: LocalServiceConstants.MATCH_INVITATIONS,
+      rawData: matchInvitations,
+      expires: null
     });
   }
 };

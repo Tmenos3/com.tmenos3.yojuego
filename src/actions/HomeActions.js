@@ -37,23 +37,27 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_MATCHES
     });
 
-    ApiService.getUpcomingPlayerMatches(LocalService.getToken())
-      .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.MATCHES_LOADED,
-          payload: resp.resp
-        });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_MATCHES,
-          payload: cause.message
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_MATCHES,
-          payload: error.message
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.getUpcomingPlayerMatches(token)
+          .then((resp) => {
+            LocalService.savePlayerMatches(resp.resp);
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.MATCHES_LOADED,
+              payload: resp.resp
+            });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.ERROR_LOADING_MATCHES,
+              payload: cause.message
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.ERROR_LOADING_MATCHES,
+              payload: error.message
+            });
+          });
       });
   }
 
@@ -62,23 +66,26 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST
     });
 
-    ApiService.getFriendshipRequest(LocalService.getToken())
-      .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.FRIENDSHIP_REQUEST_LOADED,
-          payload: resp.resp
-        });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
-          payload: cause.message
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
-          payload: error.message
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.getFriendshipRequest(token)
+          .then((resp) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.FRIENDSHIP_REQUEST_LOADED,
+              payload: resp.resp
+            });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
+              payload: cause.message
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
+              payload: error.message
+            });
+          });
       });
   }
 
@@ -87,23 +94,28 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_MATCH_INVITATIONS
     });
 
-    ApiService.getMatchInvitations(LocalService.getToken())
-      .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.MATCH_INVITATIONS_LOADED,
-          payload: resp.resp
-        });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOADING_MATCH_INVITATIONS_FAILED,
-          payload: cause.message
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOADING_MATCH_INVITATIONST_FAILED,
-          payload: error.message
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.getMatchInvitations(token)
+          .then((resp) => {
+            LocalService.saveMatchInvitations(resp.resp);
+
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.MATCH_INVITATIONS_LOADED,
+              payload: resp.resp
+            });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_MATCH_INVITATIONS_FAILED,
+              payload: cause.message
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOADING_MATCH_INVITATIONST_FAILED,
+              payload: error.message
+            });
+          });
       });
   }
 
@@ -112,14 +124,28 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_FRIENDS
     });
 
-    ApiService.getMyFriends(LocalService.getToken())
-      .then((response) => {
-        LocalService.saveFriends(response.resp)
-          .then(() => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.FRIENDS_LOADED,
-              payload: response.resp
-            });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.getMyFriends(token)
+          .then((response) => {
+            LocalService.saveFriends(response.resp)
+              .then(() => {
+                Dispatcher.handleViewAction({
+                  actionType: HomeConstants.FRIENDS_LOADED,
+                  payload: response.resp
+                });
+              }, (cause) => {
+                Dispatcher.handleViewAction({
+                  actionType: HomeConstants.ERROR_LOADING_FRIENDS,
+                  payload: cause.message
+                });
+              })
+              .catch((error) => {
+                Dispatcher.handleViewAction({
+                  actionType: HomeConstants.ERROR_LOADING_FRIENDS,
+                  payload: error.message
+                });
+              });
           }, (cause) => {
             Dispatcher.handleViewAction({
               actionType: HomeConstants.ERROR_LOADING_FRIENDS,
@@ -132,17 +158,6 @@ export default class HomeActions {
               payload: error.message
             });
           });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_FRIENDS,
-          payload: cause.message
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_FRIENDS,
-          payload: error.message
-        });
       });
   }
 
@@ -151,23 +166,29 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_GROUPS
     });
 
-    ApiService.getMyGroups(LocalService.getToken())
-      .then((response) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.GROUPS_LOADED,
-          payload: response.resp
-        });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_GROUPS,
-          payload: cause.message
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.ERROR_LOADING_GROUPS,
-          payload: error.message
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.getMyGroups(token)
+          .then((response) => {
+            LocalService.saveGroups(response.resp)
+              .then(() => {
+                Dispatcher.handleViewAction({
+                  actionType: HomeConstants.GROUPS_LOADED,
+                  payload: response.resp
+                });
+              });
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.ERROR_LOADING_GROUPS,
+              payload: cause.message
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.ERROR_LOADING_GROUPS,
+              payload: error.message
+            });
+          });
       });
   }
 
@@ -292,33 +313,36 @@ export default class HomeActions {
       actionType: HomeConstants.LOGOUT_INTENT
     });
 
-    ApiService.logOut(LocalService.getToken())
-      .then((resp) => {
-        return LocalService.clearToken();
-      })
-      .then(() => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOGOUT_RESOLVED
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.logOut(token)
+          .then((resp) => {
+            return LocalService.clearToken();
+          })
+          .then(() => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOGOUT_RESOLVED
+            });
 
-        AppActions.resetApp();
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOGOUT_FAILED,
-          payload: {
-            code: cause.code,
-            message: cause.message
-          }
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: HomeConstants.LOGOUT_FAILED,
-          payload: {
-            code: error.code,
-            message: error.message
-          }
-        });
+            AppActions.resetApp();
+          }, (cause) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOGOUT_FAILED,
+              payload: {
+                code: cause.code,
+                message: cause.message
+              }
+            });
+          })
+          .catch((error) => {
+            Dispatcher.handleViewAction({
+              actionType: HomeConstants.LOGOUT_FAILED,
+              payload: {
+                code: error.code,
+                message: error.message
+              }
+            });
+          });
       });
   }
 
