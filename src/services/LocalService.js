@@ -199,6 +199,14 @@ export default class LocalService {
     });
   }
 
+  static savePlayer(player) {
+    return LocalService.getSession()
+      .then((session) => {
+        session.player = player;
+        return LocalService.saveSession(session);
+      });
+  }
+
   static isFirstLogin() {
     //return _isFirstLogin == true;
     return false;

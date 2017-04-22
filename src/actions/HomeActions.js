@@ -372,7 +372,13 @@ export default class HomeActions {
   }
 
   static showAccount() {
-
+    LocalService.getPlayer()
+      .then((player) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.SHOW_ACCOUNT,
+          payload: player
+        });
+      });
   }
 
   static showSettings() {

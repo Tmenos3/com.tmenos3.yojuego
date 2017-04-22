@@ -32,4 +32,5 @@ export default class HomeConstants {
   static get LOADING_MATCH_INVITATIONS() { return 'LOADING_MATCH_INVITATIONS'; }
   static get MATCH_INVITATIONS_LOADED() { return 'MATCH_INVITATIONS_LOADED'; }
   static get LOADING_MATCH_INVITATIONS_FAILED() { return 'LOADING_MATCH_INVITATIONS_FAILED'; }
+  static get SHOW_ACCOUNT() { return 'SHOW_ACCOUNT'; }
 }

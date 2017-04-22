@@ -30,6 +30,7 @@ export default class Body extends Component {
       errorLoadingMatches: null,
       showCreateMatch: false,
       showMatchDetail: false,
+      showAccount: false,
     };
 
     this._renderRow = this._renderRow.bind(this);
@@ -116,6 +117,7 @@ export default class Body extends Component {
     this.setState({
       showCreateMatch: HomeStore.mustShowCreateMatch(),
       showMatchDetail: HomeStore.mustShowMatchDetail(),
+      showAccount: HomeStore.mustShowAccount(),
       match: HomeStore.getMatch(),
       loadingMatches: HomeStore.isLoadingMatches(),
       errorLoadingMatches: HomeStore.getErrorLoadingMatches()
@@ -128,6 +130,11 @@ export default class Body extends Component {
         NavigationActions.addRoute({
           id: RouteConstants.ROUTE_MATCH_DETAIL,
           data: this.state.match
+        });
+      } else if (this.state.showAccount) {
+        NavigationActions.addRoute({
+          id: RouteConstants.ROUTE_ACCOUNT,
+          data: HomeStore.getPlayer()
         });
       } else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
         let matches = HomeStore.getMatches();

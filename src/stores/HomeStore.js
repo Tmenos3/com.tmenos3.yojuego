@@ -3,6 +3,7 @@ import AppDispatcher from '../dispatcher/Dispatcher';
 import assign from 'object-assign';
 import HomeConstants from '../constants/HomeConstants';
 import CreateMatchConstants from '../constants/CreateMatchConstants'
+import AccountConstants from '../constants/AccountConstants'
 import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
@@ -36,6 +37,7 @@ let _player = null;
 let _loadingMatchInvitations = false;
 let _errorLoadingMatchInvitations = null;
 let _matchInvitations = null;
+let _showAccount = false;
 
 let HomeStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -168,6 +170,10 @@ let HomeStore = assign({}, EventEmitter.prototype, {
 
   getErrorLoadingMatchInvitations() {
     return _errorLoadingMatchInvitations;
+  },
+
+  mustShowAccount() {
+    return _showAccount;
   }
 });
 
@@ -360,8 +366,24 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
+    case HomeConstants.SHOW_ACCOUNT:
+      _showAccount = true;
+      _player = action.payload
+      HomeStore.emitChange();
+      break;
+
     case CreateMatchConstants.CLEAN_CREATE_MATCH:
       _showCreateMatch = false;
+      break;
+
+    case AccountConstants.ACCOUNT_SAVED:
+      _showAccount = false;
+      break;
+
+    case AccountConstants.BACK:
+      _showAccount = false;
+      _showMenu = false;
+      HomeStore.emitChange();
       break;
 
     case AppConstants.RESET_APP:

@@ -1,5 +1,5 @@
 //const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
-const BASEURL = 'http://192.168.0.12:8089';
+const BASEURL = 'http://192.168.0.4:8089';
 
 export default class ApiService {
   static login(email, password) {
@@ -447,6 +447,40 @@ export default class ApiService {
     return fetch(BASEURL + "/logout", {
       method: 'post',
       headers: ApiService._getHeader(token)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
+  static updateAccount(firstName, lastName, nickName, photo, phone, token) {
+    let form = {
+      firstName,
+      lastName,
+      nickName,
+      photo,
+      phone
+    };
+    let headers = ApiService._getHeader(token);
+
+    return ApiService._fetch('post', headers, form, '/player/update')
+  }
+
+  static _fetch(method, headers, body, url) {
+    return fetch(BASEURL + url, {
+      method,
+      headers,
+      body: JSON.stringify(body)
     })
       .then((response) => {
         if (response.ok) {
