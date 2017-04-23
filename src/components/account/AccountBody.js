@@ -131,8 +131,10 @@ export default class AccountBody extends Component {
             });
           }
         } else if (this.state.isAccountSaved) {
-          NavigationActions.resetToRoute({
-            id: RouteConstants.ROUTE_HOME
+          this.setState({
+            errorMessage: 'Changes have been saved.'
+          }, () => {
+            AccountActions.reset();
           });
         }
       }

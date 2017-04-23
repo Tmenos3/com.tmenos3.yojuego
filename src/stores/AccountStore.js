@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 import AccountConstants from '../constants/AccountConstants';
+import AppConstants from '../constants/AppConstants';
 import assign from 'object-assign';
 import AppDispatcher from '../dispatcher/Dispatcher';
-import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _isAccountChangesConfirmed = false;
@@ -69,16 +69,13 @@ AccountStore.dispatchToken = AppDispatcher.register((action) => {
       AccountStore.emitChange();
       break;
 
-    // case CreateMatchConstants.CLEAN_CREATE_MATCH:
-    // case AppConstants.RESET_APP:
-    //   _friends = [];
-    //   _isGettingFriends = false;
-    //   _errorGettingFriends = null;
-    //   _isNewMatchConfirmed = false;
-    //   _isSavingMatch = false;
-    //   _errorSavingMatch = null;
-    //   _isMatchSaved = false;
-    //   break;
+    case AccountConstants.RESET:
+    case AppConstants.RESET_APP:
+      _isAccountChangesConfirmed = false;
+      _isSaving = false;
+      _errorSaving = null;
+      _isAccountSaved = false;
+      break;
 
     default:
       break;

@@ -41,4 +41,10 @@ export default class AccountActions {
         });
       });;
   }
+
+  static reset() {
+    Dispatcher.handleViewAction({
+      actionType: AccountConstants.RESET
+    });
+  }
 }
