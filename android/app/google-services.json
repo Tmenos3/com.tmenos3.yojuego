@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "26036010550",
+    "firebase_url": "https://com-tmenos3-yojuego.firebaseio.com",
+    "project_id": "com-tmenos3-yojuego",
+    "storage_bucket": "com-tmenos3-yojuego.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26036010550:android:94e69c33094d471f",
+        "android_client_info": {
+          "package_name": "com.tmenos3.yojuego"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26036010550-qvj1bfm2hgiugeisfbm7hs1mjlppavtb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYJLhqiTrufXWfoja9A-nbDYnmJYRTzpQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

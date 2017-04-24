@@ -11,6 +11,7 @@ import AppStore from './stores/AppStore';
 import NavigationActions from './actions/NavigationActions';
 import NavigationConstants from './constants/NavigationConstants';
 import RouteConstants from './constants/RouteConstants';
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 
 export default class App extends Component {
   constructor(props) {
