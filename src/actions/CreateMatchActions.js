@@ -22,7 +22,10 @@ export default class CreateMatchActions {
       actionType: CreateMatchConstants.SAVING_MATCH
     });
 
-    ApiService.createMatch(title, date, fromTime, toTime, location, matchType, friends.map(friend => { return friend.friendId }), LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.createMatch(title, date, fromTime, toTime, location, matchType, friends.map(friend => { return friend.friendId }), token)
+      })
       .then((resp) => {
         //save match in local service
         Dispatcher.handleViewAction({
@@ -39,7 +42,7 @@ export default class CreateMatchActions {
           actionType: CreateMatchConstants.ERROR_SAVING_MATCH,
           payload: error.message
         });
-      });
+      });;
   }
 
   static loadFriends() {

@@ -13,6 +13,8 @@ import NavigationConstants from './constants/NavigationConstants';
 import RouteConstants from './constants/RouteConstants';
 import FCM, { FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType } from 'react-native-fcm';
 
+let id = 0;
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,13 @@ export default class App extends Component {
       // store fcm token in your server
     });
 
+    FCM.getInitialNotification()
+      .then(notification => {
+        if (notification && notification.myData) {
+          alert(notification.myData);
+        }
+      });
+
     //this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
     this.notificationListener = FCM.on(FCMEvent.Notification, (notif) => {
 
@@ -37,10 +46,13 @@ export default class App extends Component {
       // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
       // if(notif.local_notification){
       //   //this is a local notification
+      //   //Si la notif es local tengo que procesarla, de lo contrario quiere decir que viene del server,
+      //   // puedo querer o bien actualizar info o bien generar una notif local para mostrar
       // }
-      // if(notif.opened_from_tray){
-      //   //app is open/resumed because user clicked banner
-      // }
+      if (notif.opened_from_tray) {
+        //app is open/resumed because user clicked banner
+        console.log('hey!!!');
+      }
       // await someAsyncCall();
 
       // if(Platform.OS ==='ios'){
@@ -60,6 +72,32 @@ export default class App extends Component {
       //       break;
       //   }
       // }
+      id = id + 1;
+      if (id % 2 != 0) {
+        FCM.presentLocalNotification({
+          id: id,                               // (optional for instant notification)
+          title: "My Notification Title",                     // as FCM payload
+          body: "My Notification Message",                    // as FCM payload (required)
+          sound: "default",                                   // as FCM payload
+          priority: "high",                                   // as FCM payload
+          click_action: "ACTION",                             // as FCM payload
+          badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
+          number: 10,                                         // Android only
+          ticker: "My Notification Ticker",                   // Android only
+          auto_cancel: true,                                  // Android only (default true)
+          large_icon: "ic_launcher",                           // Android only
+          icon: "ic_launcher",                                // as FCM payload, you can relace this with custom icon you put in mipmap
+          big_text: "Show when notification is expanded",     // Android only
+          sub_text: "This is a subText",                      // Android only
+          color: "red",                                       // Android only
+          vibrate: 300,                                       // Android only default: 300, no vibration if you pass null
+          tag: 'some_tag',                                    // Android only
+          group: "group",                                     // Android only
+          my_custom_data: 'my_custom_field_value',             // extra data you want to throw
+          lights: true,                                       // Android only, LED blinking (default false)
+          show_in_foreground: true                                  // notification when app is in foreground (local & remote)
+        });
+      }
     });
 
     this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
