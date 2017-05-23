@@ -7,6 +7,7 @@ import AppConstants from '../constants/AppConstants';
 const CHANGE_EVENT = 'change';
 let _isAuthCompleted = false;
 let _isFirstLogin = false;
+let _player = null;
 
 let FacebookStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -27,6 +28,10 @@ let FacebookStore = assign({}, EventEmitter.prototype, {
 
   isFirstLogin() {
     return _isFirstLogin;
+  },
+
+  getPlayer() {
+    return _player;
   }
 });
 
@@ -35,12 +40,14 @@ FacebookStore.dispatchToken = AppDispatcher.register((action) => {
     case FacebookConstants.LOGIN_RESOLVED:
       _isAuthCompleted = true;
       _isFirstLogin = action.payload.isFirstLogin;
+      _player = action.payload.player;
       FacebookStore.emitChange();
       break;
 
     case AppConstants.RESET_APP:
       _isAuthCompleted = false;
       _isFirstLogin = false;
+      _player = null;
       // FacebookStore.emitChange();
       break;
 

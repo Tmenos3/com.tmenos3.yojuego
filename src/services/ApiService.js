@@ -59,6 +59,26 @@ export default class ApiService {
       });
   }
 
+  static getUserInfo(token) {
+    return fetch(BASEURL + "/auth/info", {
+      method: 'get',
+      headers: ApiService._getHeader(token)
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+            .then((responseData) => {
+              return responseData;
+            });
+        }
+
+        return response.json().
+          then((error) => {
+            return Promise.reject(error);
+          });
+      });
+  }
+
   static createMatch(title, date, fromTime, toTime, location, matchType, pendingPlayers, token) {
     let form = {
       "title": title,
