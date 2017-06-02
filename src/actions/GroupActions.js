@@ -28,13 +28,20 @@ export default class GroupActions {
       actionType: GroupConstants.SAVING_NEW_GROUP
     });
 
-    ApiService.saveNewGroup(description, friends, photo, LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.saveNewGroup(description, friends, photo, token)
+      })
+      .then((resp) => {
+        return LocalService.saveNewGroup(resp.resp);
+      })
       .then((resp) => {
         Dispatcher.handleViewAction({
-          actionType: GroupConstants.NEW_GROUP_SAVED
+          actionType: GroupConstants.NEW_GROUP_SAVED,
+          payload: {
+            groups: resp
+          }
         });
-
-        LocalService.saveNewGroup(resp.resp);
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: GroupConstants.SAVING_NEW_GROUP_FAILED,

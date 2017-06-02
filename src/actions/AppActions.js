@@ -17,6 +17,7 @@ export default class AppActions {
           ApiService.renewToken(session.token)
             .then((resp) => {
               LocalService.saveSession({
+                ...session,
                 token: resp.token,
                 user: resp.user,
                 player: resp.player

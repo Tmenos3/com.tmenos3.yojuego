@@ -3,14 +3,6 @@ import Storage from 'react-native-storage';
 import LocalServiceConstants from '../constants/LocalServiceConstants';
 
 export default class LocalService {
-  static _token;
-  static _user;
-  static _player;
-  static _tourCompleted;
-  static _isFirstLogin;
-  static _friends = [];
-  static _groups = [];
-
   static __initLocalStorage() {
     this._storage = new Storage({
       size: 1000,
@@ -40,7 +32,9 @@ export default class LocalService {
       rawData: {
         token: session.token,
         user: session.user,
-        player: session.player
+        player: session.player,
+        isFirstLogin: session.isFirstLogin,
+        tourCompleted: session.tourCompleted
       },
       expires: null
     });
@@ -61,59 +55,33 @@ export default class LocalService {
   }
 
   static saveNewFriend(newFriend) {
-    return LocalService._getStorage().load({
-      key: LocalServiceConstants.FRIENDS
-    }).then(ret => {
-      let friends = ret || [];
-      friends.push(newFriend);
+    return LocalService.getFriends()
+      .then(ret => {
+        let friends = ret || [];
+        friends.push(newFriend);
 
-      LocalService._getStorage().save({
-        key: LocalServiceConstants.FRIENDS,
-        rawData: friends,
-        expires: null
+        return LocalService.saveFriends(friends)
+      }).catch(err => {
+        switch (err.name) {
+          case 'NotFoundError':
+            return LocalService.saveFriends([newFriend])
+        }
       });
-
-      return Promise.resolve(friends);
-    }).catch(err => {
-      switch (err.name) {
-        case 'NotFoundError':
-          LocalService._getStorage().save({
-            key: LocalServiceConstants.FRIENDS,
-            rawData: [newFriend],
-            expires: null
-          });
-
-          return Promise.resolve([newFriend]);
-      }
-    });
   }
 
   static saveNewGroup(newGroup) {
-    return LocalService._getStorage().load({
-      key: LocalServiceConstants.GROUPS
-    }).then(ret => {
-      let groups = ret || [];
-      groups.push(newGroup);
+    return LocalService.getGroups()
+      .then(ret => {
+        let groups = ret || [];
+        groups.push(newGroup);
 
-      LocalService._getStorage().save({
-        key: LocalServiceConstants.GROUPS,
-        rawData: groups,
-        expires: null
+        return LocalService.saveGroups(groups)
+      }).catch(err => {
+        switch (err.name) {
+          case 'NotFoundError':
+            return LocalService.saveGroups([newGroup])
+        }
       });
-
-      return Promise.resolve(friends);
-    }).catch(err => {
-      switch (err.name) {
-        case 'NotFoundError':
-          LocalService._getStorage().save({
-            key: LocalServiceConstants.GROUPS,
-            rawData: [newGroup],
-            expires: null
-          });
-
-          return Promise.resolve([newGroup]);
-      }
-    });
   }
 
   static saveFriends(friends) {
@@ -121,7 +89,10 @@ export default class LocalService {
       key: LocalServiceConstants.FRIENDS,
       rawData: friends,
       expires: null
-    });
+    })
+      .then(() => {
+        return Promise.resolve(friends);
+      });
   }
 
   static saveGroups(groups) {
@@ -129,34 +100,21 @@ export default class LocalService {
       key: LocalServiceConstants.GROUPS,
       rawData: groups,
       expires: null
-    });
+    })
+      .then(() => {
+        return Promise.resolve(groups);
+      });
   }
 
   static tourCompleted() {
-    return LocalService._getStorage().load({
-      key: LocalServiceConstants.SESSION
-    }).then(session => {
-      session.tourCompleted = true;
-      LocalService._getStorage().save({
-        key: LocalServiceConstants.SESSION,
-        rawData: session,
-        expires: null
+    return LocalService.getSession()
+      .then(session => {
+        let newSession = {
+          ...session,
+          tourCompleted: true
+        }
+        return LocalService.saveSession(newSession);
       });
-
-      return Promise.resolve();
-    }).catch(err => {
-      switch (err.name) {
-        case 'NotFoundError':
-          session.tourCompleted = true;
-          LocalService._getStorage().save({
-            key: LocalServiceConstants.SESSION,
-            rawData: session,
-            expires: null
-          });
-
-          return Promise.resolve();
-      }
-    });
   }
 
   static getToken() {
@@ -188,15 +146,17 @@ export default class LocalService {
   }
 
   static getUser() {
-    return LocalService._user;
+    return LocalService.getSession()
+      .then((session) => {
+        return session.user;
+      });
   }
 
   static getPlayer() {
-    return LocalService._getStorage().load({
-      key: LocalServiceConstants.SESSION
-    }).then(session => {
-      return session.player;
-    });
+    return LocalService.getSession()
+      .then(session => {
+        return session.player;
+      });
   }
 
   static savePlayer(player) {
@@ -208,12 +168,20 @@ export default class LocalService {
   }
 
   static isFirstLogin() {
-    //return _isFirstLogin == true;
-    return false;
+    return LocalService.getSession()
+      .then((session) => {
+        return session.isFirstLogin;
+      });
   }
 
   static firstLoginDone() {
-    LocalService._isFirstLogin = true;
+    return LocalService.getSession()
+      .then((session) => {
+        let newSession = {
+          ...session,
+          isFirstLogin: false
+        }
+      });
   }
 
   static getFriends() {

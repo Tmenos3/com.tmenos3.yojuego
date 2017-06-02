@@ -5,16 +5,25 @@ import LocalService from '../services/LocalService';
 
 export default class GoogleActions {
   static auth(token) {
-    let isFirstLogin = !LocalService.hasToken();
-    GoogleActions.setToken(token);
+    ApiService.getUserInfo(token)
+      .then((resp) => {
+        LocalService.saveSession({
+          token: resp.token,
+          user: resp.user,
+          player: resp.player
+        })
+          .then(() => {
+            let isFirstLogin = LocalService.isFirstLogin();
 
-    Dispatcher.handleViewAction({
-      actionType: GoogleConstants.LOGIN_RESOLVED,
-      payload: { isFirstLogin: isFirstLogin }
-    });
-  }
-
-  static setToken(token) {
-    LocalService.saveToken(token);
+            Dispatcher.handleViewAction({
+              actionType: GoogleConstants.LOGIN_RESOLVED,
+              payload: {
+                isFirstLogin: isFirstLogin,
+                player: resp.player
+              }
+            });
+          });
+      })
+      .catch();
   }
 }

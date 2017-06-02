@@ -8,7 +8,7 @@ export default class FacebookActions {
     ApiService.getUserInfo(token)
       .then((resp) => {
         LocalService.saveSession({
-          token: resp.token,
+          token: token,
           user: resp.user,
           player: resp.player
         })

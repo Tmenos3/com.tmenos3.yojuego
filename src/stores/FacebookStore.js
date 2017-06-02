@@ -48,7 +48,6 @@ FacebookStore.dispatchToken = AppDispatcher.register((action) => {
       _isAuthCompleted = false;
       _isFirstLogin = false;
       _player = null;
-      // FacebookStore.emitChange();
       break;
 
     default:

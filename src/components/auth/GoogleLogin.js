@@ -9,8 +9,7 @@ import RouteConstants from '../../constants/RouteConstants';
 import GoogleActions from '../../actions/GoogleActions';
 import GoogleStore from '../../stores/GoogleStore';
 
-//const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
-const BASEURL = 'http://192.168.0.14:8080';
+const BASEURL = 'http://www.yojuego.com:8089';
 
 export default class GoogleLogIn extends Component {
   constructor(props) {
@@ -33,7 +32,11 @@ export default class GoogleLogIn extends Component {
 
   render() {
     return (
-      <WebView onNavigationStateChange={this._onLoad} style={styles.container} source={{ uri: BASEURL + '/auth/google' }} />
+      <WebView 
+        onNavigationStateChange={this._onLoad} 
+        style={styles.container} 
+        source={{ uri: BASEURL + '/auth/google' }} 
+        userAgent="Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/603.1.23 (KHTML, like Gecko) Version/10.0 Mobile/14E5239e Safari/602" />
     );
   }
 
@@ -43,6 +46,26 @@ export default class GoogleLogIn extends Component {
       token = token.substring(0, token.length - 4);
       GoogleActions.auth(token);
     }
+  }
+
+  _onStoreChange() {
+    this.setState({
+      authCompleted: GoogleStore.isAuthCompleted(),
+      firstLogin: GoogleStore.isFirstLogin()
+    }, () => {
+      if (this.state.authCompleted) {
+        if (this.state.firstLogin) {
+          NavigationActions.replaceRoute({
+            id: RouteConstants.ROUTE_CREATE_PROFILE
+          });
+        } else {
+          NavigationActions.replaceRoute({
+            id: RouteConstants.ROUTE_HOME,
+            data: { player: GoogleStore.getPlayer() }
+          });
+        }
+      }
+    });
   }
 }
 
