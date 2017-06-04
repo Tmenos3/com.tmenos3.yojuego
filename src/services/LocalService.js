@@ -181,6 +181,7 @@ export default class LocalService {
           ...session,
           isFirstLogin: false
         }
+        return LocalService.saveSession(newSession);
       });
   }
 

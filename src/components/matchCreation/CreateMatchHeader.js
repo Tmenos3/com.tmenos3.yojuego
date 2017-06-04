@@ -9,22 +9,7 @@ import {
 import CreateMatchActions from '../../actions/CreateMatchActions';
 import NavigationActions from '../../actions/NavigationActions';
 
-
 export default class CreateMatchHeader extends Component {
-  constructor(props) {
-    super(props);
-
-    this._confirm = this._confirm.bind(this);
-    this._back = this._back.bind(this);
-  }
-
-  componentDidMount() {
-  }
-
-  componentWillUnmount() {
-
-  }
-
   render() {
     return (
       <View style={styles.container}>

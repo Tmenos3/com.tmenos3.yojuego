@@ -6,42 +6,22 @@ import {
   TouchableOpacity,
   Text
 } from 'react-native';
-import GroupActions from '../../actions/GroupActions';
+import NewGroupActions from '../../actions/NewGroupActions';
 import NavigationActions from '../../actions/NavigationActions';
 
 
 export default class NewGroupHeader extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
+        <TouchableOpacity onPress={() => { NewGroupActions.confirm(); }} style={styles.menuButton}>
           <Text style={styles.menuText}>OK</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this._back} style={styles.menuButton}>
+        <TouchableOpacity onPress={() => { NavigationActions.back(); }} style={styles.menuButton}>
           <Text style={styles.menuText}>Back</Text>
         </TouchableOpacity>
       </View>
     );
-  }
-
-  _confirm() {
-    GroupActions.newGroupConfirmed();
-  }
-
-  _back() {
-    NavigationActions.back();
   }
 }
 

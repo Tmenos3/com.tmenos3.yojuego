@@ -11,13 +11,16 @@ export default class FriendshipRequestActions {
       actionType: FriendshipRequestConstants.ACCEPT_INTENT
     });
 
-    ApiService.acceptFriendshipRequest(friendshipRequest.friendship._id, LocalService.getToken())
-      .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: FriendshipRequestConstants.ACCEPT_RESOLVED
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.acceptFriendshipRequest(friendshipRequest.friendship._id, token)
+          .then((resp) => {
+            Dispatcher.handleViewAction({
+              actionType: FriendshipRequestConstants.ACCEPT_RESOLVED
+            });
 
-        FriendshipRequestActions.markAsRead(friendshipRequest._id);
+            FriendshipRequestActions.markAsRead(friendshipRequest._id);
+          })
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: FriendshipRequestConstants.ACCEPT_FAILED,
@@ -43,13 +46,16 @@ export default class FriendshipRequestActions {
       actionType: FriendshipRequestConstants.REJECT_INTENT
     });
 
-    ApiService.rejectFriendshipRequest(friendshipRequest.friendship._id, LocalService.getToken())
-      .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: FriendshipRequestConstants.REJECT_RESOLVED
-        });
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.rejectFriendshipRequest(friendshipRequest.friendship._id, token)
+          .then((resp) => {
+            Dispatcher.handleViewAction({
+              actionType: FriendshipRequestConstants.REJECT_RESOLVED
+            });
 
-        FriendshipRequestActions.markAsRead(friendshipRequest._id);
+            FriendshipRequestActions.markAsRead(friendshipRequest._id);
+          })
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: FriendshipRequestConstants.REJECT_FAILED,
@@ -75,13 +81,16 @@ export default class FriendshipRequestActions {
       actionType: FriendshipRequestConstants.MARK_AS_READ_INTENT
     });
 
-    ApiService.markAsReadFriendshipRequest(id, LocalService.getToken())
-      .then((resp) => {
-        Dispatcher.handleViewAction({
-          actionType: FriendshipRequestConstants.MARK_AS_READ_RESOLVED
-        });
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.markAsReadFriendshipRequest(id, token)
+          .then((resp) => {
+            Dispatcher.handleViewAction({
+              actionType: FriendshipRequestConstants.MARK_AS_READ_RESOLVED
+            });
 
-        HomeActions.loadFriendshipRequest();
+            HomeActions.loadFriendshipRequest();
+          })
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: FriendshipRequestConstants.MARK_AS_READ_FAILED,

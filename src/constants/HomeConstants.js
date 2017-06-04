@@ -8,10 +8,10 @@ export default class HomeConstants {
   static get MATCHES_LOADED() { return 'MATCHES_LOADED'; }
   static get LOADING_FRIENDS() { return 'LOADING_FRIENDS'; }
   static get FRIENDS_LOADED() { return 'FRIENDS_LOADED'; }
-  static get ERROR_LOADING_FRIENDS() { return 'ERROR_LOADING_FRIENDS'; }
+  static get LOADING_FRIENDS_FAILED() { return 'LOADING_FRIENDS_FAILED'; }
   static get LOADING_GROUPS() { return 'LOADING_GROUPS'; }
   static get GROUPS_LOADED() { return 'GROUPS_LOADED'; }
-  static get ERROR_LOADING_GROUPS() { return 'ERROR_LOADING_GROUPS'; }
+  static get LOADING_GROUPS_FAILED() { return 'LOADING_GROUPS_FAILED'; }
   static get SHOW_FRIEND() { return 'SHOW_FRIEND'; }
   static get SHOW_GROUP() { return 'SHOW_GROUP'; }
   static get UPDATING_FRIENDS() { return 'UPDATING_FRIENDS'; }

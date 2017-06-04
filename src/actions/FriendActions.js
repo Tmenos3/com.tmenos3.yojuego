@@ -28,23 +28,17 @@ export default class FriendActions {
       actionType: FriendConstants.SAVING_NEW_FRIEND
     });
 
-    ApiService.saveNewFriend(email, LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.saveNewFriend(email, token);
+      })
       .then((resp) => {
-        LocalService.saveNewFriend(resp.resp)
-          .then(() => {
-            Dispatcher.handleViewAction({
-              actionType: FriendConstants.NEW_FRIEND_SAVED
-            });
-          })
-          .catch((error) => {
-            Dispatcher.handleViewAction({
-              actionType: FriendConstants.SAVING_NEW_FRIEND_FAILED,
-              payload: {
-                code: error.code,
-                message: error.message
-              }
-            });
-          });
+        return LocalService.saveNewFriend(resp.resp);
+      })
+      .then(() => {
+        Dispatcher.handleViewAction({
+          actionType: FriendConstants.NEW_FRIEND_SAVED
+        });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: FriendConstants.SAVING_NEW_FRIEND_FAILED,

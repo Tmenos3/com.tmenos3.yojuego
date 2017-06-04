@@ -9,11 +9,17 @@ export default class CompleteProfileInfoActions {
       actionType: CompleteProfileInfoConstants.COMPLETE_PROFILE_INFO_INTENT
     });
 
-    ApiService.completeProfileInfo(firstName, lastName, nickName, LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.completeProfileInfo(firstName, lastName, nickName, token);
+      })
       .then((resp) => {
-        LocalService.savePlayer(resp.resp);
-        LocalService.firstLoginDone();
-
+        return LocalService.savePlayer(resp.resp);
+      })
+      .then(() => {
+        return LocalService.firstLoginDone();
+      })
+      .then(() => {
         Dispatcher.handleViewAction({
           actionType: CompleteProfileInfoConstants.COMPLETE_PROFILE_INFO_RESOLVED
         });
@@ -34,6 +40,6 @@ export default class CompleteProfileInfoActions {
             message: error.message
           }
         });
-      });
+      });;
   }
 }
