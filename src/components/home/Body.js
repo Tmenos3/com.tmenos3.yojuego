@@ -120,7 +120,8 @@ export default class Body extends Component {
       showAccount: HomeStore.mustShowAccount(),
       match: HomeStore.getMatch(),
       loadingMatches: HomeStore.isLoadingMatches(),
-      errorLoadingMatches: HomeStore.getErrorLoadingMatches()
+      errorLoadingMatches: HomeStore.getErrorLoadingMatches(),
+      showGroup: HomeStore.showGroup()
     }, () => {
       if (this.state.showCreateMatch) {
         NavigationActions.addRoute({
@@ -135,6 +136,11 @@ export default class Body extends Component {
         NavigationActions.addRoute({
           id: RouteConstants.ROUTE_ACCOUNT,
           data: HomeStore.getPlayer()
+        });
+      } else if (this.state.showGroup) {
+        NavigationActions.addRoute({
+          id: RouteConstants.ROUTE_GROUP_DETAIL,
+          data: HomeStore.getGroupId()
         });
       } else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
         let matches = HomeStore.getMatches();

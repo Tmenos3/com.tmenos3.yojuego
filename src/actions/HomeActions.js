@@ -202,7 +202,9 @@ export default class HomeActions {
   static showGroup(groupId) {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_GROUP,
-      payload: groupId
+      payload: {
+        groupId
+      }
     });
   }
 
@@ -262,32 +264,18 @@ export default class HomeActions {
       actionType: HomeConstants.LOADING_GROUPS
     });
 
-    ApiService.getMyGroups(LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.getMyGroups(token)
+      })
       .then((resp) => {
-        LocalService.saveGroups(resp.resp)
-          .then((groups) => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.GROUPS_LOADED,
-              payload: groups
-            });
-          }, (cause) => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.LOADING_GROUPS_FAILED,
-              payload: {
-                code: cause.code,
-                message: cause.message
-              }
-            });
-          })
-          .catch((error) => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.LOADING_GROUPS_FAILED,
-              payload: {
-                code: error.code,
-                message: error.message
-              }
-            });
-          });
+        return LocalService.saveGroups(resp.resp);
+      })
+      .then((groups) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.GROUPS_LOADED,
+          payload: groups
+        });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: HomeConstants.LOADING_GROUPS_FAILED,

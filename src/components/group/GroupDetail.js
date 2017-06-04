@@ -10,8 +10,8 @@ export default class GroupDetail extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <GroupDetailHeader />
-        <GroupDetailBody />
+        <GroupDetailHeader groupId={this.props.groupId}/>
+        <GroupDetailBody groupId={this.props.groupId} />
       </View>
     );
   }

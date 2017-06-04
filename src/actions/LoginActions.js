@@ -11,24 +11,30 @@ export default class LoginActions {
       actionType: LoginConstants.LOGIN_INTENT
     });
 
+    let response = null;
+    let newSession = null;
     ApiService.login(email, password)
       .then((resp) => {
-        LocalService.saveSession({
-          token: resp.token,
-          user: resp.user,
-          player: resp.player
-        })
-          .then(() => {
-            let isFirstLogin = LocalService.isFirstLogin();
-
-            Dispatcher.handleViewAction({
-              actionType: LoginConstants.LOGIN_RESOLVED,
-              payload: {
-                isFirstLogin: isFirstLogin,
-                player: resp.player
-              }
-            });
-          });
+        response = resp;
+        return LocalService.getSession();
+      })
+      .then((session) => {
+        newSession = {
+          ...session,
+          token: response.token,
+          user: response.user,
+          player: response.player
+        }
+        return LocalService.saveSession(newSession);
+      })
+      .then(() => {
+        Dispatcher.handleViewAction({
+          actionType: LoginConstants.LOGIN_RESOLVED,
+          payload: {
+            isFirstLogin: newSession.isFirstLogin,
+            player: newSession.player
+          }
+        });
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: LoginConstants.LOGIN_FAILED,

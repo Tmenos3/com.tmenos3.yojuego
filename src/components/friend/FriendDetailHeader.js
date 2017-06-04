@@ -7,20 +7,9 @@ import {
   Text
 } from 'react-native';
 import FriendActions from '../../actions/FriendActions';
+import NavigationActions from '../../actions/NavigationActions';
 
 export default class FriendDetailHeader extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   render() {
     return (
       <View style={styles.container}>

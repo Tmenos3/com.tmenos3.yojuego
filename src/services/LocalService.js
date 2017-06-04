@@ -148,6 +148,9 @@ export default class LocalService {
   static getUser() {
     return LocalService.getSession()
       .then((session) => {
+        if (!session)
+          return null;
+
         return session.user;
       });
   }
@@ -155,6 +158,9 @@ export default class LocalService {
   static getPlayer() {
     return LocalService.getSession()
       .then(session => {
+        if (!session)
+          return null;
+
         return session.player;
       });
   }
@@ -170,7 +176,10 @@ export default class LocalService {
   static isFirstLogin() {
     return LocalService.getSession()
       .then((session) => {
-        return session.isFirstLogin;
+        if (!session)
+          return true;
+
+        return session.isFirstLogin === undefined || session.isFirstLogin === null || session.isFirstLogin === true;
       });
   }
 

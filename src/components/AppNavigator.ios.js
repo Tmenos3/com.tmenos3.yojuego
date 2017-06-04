@@ -20,6 +20,7 @@ import NewFriend from './friend/NewFriend';
 import NewGroup from './group/NewGroup';
 import FriendshipRequest from './friendshipRequest/FriendshipRequest';
 import FriendList from './common/friendList/FriendList';
+import GroupDetail from './group/GroupDetail';
 
 let _navigator;
 
@@ -147,6 +148,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_FRIEND_LIST:
         return (
           <FriendList friends={route.data.friends} onBack={route.data.onBack} onConfirm={route.data.onConfirm} />
+        );
+
+      case RouteConstants.ROUTE_GROUP_DETAIL:
+        return (
+          <GroupDetail groupId={route.data}/>
         );
     }
   }

@@ -246,7 +246,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
 
     case HomeConstants.SHOW_GROUP:
       _showGroup = true;
-      _groupId = action.payload;
+      _groupId = action.payload.groupId;
       HomeStore.emitChange();
       break;
 

@@ -22,6 +22,7 @@ import FriendshipRequest from './friendshipRequest/FriendshipRequest';
 import MatchInvitation from './matchInvitation/MatchInvitation';
 import FriendList from './common/friendList/FriendList';
 import Account from './account/Account';
+import GroupDetail from './group/GroupDetail';
 
 let _navigator;
 
@@ -168,6 +169,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_ACCOUNT:
         return (
           <Account player={route.data}/>
+        );
+
+      case RouteConstants.ROUTE_GROUP_DETAIL:
+        return (
+          <GroupDetail groupId={route.data}/>
         );
     }
   }

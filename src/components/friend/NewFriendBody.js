@@ -50,7 +50,7 @@ export default class NewFriendBody extends Component {
             onChangeText={this._onEmailTextChanged}
             text={this.state.email}
             underlineColorAndroid={'transparent'}
-            />
+            keyboardType={'email-address'} />
         </View>
         {this._renderError()}
       </View>

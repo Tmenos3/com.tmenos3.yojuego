@@ -42,7 +42,7 @@ export default class AppActions {
   }
 
   static setToken(token) {
-    LocalService.saveToken(token)
+    return LocalService.saveToken(token)
       .then(() => {
         Dispatcher.handleViewAction({
           actionType: AppConstants.TOKEN_CHANGE,
@@ -50,7 +50,6 @@ export default class AppActions {
             token: token
           }
         });
-
       });
   }
 

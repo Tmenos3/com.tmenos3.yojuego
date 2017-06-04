@@ -7,31 +7,57 @@ import {
   Text
 } from 'react-native';
 import GroupActions from '../../actions/GroupActions';
+import GroupStore from '../../stores/GroupStore';
+import NavigationActions from '../../actions/NavigationActions';
 
 export default class GroupDetailHeader extends Component {
   constructor(props) {
     super(props);
+
+    this._renderDescription = this._renderDescription.bind(this);
+    this._onStoreChange = this._onStoreChange.bind(this);
+
+    this.state = {
+      group: null
+    }
   }
 
   componentDidMount() {
-
+    GroupStore.addChangeListener(this._onStoreChange);
+    GroupActions.loadGroup(this.props.groupId);
   }
 
   componentWillUnmount() {
-
+    GroupStore.removeChangeListener(this._onStoreChange);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
-          <Text style={styles.menuText}>Menu</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._back} style={styles.menuButton}>
-          <Text style={styles.menuText}>Back</Text>
-        </TouchableOpacity>
+        {this._renderDescription()}
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
+            <Text style={styles.menuText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._back} style={styles.menuButton}>
+            <Text style={styles.menuText}>Back</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
+  }
+
+  _onStoreChange() {
+    this.setState({
+      group: GroupStore.getGroup()
+    });
+  }
+
+  _renderDescription() {
+    if (this.state.group)
+      return (<Text style={styles.groupName}>{this.state.group.description}</Text>);
+
+    return null;
   }
 
   _confirm() {
@@ -39,7 +65,7 @@ export default class GroupDetailHeader extends Component {
   }
 
   _back() {
-    GroupActions.back();
+    NavigationActions.back();
   }
 }
 
@@ -47,7 +73,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#009900',
     height: 60,
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
   menuButton: {
@@ -63,5 +90,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     fontWeight: 'bold'
+  },
+  groupName: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginLeft: 10
+  },
+  buttons: {
+    flexDirection: 'row',
   }
 });

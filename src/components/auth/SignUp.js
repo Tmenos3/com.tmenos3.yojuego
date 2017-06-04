@@ -60,13 +60,15 @@ export default class SignUp extends Component {
           <TextInput placeholder={"Mail"}
             style={styles.input}
             returnKeyType={"done"}
-            onChangeText={this._onChangeUsername} />
+            onChangeText={this._onChangeUsername} 
+            keyboardType={'email-address'} />
         </View>
         <View style={[styles.inputContainer, { borderColor: this.state.repeatUsernameBorderColor }]}>
           <TextInput placeholder={"Confirmar mail"}
             style={styles.input}
             returnKeyType={"done"}
-            onChangeText={this._onChangeRepeatUsername} />
+            onChangeText={this._onChangeRepeatUsername} 
+            keyboardType={'email-address'} />
         </View>
         <View style={[styles.inputContainer, { borderColor: this.state.passwordBorderColor }]}>
           <TextInput placeholder={"Contraseña"}
@@ -143,7 +145,7 @@ export default class SignUp extends Component {
 
   _onChangeUsername(text) {
     if (text.length <= 0) {
-      this.setState({ usernameBorderColor: 'red', username: null }, this._canContinue);
+      this.setState({ usernameBorderColor: 'red', username: '' }, this._canContinue);
     } else {
       this.setState({ usernameBorderColor: 'grey', username: text }, this._canContinue);
     }
@@ -151,10 +153,10 @@ export default class SignUp extends Component {
 
   _onChangeRepeatUsername(text) {
     if (text.length <= 0) {
-      this.setState({ repeatUsernameBorderColor: 'red', repeatUsername: null }, this._canContinue);
+      this.setState({ repeatUsernameBorderColor: 'red', repeatUsername: '' }, this._canContinue);
     } else {
       if (this.state.username != text) {
-        this.setState({ repeatUsernameBorderColor: 'red', repeatUsername: null }, this._canContinue);
+        this.setState({ repeatUsernameBorderColor: 'red', repeatUsername: '' }, this._canContinue);
       } else {
         this.setState({ repeatUsernameBorderColor: 'grey', repeatUsername: text }, this._canContinue);
       }
@@ -163,7 +165,7 @@ export default class SignUp extends Component {
 
   _onChangePassword(text) {
     if (text.length <= 0) {
-      this.setState({ passwordBorderColor: 'red', password: null }, this._canContinue);
+      this.setState({ passwordBorderColor: 'red', password: '' }, this._canContinue);
     } else {
       this.setState({ passwordBorderColor: 'grey', password: text }, this._canContinue);
     }
@@ -171,10 +173,10 @@ export default class SignUp extends Component {
 
   _onChangeRepeatPassword(text) {
     if (text.length <= 0) {
-      this.setState({ repeatPasswordBorderColor: 'red', repeatPassword: null }, this._canContinue);
+      this.setState({ repeatPasswordBorderColor: 'red', repeatPassword: '' }, this._canContinue);
     } else {
       if (this.state.password != text) {
-        this.setState({ repeatPasswordBorderColor: 'red', repeatPassword: null }, this._canContinue);
+        this.setState({ repeatPasswordBorderColor: 'red', repeatPassword: '' }, this._canContinue);
       } else {
         this.setState({ repeatPasswordBorderColor: 'grey', repeatPassword: text }, this._canContinue);
       }

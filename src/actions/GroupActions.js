@@ -9,60 +9,27 @@ export default class GroupActions {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.LOADING_GROUP
     });
-  }
 
-  static deleteGroup(groupId) {
-    Dispatcher.handleViewAction({
-      actionType: GroupConstants.DELETING_GROUP
-    });
-  }
-
-  static newGroupConfirmed() {
-    Dispatcher.handleViewAction({
-      actionType: GroupConstants.NEW_GROUP_CONFIRMED
-    });
-  }
-
-  static confirmNewGroup(description, friends, photo) {
-    Dispatcher.handleViewAction({
-      actionType: GroupConstants.SAVING_NEW_GROUP
-    });
-
-    LocalService.getToken()
-      .then((token) => {
-        return ApiService.saveNewGroup(description, friends, photo, token)
+    LocalService.getGroups()
+      .then((groups) => {
+        let group = groups.find((g) => { return g._id === groupId; });
+        return Promise.resolve(group);
       })
-      .then((resp) => {
-        return LocalService.saveNewGroup(resp.resp);
-      })
-      .then((resp) => {
+      .then((group) => {
         Dispatcher.handleViewAction({
-          actionType: GroupConstants.NEW_GROUP_SAVED,
+          actionType: GroupConstants.GROUP_LOADED,
           payload: {
-            groups: resp
-          }
-        });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: GroupConstants.SAVING_NEW_GROUP_FAILED,
-          payload: {
-            code: cause.code,
-            message: cause.message
+            group
           }
         });
       })
       .catch((error) => {
         Dispatcher.handleViewAction({
-          actionType: GroupConstants.SAVING_NEW_GROUP_FAILED,
+          actionType: GroupConstants.ERROR_LOADING_GROUP,
           payload: {
-            code: error.code,
             message: error.message
           }
         });
       });
-  }
-
-  static groupsUpdated() {
-    HomeActions.loadGroups();
   }
 }
