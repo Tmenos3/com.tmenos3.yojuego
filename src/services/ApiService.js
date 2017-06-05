@@ -2,7 +2,7 @@ const BASEURL = 'http://192.168.0.4:8089';
 
 export default class ApiService {
   static login(email, password) {
-    var _headers = new Headers();
+    let _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
 
     let form = {
@@ -14,7 +14,7 @@ export default class ApiService {
   }
 
   static renewToken(token) {
-    var _headers = new Headers();
+    let _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
 
     let form = {
@@ -42,7 +42,7 @@ export default class ApiService {
   }
 
   static signUp(email, password) {
-    var _headers = new Headers();
+    let _headers = new Headers();
     _headers.append('Content-Type', 'application/json');
 
     let form = {
