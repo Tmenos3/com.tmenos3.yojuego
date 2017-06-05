@@ -1,4 +1,3 @@
-//const BASEURL = 'http://ec2-54-174-177-82.compute-1.amazonaws.com:8081';
 const BASEURL = 'http://192.168.0.4:8089';
 
 export default class ApiService {
@@ -10,25 +9,8 @@ export default class ApiService {
       "email": email,
       "password": password
     };
-    return fetch(BASEURL + "/login/yojuego", {
-      method: 'post',
-      headers: _headers,
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
 
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-
-      });
+    return ApiService._fetch('post', _headers, form, '/login/yojuego');
   }
 
   static renewToken(token) {
@@ -38,45 +20,11 @@ export default class ApiService {
     let form = {
       "token": token
     };
-    return fetch(BASEURL + "/login/renewtoken", {
-      method: 'post',
-      headers: _headers,
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-
-      });
+    return ApiService._fetch('post', _headers, form, '/login/renewtoken');
   }
 
   static getUserInfo(token) {
-    return fetch(BASEURL + "/auth/info", {
-      method: 'get',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/auth/info');
   }
 
   static createMatch(title, date, fromTime, toTime, location, matchType, pendingPlayers, token) {
@@ -89,25 +37,8 @@ export default class ApiService {
       "matchType": matchType,
       "pendingPlayers": pendingPlayers
     };
-    return fetch(BASEURL + "/match", {
-      method: 'put',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
 
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-
-      });
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/match');
   }
 
   static signUp(email, password) {
@@ -118,25 +49,8 @@ export default class ApiService {
       "email": email,
       "password": password
     };
-    return fetch(BASEURL + "/signup/yojuego", {
-      method: 'post',
-      headers: _headers,
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
 
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-
-      });
+    return ApiService._fetch('post', _headers, form, '/signup/yojuego');
   }
 
   static completeProfileInfo(firstName, lastName, nickName, token) {
@@ -145,46 +59,12 @@ export default class ApiService {
       "lastName": lastName,
       "nickName": nickName
     };
-    return fetch(BASEURL + "/player/create", {
-      method: 'put',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
 
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-
-      });
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/player/create');
   }
 
   static getUpcomingPlayerMatches(token) {
-    return fetch(BASEURL + "/match/upcoming", {
-      method: 'get',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-
-      });
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/match/upcoming');
   }
 
   static saveNewFriend(email, token) {
@@ -192,24 +72,7 @@ export default class ApiService {
       "email": email
     };
 
-    return fetch(BASEURL + "/friendship/create", {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendship/create');
   }
 
   static saveNewGroup(description, players, photo, token) {
@@ -219,104 +82,23 @@ export default class ApiService {
       "photo": photo
     };
 
-    return fetch(BASEURL + "/group", {
-      method: 'put',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/group');
   }
 
   static getMyFriends(token) {
-    return fetch(BASEURL + "/friendship", {
-      method: 'get',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/friendship');
   }
 
   static getMyGroups(token) {
-    return fetch(BASEURL + "/group", {
-      method: 'get',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/group');
   }
 
   static getFriendshipRequest(token) {
-    return fetch(BASEURL + "/notifications/friendshiprequest", {
-      method: 'get',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/notifications/friendshiprequest');
   }
 
   static getMatchInvitations(token) {
-    return fetch(BASEURL + "/notifications/matchinvitation", {
-      method: 'get',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/notifications/matchinvitation');
   }
 
   static acceptFriendshipRequest(id, token) {
@@ -324,24 +106,7 @@ export default class ApiService {
       "id": id
     };
 
-    return fetch(BASEURL + "/friendship/accept", {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendship/accept');
   }
 
   static rejectFriendshipRequest(id, token) {
@@ -349,68 +114,19 @@ export default class ApiService {
       "id": id
     };
 
-    return fetch(BASEURL + "/friendship/reject", {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendship/reject');
   }
 
   static acceptMatchInvitation(id, token) {
     let form = { "matchId": id };
-    return fetch(BASEURL + '/match/confirmPlayer', {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
 
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/match/confirmPlayer');
   }
 
   static rejectMatchInvitation(id, token) {
     let form = { "matchId": id };
-    return fetch(BASEURL + '/match/rejectPlayer', {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
 
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/match/rejectPlayer');
   }
 
   static markAsReadFriendshipRequest(id, token) {
@@ -418,24 +134,7 @@ export default class ApiService {
       "id": id
     };
 
-    return fetch(BASEURL + "/notifications/friendshiprequest/markasread", {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/notifications/friendshiprequest/markasread')
   }
 
   static markAsReadMatchInvitation(id, token) {
@@ -443,44 +142,11 @@ export default class ApiService {
       "id": id
     };
 
-    return fetch(BASEURL + "/notifications/matchinvitation/markasread", {
-      method: 'post',
-      headers: ApiService._getHeader(token),
-      body: JSON.stringify(form)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/notifications/matchinvitation/markasread')
   }
 
   static logOut(token) {
-    return fetch(BASEURL + "/logout", {
-      method: 'post',
-      headers: ApiService._getHeader(token)
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-            .then((responseData) => {
-              return responseData;
-            });
-        }
-
-        return response.json().
-          then((error) => {
-            return Promise.reject(error);
-          });
-      });
+    return ApiService._fetch('post', ApiService._getHeader(token), null, '/logout')
   }
 
   static updateAccount(firstName, lastName, nickName, photo, phone, token) {
@@ -491,9 +157,8 @@ export default class ApiService {
       photo,
       phone
     };
-    let headers = ApiService._getHeader(token);
 
-    return ApiService._fetch('post', headers, form, '/player/update')
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/player/update')
   }
 
   static editGroup(id, description, photo, token) {
@@ -501,16 +166,18 @@ export default class ApiService {
       description,
       photo
     };
-    let headers = ApiService._getHeader(token);
 
-    return ApiService._fetch('post', headers, form, '/group/' + id)
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + id)
   }
 
   static _fetch(method, headers, body, url) {
+    let fetchBody;
+    if (body)
+      fetchBody = JSON.stringify(body);
     return fetch(BASEURL + url, {
       method,
       headers,
-      body: JSON.stringify(body)
+      body: fetchBody
     })
       .then((response) => {
         if (response.ok) {
@@ -524,6 +191,9 @@ export default class ApiService {
           then((error) => {
             return Promise.reject(error);
           });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 
