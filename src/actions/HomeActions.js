@@ -32,6 +32,12 @@ export default class HomeActions {
     });
   }
 
+  static groupDetailShown() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.GROUP_DETAIL_SHOWN
+    });
+  }
+
   static loadPlayerMatches() {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.LOADING_MATCHES

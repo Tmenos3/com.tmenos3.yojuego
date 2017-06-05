@@ -23,6 +23,7 @@ import MatchInvitation from './matchInvitation/MatchInvitation';
 import FriendList from './common/friendList/FriendList';
 import Account from './account/Account';
 import GroupDetail from './group/GroupDetail';
+import EditGroup from './group/EditGroup';
 
 let _navigator;
 
@@ -168,12 +169,17 @@ export default class AppNavigator extends Component {
 
       case RouteConstants.ROUTE_ACCOUNT:
         return (
-          <Account player={route.data}/>
+          <Account player={route.data} />
         );
 
       case RouteConstants.ROUTE_GROUP_DETAIL:
         return (
-          <GroupDetail groupId={route.data}/>
+          <GroupDetail groupId={route.data} />
+        );
+
+      case RouteConstants.ROUTE_EDIT_GROUP:
+        return (
+          <EditGroup group={route.data} />
         );
     }
   }

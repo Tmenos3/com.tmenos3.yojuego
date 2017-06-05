@@ -138,6 +138,7 @@ export default class Body extends Component {
           data: HomeStore.getPlayer()
         });
       } else if (this.state.showGroup) {
+        HomeActions.groupDetailShown();
         NavigationActions.addRoute({
           id: RouteConstants.ROUTE_GROUP_DETAIL,
           data: HomeStore.getGroupId()

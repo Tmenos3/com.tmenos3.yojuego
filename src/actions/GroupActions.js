@@ -32,4 +32,19 @@ export default class GroupActions {
         });
       });
   }
+
+  static edit(group) {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.EDIT_GROUP,
+      payload: {
+        group
+      }
+    });
+  }
+
+  static editShown() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.EDIT_SHOWN
+    });
+  }
 }

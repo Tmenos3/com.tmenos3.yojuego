@@ -21,6 +21,7 @@ import NewGroup from './group/NewGroup';
 import FriendshipRequest from './friendshipRequest/FriendshipRequest';
 import FriendList from './common/friendList/FriendList';
 import GroupDetail from './group/GroupDetail';
+import EditGroup from './group/EditGroup';
 
 let _navigator;
 
@@ -153,6 +154,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_GROUP_DETAIL:
         return (
           <GroupDetail groupId={route.data}/>
+        );
+
+      case RouteConstants.ROUTE_EDIT_GROUP:
+        return (
+          <EditGroup group={route.data} />
         );
     }
   }

@@ -206,6 +206,15 @@ export default class LocalService {
     });
   }
 
+  static updateGroup(group) {
+    return LocalService.getGroups()
+      .then((groups) => {
+        let i = groups.findIndex((g) => { return g._id === group._id; });
+        groups[i] = group;
+        return LocalService.saveGroups(groups);
+      });
+  }
+
   static savePlayerMatches(matches) {
     return LocalService._getStorage().save({
       key: LocalServiceConstants.MATCHES,

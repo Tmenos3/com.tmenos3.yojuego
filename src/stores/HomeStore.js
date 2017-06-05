@@ -372,6 +372,11 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
+    case HomeConstants.GROUP_DETAIL_SHOWN:
+      _showGroup = false;
+      HomeStore.emitChange();
+      break;
+
     case CreateMatchConstants.CLEAN_CREATE_MATCH:
       _showCreateMatch = false;
       break;

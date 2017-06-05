@@ -6,39 +6,17 @@ import {
   TouchableOpacity,
   Text
 } from 'react-native';
-import GroupActions from '../../actions/GroupActions';
-import GroupStore from '../../stores/GroupStore';
+import EditGroupActions from '../../actions/EditGroupActions';
 import NavigationActions from '../../actions/NavigationActions';
 
-export default class GroupDetailHeader extends Component {
-  constructor(props) {
-    super(props);
-
-    this._renderDescription = this._renderDescription.bind(this);
-    this._onStoreChange = this._onStoreChange.bind(this);
-    this._edit = this._edit.bind(this);
-
-    this.state = {
-      group: null
-    }
-  }
-
-  componentDidMount() {
-    GroupStore.addChangeListener(this._onStoreChange);
-    GroupActions.loadGroup(this.props.groupId);
-  }
-
-  componentWillUnmount() {
-    GroupStore.removeChangeListener(this._onStoreChange);
-  }
-
+export default class EditGroupHeader extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this._renderDescription()}
+        <Text style={styles.groupName}>{'Edit ' + this.props.group.description}</Text>
         <View style={styles.buttons}>
-          <TouchableOpacity onPress={this._edit} style={styles.menuButton}>
-            <Text style={styles.menuText}>Edit</Text>
+          <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
+            <Text style={styles.menuText}>Ok</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._back} style={styles.menuButton}>
             <Text style={styles.menuText}>Back</Text>
@@ -48,21 +26,8 @@ export default class GroupDetailHeader extends Component {
     );
   }
 
-  _onStoreChange() {
-    this.setState({
-      group: GroupStore.getGroup()
-    });
-  }
-
-  _renderDescription() {
-    if (this.state.group)
-      return (<Text style={styles.groupName}>{this.state.group.description}</Text>);
-
-    return null;
-  }
-
-  _edit() {
-    GroupActions.edit(this.state.group);
+  _confirm() {
+    EditGroupActions.confirm();
   }
 
   _back() {

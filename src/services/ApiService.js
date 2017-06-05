@@ -219,8 +219,8 @@ export default class ApiService {
       "photo": photo
     };
 
-    return fetch(BASEURL + "/group/create", {
-      method: 'post',
+    return fetch(BASEURL + "/group", {
+      method: 'put',
       headers: ApiService._getHeader(token),
       body: JSON.stringify(form)
     })
@@ -494,6 +494,16 @@ export default class ApiService {
     let headers = ApiService._getHeader(token);
 
     return ApiService._fetch('post', headers, form, '/player/update')
+  }
+
+  static editGroup(id, description, photo, token) {
+    let form = {
+      description,
+      photo
+    };
+    let headers = ApiService._getHeader(token);
+
+    return ApiService._fetch('post', headers, form, '/group/' + id)
   }
 
   static _fetch(method, headers, body, url) {

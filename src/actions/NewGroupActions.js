@@ -4,7 +4,7 @@ import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
 import HomeActions from '../actions/HomeActions';
 
-export default class CreateMatchActions {
+export default class NewGroupActions {
   static confirm() {
     Dispatcher.handleViewAction({
       actionType: NewGroupConstants.CONFIRM

@@ -68,10 +68,20 @@ export default class GroupDetailBody extends Component {
     this.setState({
       isLoadingGroup: GroupStore.isLoadingGroup(),
       errorLoadingGroup: GroupStore.getErrorLoadingGroup(),
-      group: GroupStore.getGroup()
+      group: GroupStore.getGroup(),
+      editGroup: GroupStore.editGroup()
     }, () => {
       if (this.state.group)
         this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+
+      if (this.state.editGroup) {
+        let groupToEdit = GroupStore.getGroupToEdit();
+        GroupActions.editShown();
+        NavigationActions.addRoute({
+          id: RouteConstants.ROUTE_EDIT_GROUP,
+          data: groupToEdit
+        });
+      }
     });
   }
 
@@ -184,7 +194,7 @@ export default class GroupDetailBody extends Component {
   }
 
   _exit() {
-    
+
   }
 }
 
