@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Image
 } from 'react-native';
+import ModalMessage from '../common/ModalMessage';
 import GroupActions from '../../actions/GroupActions';
 import NavigationActions from '../../actions/NavigationActions';
 import GroupStore from '../../stores/GroupStore';
@@ -22,6 +23,7 @@ export default class GroupDetailBody extends Component {
 
     this.state = {
       isLoadingGroup: false,
+      isDeletingGroup: false,
       errorLoadingGroup: null,
       group: null,
       dsFriends: ds.cloneWithRows([]),
@@ -38,6 +40,8 @@ export default class GroupDetailBody extends Component {
     this._delete = this._delete.bind(this);
     this._exit = this._exit.bind(this);
     this._renderDeleteGroupConfirmationModal = this._renderDeleteGroupConfirmationModal.bind(this);
+    this._confirmDeleteGroup = this._confirmDeleteGroup.bind(this);
+    this._cancelDeleteGroup = this._cancelDeleteGroup.bind(this);
   }
 
   componentDidMount() {
@@ -70,10 +74,12 @@ export default class GroupDetailBody extends Component {
   _onStoreChange() {
     this.setState({
       isLoadingGroup: GroupStore.isLoadingGroup(),
+      isDeletingGroup: GroupStore.isDeletingGroup(),
       errorLoadingGroup: GroupStore.getErrorLoadingGroup(),
       group: GroupStore.getGroup(),
       editGroup: GroupStore.editGroup(),
-      deleteGroup: GroupStore.deleteGroup()
+      deleteGroup: GroupStore.deleteGroup(),
+      groupDeleted: GroupStore.groupDeleted()
     }, () => {
       if (this.state.group)
         this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
@@ -85,6 +91,9 @@ export default class GroupDetailBody extends Component {
           id: RouteConstants.ROUTE_EDIT_GROUP,
           data: groupToEdit
         });
+      } else if(this.state.groupDeleted) {
+        GroupActions.resetGroupDetail();
+        NavigationActions.back();
       }
     });
   }
@@ -104,19 +113,11 @@ export default class GroupDetailBody extends Component {
   _renderDeleteGroupConfirmationModal() {
     if (this.state.deleteGroup) {
       return (
-        <View style={styles.modal}>
-          <View style={styles.confirmation}>
-            <Text>{'Eliminar grupo ' + this.state.group.description}</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity>
-                <Text>Confirmar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Text>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <ModalMessage
+          text={'Eliminar grupo ' + this.state.group.description}
+          confirm={this._confirmDeleteGroup}
+          cancel={this._cancelDeleteGroup}
+        />
       )
     }
 
@@ -221,6 +222,14 @@ export default class GroupDetailBody extends Component {
 
   _exit() {
 
+  }
+
+  _confirmDeleteGroup() {
+    GroupActions.deleteConfirmed(this.props.groupId);
+  }
+
+  _cancelDeleteGroup() {
+    GroupActions.cancelDeleteGroup();
   }
 }
 

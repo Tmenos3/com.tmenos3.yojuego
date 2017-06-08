@@ -80,7 +80,7 @@ export default class NewGroupActions {
 
   static groupsUpdated() {
     Dispatcher.handleViewAction({
-      actionType: NewGroupConstants.CLEAN_NEW_GROUP
+      actionType: NewGroupConstants.RESET
     });
 
     HomeActions.loadGroups();

@@ -171,7 +171,7 @@ export default class ApiService {
   }
 
   static deleteGroup(groupId, token) {
-    return ApiService._fetch('delete', ApiService._getHeader(token), null, '/group/' + id)
+    return ApiService._fetch('delete', ApiService._getHeader(token), null, '/group/' + groupId)
   }
 
   static _fetch(method, headers, body, url) {

@@ -110,6 +110,14 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       GroupStore.emitChange();
       break;
 
+    case GroupConstants.CANCEL_DELETE_GROUP:
+      _deleteGroup = false;
+      _deletingGroup = false;
+      _errorDeletingGroup = null;
+      _groupDeleted = false;
+      GroupStore.emitChange();
+      break;
+
     case GroupConstants.DELETING_GROUP:
       _deleteGroup = false;
       _deletingGroup = true;

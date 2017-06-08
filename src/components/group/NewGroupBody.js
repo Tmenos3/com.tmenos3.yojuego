@@ -86,8 +86,8 @@ export default class NewGroupBody extends Component {
       } else if (this.state.groupSaved && !this.state.isSavingGroup && !this.state.errorSavingGroup) {
         this.setState({ errorSavingNewGroup: 'Grupo guardado.' }, () => {
           setTimeout(() => {
-            NavigationActions.back();
             NewGroupActions.groupsUpdated();
+            NavigationActions.back();
           }, 3000);
         });
       }

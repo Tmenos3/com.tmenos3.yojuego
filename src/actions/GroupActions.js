@@ -48,6 +48,12 @@ export default class GroupActions {
     });
   }
 
+  static cancelDeleteGroup() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.CANCEL_DELETE_GROUP
+    });
+  }
+
   static deleteConfirmed(groupId) {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.DELETING_GROUP
@@ -64,6 +70,8 @@ export default class GroupActions {
         Dispatcher.handleViewAction({
           actionType: GroupConstants.GROUP_DELETED
         });
+
+        HomeActions.loadGroups();
       })
       .catch((error) => {
         Dispatcher.handleViewAction({
@@ -78,6 +86,12 @@ export default class GroupActions {
   static editShown() {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.EDIT_SHOWN
+    });
+  }
+
+  static resetGroupDetail() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.RESET
     });
   }
 }

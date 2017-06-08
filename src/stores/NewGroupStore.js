@@ -112,7 +112,7 @@ NewGroupStore.dispatchToken = AppDispatcher.register((action) => {
       NewGroupStore.emitChange();
       break;
 
-    case NewGroupConstants.CLEAN_NEW_GROUP:
+    case NewGroupConstants.RESET:
     case AppConstants.RESET_APP:
       _friends = [];
       _isGettingFriends = false;

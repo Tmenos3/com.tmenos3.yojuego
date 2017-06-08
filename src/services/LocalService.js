@@ -230,4 +230,15 @@ export default class LocalService {
       expires: null
     });
   }
+
+  static deleteGroup(id) {
+    return LocalService.getGroups()
+      .then((groups) => {
+        let i = groups.findIndex((g) => { return g._id === id; });
+        if (i > -1)
+          groups.splice(i, 1);
+
+        return LocalService.saveGroups(groups);
+      });
+  }
 };

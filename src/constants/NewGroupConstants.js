@@ -8,5 +8,5 @@ export default class NewGroupConstants {
   static get GROUP_SAVED() { return 'NEW_GROUP_GROUP_SAVED'; }
   static get SAVING_GROUP() { return 'NEW_GROUP_SAVING_GROUP'; }
   static get ERROR_SAVING_GROUP() { return 'NEW_GROUP_ERROR_SAVING_GROUP'; }
-  static get CLEAN_CREATE_GROUP() {return 'CLEAN_NEW_GROUP'; }
+  static get RESET() {return 'NEW_GROUP_RESET'; }
 }
