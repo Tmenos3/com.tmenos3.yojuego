@@ -170,6 +170,10 @@ export default class ApiService {
     return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + id)
   }
 
+  static deleteGroup(groupId, token) {
+    return ApiService._fetch('delete', ApiService._getHeader(token), null, '/group/' + id)
+  }
+
   static _fetch(method, headers, body, url) {
     let fetchBody;
     if (body)

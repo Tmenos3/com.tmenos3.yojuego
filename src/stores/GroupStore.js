@@ -12,6 +12,10 @@ let _errorLoadingGroup = null;
 let _group = null;
 let _editGroup = false;
 let _groupToEdit = null;
+let _deleteGroup = false;
+let _deletingGroup = false;
+let _errorDeletingGroup = null;
+let _groupDeleted = false;
 
 let GroupStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -44,19 +48,27 @@ let GroupStore = assign({}, EventEmitter.prototype, {
 
   getGroupToEdit() {
     return _groupToEdit;
+  },
+
+  isDeletingGroup() {
+    return _deletingGroup;
+  },
+
+  getErrorDeletingGroup() {
+    return _errorDeletingGroup;
+  },
+
+  groupDeleted() {
+    return _groupDeleted;
+  },
+
+  deleteGroup() {
+    return _deleteGroup;
   }
 });
 
 GroupStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
-    case GroupConstants.CONFIRM:
-      GroupStore.emitChange();
-      break;
-
-    case GroupConstants.BACK:
-      GroupStore.emitChange();
-      break;
-
     case GroupConstants.LOADING_GROUP:
       _isLoadingGroup = true;
       _errorLoadingGroup = null;
@@ -90,17 +102,54 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       GroupStore.emitChange();
       break;
 
+    case GroupConstants.DELETE_GROUP:
+      _deleteGroup = true;
+      _deletingGroup = false;
+      _errorDeletingGroup = null;
+      _groupDeleted = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.DELETING_GROUP:
+      _deleteGroup = false;
+      _deletingGroup = true;
+      _errorDeletingGroup = null;
+      _groupDeleted = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.GROUP_DELETED:
+      _deleteGroup = false;
+      _deletingGroup = false;
+      _errorDeletingGroup = null;
+      _groupDeleted = true;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.ERROR_DELETING_GROUP:
+      _deleteGroup = false;
+      _deletingGroup = false;
+      _errorDeletingGroup = action.payload.message;
+      _groupDeleted = false;
+      GroupStore.emitChange();
+      break;
+
     case EditGroupConstants.GROUP_SAVED:
       _group = action.payload.group;
       GroupStore.emitChange();
       break;
 
+    case GroupConstants.RESET:
     case AppConstants.RESET_APP:
       _isLoadingGroup = false;
       _errorLoadingGroup = null;
       _group = null;
       _editGroup = false;
       _groupToEdit = null;
+      _deleteGroup = false;
+      _deletingGroup = false;
+      _errorDeletingGroup = null;
+      _groupDeleted = false;
       break;
 
     default:

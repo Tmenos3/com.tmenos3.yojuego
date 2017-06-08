@@ -24,7 +24,8 @@ export default class GroupDetailBody extends Component {
       isLoadingGroup: false,
       errorLoadingGroup: null,
       group: null,
-      dsFriends: ds.cloneWithRows([])
+      dsFriends: ds.cloneWithRows([]),
+      deleteGroup: false
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -36,6 +37,7 @@ export default class GroupDetailBody extends Component {
     this._renderRowFriend = this._renderRowFriend.bind(this);
     this._delete = this._delete.bind(this);
     this._exit = this._exit.bind(this);
+    this._renderDeleteGroupConfirmationModal = this._renderDeleteGroupConfirmationModal.bind(this);
   }
 
   componentDidMount() {
@@ -53,13 +55,14 @@ export default class GroupDetailBody extends Component {
         {this._renderLoading()}
         {this._renderGroupInfo()}
         <View style={styles.options}>
-          <TouchableOpacity style={[styles.option, { backgroundColor: 'green' }]} onPress={this._delete}>
+          <TouchableOpacity style={[styles.option, { backgroundColor: 'green' }]} onPress={this._exit}>
             <Text style={styles.text}>Salir del Grupo</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.option, { backgroundColor: 'red' }]} onPress={this._exit}>
+          <TouchableOpacity style={[styles.option, { backgroundColor: 'red' }]} onPress={this._delete}>
             <Text style={styles.text}>Eliminar Grupo</Text>
           </TouchableOpacity>
         </View>
+        {this._renderDeleteGroupConfirmationModal()}
       </View>
     );
   }
@@ -69,7 +72,8 @@ export default class GroupDetailBody extends Component {
       isLoadingGroup: GroupStore.isLoadingGroup(),
       errorLoadingGroup: GroupStore.getErrorLoadingGroup(),
       group: GroupStore.getGroup(),
-      editGroup: GroupStore.editGroup()
+      editGroup: GroupStore.editGroup(),
+      deleteGroup: GroupStore.deleteGroup()
     }, () => {
       if (this.state.group)
         this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
@@ -90,6 +94,28 @@ export default class GroupDetailBody extends Component {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />
+        </View>
+      )
+    }
+
+    return null;
+  }
+
+  _renderDeleteGroupConfirmationModal() {
+    if (this.state.deleteGroup) {
+      return (
+        <View style={styles.modal}>
+          <View style={styles.confirmation}>
+            <Text>{'Eliminar grupo ' + this.state.group.description}</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity>
+                <Text>Confirmar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       )
     }
