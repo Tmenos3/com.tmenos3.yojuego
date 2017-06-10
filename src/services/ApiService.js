@@ -193,12 +193,10 @@ export default class ApiService {
 
         return response.json().
           then((error) => {
+            console.log(error);
             return Promise.reject(error);
           });
       })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   static _getHeader(token) {
