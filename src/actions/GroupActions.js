@@ -48,9 +48,21 @@ export default class GroupActions {
     });
   }
 
+  static exit() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.EXIT_GROUP
+    });
+  }
+
   static cancelDeleteGroup() {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.CANCEL_DELETE_GROUP
+    });
+  }
+
+  static cancelExitGroup() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.CANCEL_EXIT_GROUP
     });
   }
 
@@ -63,9 +75,6 @@ export default class GroupActions {
       .then((token) => {
         return ApiService.deleteGroup(groupId, token);
       })
-      .then((resp) => {
-        return LocalService.deleteGroup(groupId);
-      })
       .then(() => {
         Dispatcher.handleViewAction({
           actionType: GroupConstants.GROUP_DELETED
@@ -76,6 +85,32 @@ export default class GroupActions {
       .catch((error) => {
         Dispatcher.handleViewAction({
           actionType: GroupConstants.ERROR_DELETING_GROUP,
+          payload: {
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static exitConfirmed(groupId) {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.EXITING_GROUP
+    });
+
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.exitGroup(groupId, token);
+      })
+      .then(() => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.GROUP_EXITED
+        });
+
+        HomeActions.loadGroups();
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.ERROR_EXITING_GROUP,
           payload: {
             message: error.message
           }

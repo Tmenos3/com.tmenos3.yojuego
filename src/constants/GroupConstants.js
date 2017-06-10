@@ -10,4 +10,9 @@ export default class GroupConstants {
   static get GROUP_DELETED() { return 'GROUP_GROUP_DELETED'; }
   static get ERROR_DELETING_GROUP() { return 'GROUP_ERROR_DELETING_GROUP'; }
   static get RESET() { return 'GROUP_RESET'; }
+  static get EXIT_GROUP() { return 'GROUP_EXIT_GROUP'; }
+  static get CANCEL_EXIT_GROUP() { return 'GROUP_CANCEL_EXIT_GROUP'; }
+  static get EXITING_GROUP() { return 'GROUP_EXITING_GROUP'; }
+  static get GROUP_EXITED() { return 'GROUP_GROUP_EXITED'; }
+  static get ERROR_EXITING_GROUP() { return 'GROUP_ERROR_EXITING_GROUP'; }
 }

@@ -24,10 +24,16 @@ export default class GroupDetailBody extends Component {
     this.state = {
       isLoadingGroup: false,
       isDeletingGroup: false,
+      isExitingGroup: false,
       errorLoadingGroup: null,
+      errorDeletingGroup: null,
+      errorExitingGroup: null,
       group: null,
       dsFriends: ds.cloneWithRows([]),
-      deleteGroup: false
+      deleteGroup: false,
+      groupDeleted: false,
+      exitGroup: false,
+      groupExited: false,
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -40,8 +46,11 @@ export default class GroupDetailBody extends Component {
     this._delete = this._delete.bind(this);
     this._exit = this._exit.bind(this);
     this._renderDeleteGroupConfirmationModal = this._renderDeleteGroupConfirmationModal.bind(this);
+    this._renderExitGroupConfirmationModal = this._renderExitGroupConfirmationModal.bind(this);
     this._confirmDeleteGroup = this._confirmDeleteGroup.bind(this);
+    this._confirmExitGroup = this._confirmExitGroup.bind(this);
     this._cancelDeleteGroup = this._cancelDeleteGroup.bind(this);
+    this._cancelExitGroup = this._cancelExitGroup.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +66,9 @@ export default class GroupDetailBody extends Component {
     return (
       <View style={styles.container}>
         {this._renderLoading()}
+        {this._renderError(this.state.errorLoadingGroup)}
+        {this._renderError(this.state.errorDeletingGroup)}
+        {this._renderError(this.state.errorExitingGroup)}
         {this._renderGroupInfo()}
         <View style={styles.options}>
           <TouchableOpacity style={[styles.option, { backgroundColor: 'green' }]} onPress={this._exit}>
@@ -67,6 +79,7 @@ export default class GroupDetailBody extends Component {
           </TouchableOpacity>
         </View>
         {this._renderDeleteGroupConfirmationModal()}
+        {this._renderExitGroupConfirmationModal()}
       </View>
     );
   }
@@ -75,11 +88,16 @@ export default class GroupDetailBody extends Component {
     this.setState({
       isLoadingGroup: GroupStore.isLoadingGroup(),
       isDeletingGroup: GroupStore.isDeletingGroup(),
+      isExitingGroup: GroupStore.isExitingGroup(),
       errorLoadingGroup: GroupStore.getErrorLoadingGroup(),
+      errorDeletingGroup: GroupStore.getErrorDeletingGroup(),
+      errorExitingGroup: GroupStore.getErrorExitingGroup(),
       group: GroupStore.getGroup(),
       editGroup: GroupStore.editGroup(),
       deleteGroup: GroupStore.deleteGroup(),
-      groupDeleted: GroupStore.groupDeleted()
+      exitGroup: GroupStore.exitGroup(),
+      groupDeleted: GroupStore.groupDeleted(),
+      groupExited: GroupStore.groupExited()
     }, () => {
       if (this.state.group)
         this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
@@ -91,15 +109,26 @@ export default class GroupDetailBody extends Component {
           id: RouteConstants.ROUTE_EDIT_GROUP,
           data: groupToEdit
         });
-      } else if(this.state.groupDeleted) {
-        GroupActions.resetGroupDetail();
-        NavigationActions.back();
+      } else if (this.state.groupDeleted) {
+        this.setState({ errorDeletingGroup: 'Grupo eliminado.' }, () => {
+          setTimeout(() => {
+            GroupActions.resetGroupDetail();
+            NavigationActions.back();
+          }, 1500);
+        });
+      } else if (this.state.groupExited) {
+        this.setState({ errorExitingGroup: 'Has salido del grupo.' }, () => {
+          setTimeout(() => {
+            GroupActions.resetGroupDetail();
+            NavigationActions.back();
+          }, 1500);
+        });
       }
     });
   }
 
   _renderLoading() {
-    if (this.state.isLoadingGroup) {
+    if (this.state.isLoadingGroup || this.state.isDeletingGroup || this.state.isExitingGroup) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />
@@ -117,6 +146,20 @@ export default class GroupDetailBody extends Component {
           text={'Eliminar grupo ' + this.state.group.description}
           confirm={this._confirmDeleteGroup}
           cancel={this._cancelDeleteGroup}
+        />
+      )
+    }
+
+    return null;
+  }
+
+  _renderExitGroupConfirmationModal() {
+    if (this.state.exitGroup) {
+      return (
+        <ModalMessage
+          text={'Salir del grupo ' + this.state.group.description}
+          confirm={this._confirmExitGroup}
+          cancel={this._cancelExitGroup}
         />
       )
     }
@@ -217,19 +260,27 @@ export default class GroupDetailBody extends Component {
   }
 
   _delete() {
-    GroupActions.delete(this.props.groupId);
+    GroupActions.delete();
   }
 
   _exit() {
-
+    GroupActions.exit();
   }
 
   _confirmDeleteGroup() {
     GroupActions.deleteConfirmed(this.props.groupId);
   }
 
+  _confirmExitGroup() {
+    GroupActions.exitConfirmed(this.props.groupId);
+  }
+
   _cancelDeleteGroup() {
     GroupActions.cancelDeleteGroup();
+  }
+
+  _cancelExitGroup() {
+    GroupActions.cancelExitGroup();
   }
 }
 

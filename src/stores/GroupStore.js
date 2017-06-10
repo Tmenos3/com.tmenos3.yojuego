@@ -16,6 +16,10 @@ let _deleteGroup = false;
 let _deletingGroup = false;
 let _errorDeletingGroup = null;
 let _groupDeleted = false;
+let _exitGroup = false;
+let _exitingGroup = false;
+let _errorExitingGroup = null;
+let _groupExited = false;
 
 let GroupStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -64,6 +68,22 @@ let GroupStore = assign({}, EventEmitter.prototype, {
 
   deleteGroup() {
     return _deleteGroup;
+  },
+
+  isExitingGroup() {
+    return _exitingGroup;
+  },
+
+  getErrorExitingGroup() {
+    return _errorExitingGroup;
+  },
+
+  groupExited() {
+    return _groupExited;
+  },
+
+  exitGroup() {
+    return _exitGroup;
   }
 });
 
@@ -147,6 +167,46 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       GroupStore.emitChange();
       break;
 
+    case GroupConstants.EXIT_GROUP:
+      _exitGroup = true;
+      _exitingGroup = false;
+      _errorExitingGroup = null;
+      _groupExited = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.CANCEL_EXIT_GROUP:
+      _exitGroup = false;
+      _exitingGroup = false;
+      _errorExitingGroup = null;
+      _groupExited = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.EXITING_GROUP:
+      _exitGroup = false;
+      _exitingGroup = true;
+      _errorExitingGroup = null;
+      _groupExited = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.GROUP_EXITED:
+      _exitGroup = false;
+      _exitingGroup = false;
+      _errorExitingGroup = null;
+      _groupExited = true;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.ERROR_EXITING_GROUP:
+      _exitGroup = false;
+      _exitingGroup = false;
+      _errorExitingGroup = action.payload.message;
+      _groupExited = false;
+      GroupStore.emitChange();
+      break;
+
     case GroupConstants.RESET:
     case AppConstants.RESET_APP:
       _isLoadingGroup = false;
@@ -158,6 +218,10 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       _deletingGroup = false;
       _errorDeletingGroup = null;
       _groupDeleted = false;
+      _exitGroup = false;
+      _exitingGroup = false;
+      _errorExitingGroup = null;
+      _groupExited = false;
       break;
 
     default:
