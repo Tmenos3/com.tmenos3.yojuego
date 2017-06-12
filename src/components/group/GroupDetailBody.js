@@ -5,9 +5,11 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   ActivityIndicator,
-  Image
+  Image,
+  BackAndroid
 } from 'react-native';
 import ModalMessage from '../common/ModalMessage';
 import GroupActions from '../../actions/GroupActions';
@@ -16,6 +18,7 @@ import GroupStore from '../../stores/GroupStore';
 import RouteConstants from '../../constants/RouteConstants';
 
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+const ACTION_TIMER = 400;
 
 export default class GroupDetailBody extends Component {
   constructor(props) {
@@ -34,6 +37,8 @@ export default class GroupDetailBody extends Component {
       groupDeleted: false,
       exitGroup: false,
       groupExited: false,
+      isAddingFriends: false,
+      errorAddingPlayers: null,
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -51,15 +56,22 @@ export default class GroupDetailBody extends Component {
     this._confirmExitGroup = this._confirmExitGroup.bind(this);
     this._cancelDeleteGroup = this._cancelDeleteGroup.bind(this);
     this._cancelExitGroup = this._cancelExitGroup.bind(this);
+    this._selectingFriendsBack = this._selectingFriendsBack.bind(this);
+    this._selectingFriendsConfirm = this._selectingFriendsConfirm.bind(this);
+    this._selectFriends = this._selectFriends.bind(this);
+    this._onLongPress = this._onLongPress.bind(this);
+    this._handleBack = this._handleBack.bind(this);
   }
 
   componentDidMount() {
     GroupStore.addChangeListener(this._onStoreChange);
     GroupActions.loadGroup(this.props.groupId);
+    BackAndroid.addEventListener('hardwareBackPress', this._handleBack);
   }
 
   componentWillUnmount() {
     GroupStore.removeChangeListener(this._onStoreChange);
+    BackAndroid.removeEventListener('hardwareBackPress', this._handleBack);
   }
 
   render() {
@@ -69,8 +81,12 @@ export default class GroupDetailBody extends Component {
         {this._renderError(this.state.errorLoadingGroup)}
         {this._renderError(this.state.errorDeletingGroup)}
         {this._renderError(this.state.errorExitingGroup)}
+        {this._renderError(this.state.errorAddingPlayers)}
         {this._renderGroupInfo()}
         <View style={styles.options}>
+          <TouchableOpacity style={[styles.option, { backgroundColor: 'blue' }]} onPress={this._selectFriends}>
+            <Text style={styles.text}>{'Agegar amigos'}</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={[styles.option, { backgroundColor: 'green' }]} onPress={this._exit}>
             <Text style={styles.text}>Salir del Grupo</Text>
           </TouchableOpacity>
@@ -82,6 +98,19 @@ export default class GroupDetailBody extends Component {
         {this._renderExitGroupConfirmationModal()}
       </View>
     );
+  }
+
+  _handleBack() {
+    let avoidBack = false;
+    this.state.group.players.forEach((p) => {
+      if (p.isSelected) {
+        p.isSelected = false;
+        avoidBack = true;
+        this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+      }
+    });
+
+    return avoidBack;
   }
 
   _onStoreChange() {
@@ -97,7 +126,9 @@ export default class GroupDetailBody extends Component {
       deleteGroup: GroupStore.deleteGroup(),
       exitGroup: GroupStore.exitGroup(),
       groupDeleted: GroupStore.groupDeleted(),
-      groupExited: GroupStore.groupExited()
+      groupExited: GroupStore.groupExited(),
+      isAddingFriends: GroupStore.isAddingPlayers(),
+      friendsAdded: GroupStore.playersAdded()
     }, () => {
       if (this.state.group)
         this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
@@ -123,12 +154,18 @@ export default class GroupDetailBody extends Component {
             NavigationActions.back();
           }, 1500);
         });
+      } else if (this.state.playersAdded) {
+        this.setState({ errorAddingPlayers: 'Amigos agregados.' }, () => {
+          setTimeout(() => {
+            this.setState({ errorAddingPlayers: null });
+          }, 1500);
+        });
       }
     });
   }
 
   _renderLoading() {
-    if (this.state.isLoadingGroup || this.state.isDeletingGroup || this.state.isExitingGroup) {
+    if (this.state.isAddingFriends || this.state.isLoadingGroup || this.state.isDeletingGroup || this.state.isExitingGroup) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />
@@ -208,14 +245,18 @@ export default class GroupDetailBody extends Component {
   _renderRowFriend(rowData) {
     try {
       return (
-        <View key={rowData._id} style={{ borderRadius: 10 }}>
+        <TouchableOpacity
+          key={rowData._id}
+          delayLongPress={400}
+          onLongPress={() => this._onLongPress(rowData._id)}
+          style={[styles.playerRow, { backgroundColor: rowData.isSelected ? 'rgb(0, 155, 0)' : 'rgb(155, 155, 155)' }]} >
           <View style={styles.dataRowLeft}>
             {this._renderPhoto(rowData.photo)}
           </View>
           <View style={styles.dataRowRight}>
             {this._renderInfo(rowData)}
           </View>
-        </View>
+        </TouchableOpacity>
       );
     } catch (error) {
       return null;
@@ -282,6 +323,27 @@ export default class GroupDetailBody extends Component {
   _cancelExitGroup() {
     GroupActions.cancelExitGroup();
   }
+
+  _selectFriends() {
+    GroupActions.selectFriendsToAdd(this._selectingFriendsBack, this._selectingFriendsConfirm);
+  }
+
+  _selectingFriendsBack() {
+    NavigationActions.back();
+  }
+
+  _selectingFriendsConfirm(friendList) {
+    NavigationActions.back();
+    GroupActions.addPlayers(this.props.groupId, friendList);
+  }
+
+  _onLongPress(id) {
+    this.state.group.players.forEach((p) => {
+      p.isSelected = p._id === id;
+    });
+
+    this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+  }
 }
 
 const styles = StyleSheet.create({
@@ -325,5 +387,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.9,
     marginLeft: Dimensions.get('window').width * 0.05,
     bottom: Dimensions.get('window').width * 0.025,
+  },
+  playerRow: {
+    flexDirection: 'row',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5
   }
 });

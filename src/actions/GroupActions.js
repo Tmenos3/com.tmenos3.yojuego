@@ -3,6 +3,8 @@ import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
 import HomeActions from '../actions/HomeActions';
+import NavigationActions from '../actions/NavigationActions';
+import RouteConstants from '../constants/RouteConstants';
 
 export default class GroupActions {
   static loadGroup(groupId) {
@@ -128,5 +130,51 @@ export default class GroupActions {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.RESET
     });
+  }
+
+  static selectFriendsToAdd(onBack, onConfirm) {
+    LocalService.getFriends()
+      .then((friends) => {
+        NavigationActions.addRoute({
+          id: RouteConstants.ROUTE_FRIEND_LIST,
+          data: {
+            friends,
+            onBack,
+            onConfirm
+          }
+        });
+      });
+  }
+
+  static addPlayers(groupId, players) {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.ADDING_PLAYERS
+    });
+
+    let group = null;
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.addPlayers(groupId, players.map((p) => { return p.friendId }), token);
+      })
+      .then((resp) => {
+        group = resp.resp;
+        return LocalService.updateGroup(group);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.PLAYERS_ADDED,
+          payload: {
+            group
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.ERROR_ADDING_PLAYERS,
+          payload: {
+            message: error.message
+          }
+        });
+      });
   }
 }

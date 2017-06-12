@@ -178,6 +178,13 @@ export default class ApiService {
     return ApiService._fetch('post', ApiService._getHeader(token), null, '/group/' + groupId + '/exit')
   }
 
+  static addPlayers(groupId, players, token) {
+    let form = {
+      players
+    }
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + groupId + '/players')
+  }
+
   static _fetch(method, headers, body, url) {
     let fetchBody;
     if (body)

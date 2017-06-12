@@ -20,6 +20,9 @@ let _exitGroup = false;
 let _exitingGroup = false;
 let _errorExitingGroup = null;
 let _groupExited = false;
+let _isAddingPlayers = false;
+let _playersAdded = false;
+let _errorAddingPlayers = null;
 
 let GroupStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -84,6 +87,18 @@ let GroupStore = assign({}, EventEmitter.prototype, {
 
   exitGroup() {
     return _exitGroup;
+  },
+
+  isAddingPlayers() {
+    return _isAddingPlayers;
+  },
+
+  playersAdded() {
+    return _playersAdded;
+  },
+
+  getErrorAddingPlayers() {
+    return _errorAddingPlayers;
   }
 });
 
@@ -207,6 +222,28 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       GroupStore.emitChange();
       break;
 
+    case GroupConstants.ADDING_PLAYERS:
+      _isAddingPlayers = true;
+      _playersAdded = false;
+      _errorAddingPlayers = null;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.PLAYERS_ADDED:
+      _isAddingPlayers = false;
+      _playersAdded = true;
+      _group = action.payload.group;
+      _errorAddingPlayers = null;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.ERROR_ADDING_PLAYERS:
+      _isAddingPlayers = false;
+      _playersAdded = false;
+      _errorAddingPlayers = action.payload.message;
+      GroupStore.emitChange();
+      break;
+
     case GroupConstants.RESET:
     case AppConstants.RESET_APP:
       _isLoadingGroup = false;
@@ -222,6 +259,9 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       _exitingGroup = false;
       _errorExitingGroup = null;
       _groupExited = false;
+      _isAddingPlayers = false;
+      _playersAdded = false;
+      _errorAddingPlayers = null;
       break;
 
     default:

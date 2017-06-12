@@ -15,4 +15,7 @@ export default class GroupConstants {
   static get EXITING_GROUP() { return 'GROUP_EXITING_GROUP'; }
   static get GROUP_EXITED() { return 'GROUP_GROUP_EXITED'; }
   static get ERROR_EXITING_GROUP() { return 'GROUP_ERROR_EXITING_GROUP'; }
+  static get ADDING_PLAYERS() { return 'GROUP_ADDING_PLAYERS'; }
+  static get PLAYERS_ADDED() { return 'GROUP_PLAYERS_ADDED'; }
+  static get ERROR_ADDING_PLAYERS() { return 'GROUP_ERROR_ADDING_PLAYERS'; }
 }
