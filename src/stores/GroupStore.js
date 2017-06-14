@@ -23,6 +23,15 @@ let _groupExited = false;
 let _isAddingPlayers = false;
 let _playersAdded = false;
 let _errorAddingPlayers = null;
+let _back = false;
+let _removePlayer = false;
+let _removingPlayer = false;
+let _errorRemovingPlayer = null;
+let _playerRemoved = false;
+let _makeAdminPlayer = false;
+let _makingAdminPlayer = false;
+let _errorMakingAdminPlayer = null;
+let _playerMadeAdmin = false;
 
 let GroupStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -99,11 +108,54 @@ let GroupStore = assign({}, EventEmitter.prototype, {
 
   getErrorAddingPlayers() {
     return _errorAddingPlayers;
-  }
+  },
+
+  backPressed() {
+    let ret = _back;
+    _back = false;
+    return ret;
+  },
+
+  removePlayer() {
+    return _removePlayer;
+  },
+
+  isRemovingPlayer() {
+    return _removingPlayer;
+  },
+
+  getErrorRemovingPlayer() {
+    return _errorRemovingPlayer;
+  },
+
+  playerRemoved() {
+    return _playerRemoved;
+  },
+
+  makeAdminPlayer() {
+    return _makeAdminPlayer;
+  },
+
+  isMakingAdminPlayer() {
+    return _makingAdminPlayer;
+  },
+
+  getErrorMakingAdminPlayer() {
+    return _errorMakingAdminPlayer;
+  },
+
+  playerMadeAdmin() {
+    return _playerMadeAdmin;
+  },
 });
 
 GroupStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
+    case GroupConstants.BACK:
+      _back = true;
+      GroupStore.emitChange();
+      break;
+
     case GroupConstants.LOADING_GROUP:
       _isLoadingGroup = true;
       _errorLoadingGroup = null;
@@ -244,6 +296,102 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       GroupStore.emitChange();
       break;
 
+    case GroupConstants.RESET_ADD_PLAYERS:
+      _playersAdded = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.REMOVE_PLAYER:
+      _removePlayer = true;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.CANCEL_REMOVE_PLAYER:
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.REMOVING_PLAYER:
+      _removePlayer = false;
+      _removingPlayer = true;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.PLAYER_REMOVED:
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = true;
+      _group = action.payload.group;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.ERROR_REMOVING_PLAYER:
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = action.payload.message;
+      _playerRemoved = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.RESET_REMOVE_PLAYER:
+      _playerRemoved = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.MAKE_PLAYER_ADMIN:
+      _makeAdminPlayer = true;
+      _makingAdminPlayer = false;
+      _errorMakingAdminPlayer = null;
+      _playerMadeAdmin = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.CANCEL_MAKE_PLAYER_ADMIN:
+      _makeAdminPlayer = false;
+      _makingAdminPlayer = false;
+      _errorMakingAdminPlayer = null;
+      _playerMadeAdmin = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.MAKING_PLAYER_ADMIN:
+      _makeAdminPlayer = false;
+      _makingAdminPlayer = true;
+      _errorMakingAdminPlayer = null;
+      _playerMadeAdmin = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.PLAYER_MADE_ADMIN:
+      _makeAdminPlayer = false;
+      _makingAdminPlayer = false;
+      _errorMakingAdminPlayer = null;
+      _playerMadeAdmin = true;
+      _group = action.payload.group;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.ERROR_MAKING_PLAYER_ADMIN:
+      _makeAdminPlayer = false;
+      _makingAdminPlayer = false;
+      _errorMakingAdminPlayer = action.payload.message;
+      _playerMadeAdmin = false;
+      GroupStore.emitChange();
+      break;
+
+    case GroupConstants.RESET_REMOVE_PLAYER:
+      _playerMadeAdmin = false;
+      GroupStore.emitChange();
+
     case GroupConstants.RESET:
     case AppConstants.RESET_APP:
       _isLoadingGroup = false;
@@ -262,6 +410,15 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       _isAddingPlayers = false;
       _playersAdded = false;
       _errorAddingPlayers = null;
+      _back = false;
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      _makeAdminPlayer = false;
+      _makingAdminPlayer = false;
+      _errorMakingAdminPlayer = null;
+      _playerMadeAdmin = false;
       break;
 
     default:

@@ -185,6 +185,17 @@ export default class ApiService {
     return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + groupId + '/players')
   }
 
+  static removePlayer(groupId, playerId, token) {
+    return ApiService._fetch('delete', ApiService._getHeader(token), null, '/group/' + groupId + '/player/' + playerId)
+  }
+
+  static makeAdminPlayer(groupId, playerId, token) {
+    let form = {
+      playerId
+    }
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + groupId + '/makeadmin')
+  }
+
   static _fetch(method, headers, body, url) {
     let fetchBody;
     if (body)

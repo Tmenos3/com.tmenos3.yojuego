@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import GroupActions from '../../actions/GroupActions';
 import GroupStore from '../../stores/GroupStore';
-import NavigationActions from '../../actions/NavigationActions';
 
 export default class GroupDetailHeader extends Component {
   constructor(props) {
@@ -66,7 +65,7 @@ export default class GroupDetailHeader extends Component {
   }
 
   _back() {
-    NavigationActions.back();
+    GroupActions.back();
   }
 }
 

@@ -7,6 +7,12 @@ import NavigationActions from '../actions/NavigationActions';
 import RouteConstants from '../constants/RouteConstants';
 
 export default class GroupActions {
+  static back() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.BACK
+    });
+  }
+
   static loadGroup(groupId) {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.LOADING_GROUP
@@ -56,6 +62,18 @@ export default class GroupActions {
     });
   }
 
+  static removePlayer() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.REMOVE_PLAYER
+    });
+  }
+
+  static makePlayerAdmin() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.MAKE_PLAYER_ADMIN
+    });
+  }
+
   static cancelDeleteGroup() {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.CANCEL_DELETE_GROUP
@@ -65,6 +83,18 @@ export default class GroupActions {
   static cancelExitGroup() {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.CANCEL_EXIT_GROUP
+    });
+  }
+
+  static cancelRemovePlayer() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.CANCEL_REMOVE_PLAYER
+    });
+  }
+
+  static cancelMakeAdminPlayer() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.CANCEL_MAKE_PLAYER_ADMIN
     });
   }
 
@@ -113,6 +143,70 @@ export default class GroupActions {
       .catch((error) => {
         Dispatcher.handleViewAction({
           actionType: GroupConstants.ERROR_EXITING_GROUP,
+          payload: {
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static removePlayerConfirmed(groupId, playerId) {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.REMOVING_PLAYER
+    });
+
+    let group = null;
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.removePlayer(groupId, playerId, token);
+      })
+      .then((resp) => {
+        group = resp.resp;
+        return LocalService.updateGroup(group);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.PLAYER_REMOVED,
+          payload: {
+            group
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.ERROR_REMOVING_PLAYER,
+          payload: {
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static makeAdminPlayerConfirmed(groupId, playerId) {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.MAKING_PLAYER_ADMIN
+    });
+
+    let group = null;
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.makeAdminPlayer(groupId, playerId, token);
+      })
+      .then((resp) => {
+        group = resp.resp;
+        return LocalService.updateGroup(group);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.PLAYER_MADE_ADMIN,
+          payload: {
+            group
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.ERROR_MAKING_PLAYER_ADMIN,
           payload: {
             message: error.message
           }
@@ -176,5 +270,23 @@ export default class GroupActions {
           }
         });
       });
+  }
+
+  static resetAddPlayers() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.RESET_ADD_PLAYERS
+    });
+  }
+
+  static resetRemovePlayer() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.RESET_REMOVE_PLAYER
+    });
+  }
+
+  static resetMakePlayerAdmin() {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.RESET_MAKE_PLAYER_ADMIN
+    });
   }
 }

@@ -28,17 +28,27 @@ export default class GroupDetailBody extends Component {
       isLoadingGroup: false,
       isDeletingGroup: false,
       isExitingGroup: false,
+      isRemovingPlayer: false,
+      isAddingFriends: false,
+      isMakingAdminPlayer: false,
       errorLoadingGroup: null,
       errorDeletingGroup: null,
       errorExitingGroup: null,
+      errorRemovingPlayer: null,
+      errorAddingPlayers: null,
+      errorMakingAdminPlayer: null,
       group: null,
       dsFriends: ds.cloneWithRows([]),
       deleteGroup: false,
+      removePlayer: false,
+      makeAdminPlayer: false,
       groupDeleted: false,
       exitGroup: false,
       groupExited: false,
-      isAddingFriends: false,
-      errorAddingPlayers: null,
+      playerRemoved: false,
+      playersAdded: false,
+      playerMadeAdmin: false,
+      showPlayerOptions: false
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -61,6 +71,15 @@ export default class GroupDetailBody extends Component {
     this._selectFriends = this._selectFriends.bind(this);
     this._onLongPress = this._onLongPress.bind(this);
     this._handleBack = this._handleBack.bind(this);
+    this._renderPlayerOptions = this._renderPlayerOptions.bind(this);
+    this._makeAdminPlayer = this._makeAdminPlayer.bind(this);
+    this._removePlayer = this._removePlayer.bind(this);
+    this._confirmRemovePlayer = this._confirmRemovePlayer.bind(this);
+    this._confirmMakeAdminPlayer = this._confirmMakeAdminPlayer.bind(this);
+    this._renderRemovePlayerConfirmationModal = this._renderRemovePlayerConfirmationModal.bind(this);
+    this._renderMakeAdminPlayerConfirmationModal = this._renderMakeAdminPlayerConfirmationModal.bind(this);
+    this._cancelRemovePlayer = this._cancelRemovePlayer.bind(this);
+    this._cancelMakeAdminPlayer = this._cancelMakeAdminPlayer.bind(this);
   }
 
   componentDidMount() {
@@ -82,6 +101,8 @@ export default class GroupDetailBody extends Component {
         {this._renderError(this.state.errorDeletingGroup)}
         {this._renderError(this.state.errorExitingGroup)}
         {this._renderError(this.state.errorAddingPlayers)}
+        {this._renderError(this.state.errorRemovingPlayer)}
+        {this._renderError(this.state.errorMakingAdminPlayer)}
         {this._renderGroupInfo()}
         <View style={styles.options}>
           <TouchableOpacity style={[styles.option, { backgroundColor: 'blue' }]} onPress={this._selectFriends}>
@@ -96,6 +117,9 @@ export default class GroupDetailBody extends Component {
         </View>
         {this._renderDeleteGroupConfirmationModal()}
         {this._renderExitGroupConfirmationModal()}
+        {this._renderRemovePlayerConfirmationModal()}
+        {this._renderMakeAdminPlayerConfirmationModal()}
+        {this._renderPlayerOptions()}
       </View>
     );
   }
@@ -106,7 +130,10 @@ export default class GroupDetailBody extends Component {
       if (p.isSelected) {
         p.isSelected = false;
         avoidBack = true;
-        this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+        this.setState({
+          dsFriends: ds.cloneWithRows(this.state.group.players),
+          showPlayerOptions: false
+        });
       }
     });
 
@@ -118,48 +145,76 @@ export default class GroupDetailBody extends Component {
       isLoadingGroup: GroupStore.isLoadingGroup(),
       isDeletingGroup: GroupStore.isDeletingGroup(),
       isExitingGroup: GroupStore.isExitingGroup(),
+      isRemovingPlayer: GroupStore.isRemovingPlayer(),
+      isMakingAdminPlayer: GroupStore.isMakingAdminPlayer(),
       errorLoadingGroup: GroupStore.getErrorLoadingGroup(),
       errorDeletingGroup: GroupStore.getErrorDeletingGroup(),
       errorExitingGroup: GroupStore.getErrorExitingGroup(),
+      errorRemovingPlayer: GroupStore.getErrorRemovingPlayer(),
+      errorMakingAdminPlayer: GroupStore.getErrorMakingAdminPlayer(),
       group: GroupStore.getGroup(),
       editGroup: GroupStore.editGroup(),
       deleteGroup: GroupStore.deleteGroup(),
+      removePlayer: GroupStore.removePlayer(),
+      makeAdminPlayer: GroupStore.makeAdminPlayer(),
       exitGroup: GroupStore.exitGroup(),
       groupDeleted: GroupStore.groupDeleted(),
       groupExited: GroupStore.groupExited(),
+      playerRemoved: GroupStore.playerRemoved(),
+      playerMadeAdmin: GroupStore.playerMadeAdmin(),
       isAddingFriends: GroupStore.isAddingPlayers(),
-      friendsAdded: GroupStore.playersAdded()
+      playersAdded: GroupStore.playersAdded()
     }, () => {
-      if (this.state.group)
-        this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+      if (GroupStore.backPressed()) {
+        if (!this._handleBack())
+          NavigationActions.back();
+      } else {
+        if (this.state.group)
+          this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
 
-      if (this.state.editGroup) {
-        let groupToEdit = GroupStore.getGroupToEdit();
-        GroupActions.editShown();
-        NavigationActions.addRoute({
-          id: RouteConstants.ROUTE_EDIT_GROUP,
-          data: groupToEdit
-        });
-      } else if (this.state.groupDeleted) {
-        this.setState({ errorDeletingGroup: 'Grupo eliminado.' }, () => {
-          setTimeout(() => {
-            GroupActions.resetGroupDetail();
-            NavigationActions.back();
-          }, 1500);
-        });
-      } else if (this.state.groupExited) {
-        this.setState({ errorExitingGroup: 'Has salido del grupo.' }, () => {
-          setTimeout(() => {
-            GroupActions.resetGroupDetail();
-            NavigationActions.back();
-          }, 1500);
-        });
-      } else if (this.state.playersAdded) {
-        this.setState({ errorAddingPlayers: 'Amigos agregados.' }, () => {
-          setTimeout(() => {
-            this.setState({ errorAddingPlayers: null });
-          }, 1500);
-        });
+        if (this.state.editGroup) {
+          let groupToEdit = GroupStore.getGroupToEdit();
+          GroupActions.editShown();
+          NavigationActions.addRoute({
+            id: RouteConstants.ROUTE_EDIT_GROUP,
+            data: groupToEdit
+          });
+        } else if (this.state.groupDeleted) {
+          this.setState({ errorDeletingGroup: 'Grupo eliminado.' }, () => {
+            setTimeout(() => {
+              GroupActions.resetGroupDetail();
+              NavigationActions.back();
+            }, 1500);
+          });
+        } else if (this.state.groupExited) {
+          this.setState({ errorExitingGroup: 'Has salido del grupo.' }, () => {
+            setTimeout(() => {
+              GroupActions.resetGroupDetail();
+              NavigationActions.back();
+            }, 1500);
+          });
+        } else if (this.state.playersAdded) {
+          this.setState({ errorAddingPlayers: 'Amigos agregados.' }, () => {
+            GroupActions.resetAddPlayers();
+            setTimeout(() => {
+              this.setState({ errorAddingPlayers: null });
+            }, 1500);
+          });
+        } else if (this.state.playerRemoved) {
+          this.setState({ errorRemovingPlayer: 'Amigo eliminado.', showPlayerOptions: false }, () => {
+            GroupActions.resetRemovePlayer();
+            setTimeout(() => {
+              this.setState({ errorRemovingPlayer: null });
+            }, 1500);
+          });
+        } else if (this.state.playerMadeAdmin) {
+          this.setState({ errorMakingPlayerAdmin: 'Amigo admin.', showPlayerOptions: false }, () => {
+            GroupActions.resetMakePlayerAdmin();
+            setTimeout(() => {
+              this.setState({ errorMakingPlayerAdmin: null });
+            }, 1500);
+          });
+        }
       }
     });
   }
@@ -204,6 +259,34 @@ export default class GroupDetailBody extends Component {
     return null;
   }
 
+  _renderRemovePlayerConfirmationModal() {
+    if (this.state.removePlayer) {
+      return (
+        <ModalMessage
+          text={'Eliminar amigo del grupo ' + this.state.group.description}
+          confirm={this._confirmRemovePlayer}
+          cancel={this._cancelRemovePlayer}
+        />
+      )
+    }
+
+    return null;
+  }
+
+  _renderMakeAdminPlayerConfirmationModal() {
+    if (this.state.makeAdminPlayer) {
+      return (
+        <ModalMessage
+          text={'Hacer amigo admin del grupo ' + this.state.group.description}
+          confirm={this._confirmMakeAdminPlayer}
+          cancel={this._cancelMakeAdminPlayer}
+        />
+      )
+    }
+
+    return null;
+  }
+
   _renderGroupInfo() {
     if (this.state.group) {
       return (
@@ -240,6 +323,22 @@ export default class GroupDetailBody extends Component {
     }
 
     return null;
+  }
+
+  _renderPlayerOptions() {
+    return this.state.showPlayerOptions ?
+      (
+        <View style={styles.playerOptions}>
+          <TouchableOpacity style={styles.playerOptionsButton} onPress={this._makeAdminPlayer}>
+            <Text style={styles.playerOptionsText}>{'Admin'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.playerOptionsButton} onPress={this._removePlayer}>
+            <Text style={styles.playerOptionsText}>{'Remove'}</Text>
+          </TouchableOpacity>
+        </View>
+      )
+      :
+      null;
   }
 
   _renderRowFriend(rowData) {
@@ -342,7 +441,40 @@ export default class GroupDetailBody extends Component {
       p.isSelected = p._id === id;
     });
 
-    this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+    this.setState({
+      dsFriends: ds.cloneWithRows(this.state.group.players),
+      showPlayerOptions: true
+    });
+  }
+
+  _removePlayer() {
+    GroupActions.removePlayer();
+  }
+
+  _makeAdminPlayer() {
+    GroupActions.makePlayerAdmin();
+  }
+
+  _confirmRemovePlayer() {
+    let player = this.state.group.players.find((p) => {
+      return p.isSelected === true;
+    });
+    GroupActions.removePlayerConfirmed(this.props.groupId, player._id);
+  }
+
+  _cancelRemovePlayer() {
+    GroupActions.cancelRemovePlayer();
+  }
+
+  _confirmMakeAdminPlayer() {
+    let player = this.state.group.players.find((p) => {
+      return p.isSelected === true;
+    });
+    GroupActions.makeAdminPlayerConfirmed(this.props.groupId, player._id);
+  }
+
+  _cancelMakeAdminPlayer() {
+    GroupActions.cancelMakeAdminPlayer();
   }
 }
 
@@ -393,5 +525,30 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     borderRadius: 5
-  }
+  },
+  playerOptions: {
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 2,
+    backgroundColor: '#009900',
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: Dimensions.get('window').width,
+    padding: 20
+  },
+  playerOptionsButton: {
+    width: Dimensions.get('window').width * 0.2,
+    height: 40,
+    justifyContent: 'center',
+    borderRadius: Dimensions.get('window').width * 0.012,
+    backgroundColor: '#33adff',
+  },
+  playerOptionsText: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
 });

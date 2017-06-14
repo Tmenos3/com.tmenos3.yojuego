@@ -18,4 +18,18 @@ export default class GroupConstants {
   static get ADDING_PLAYERS() { return 'GROUP_ADDING_PLAYERS'; }
   static get PLAYERS_ADDED() { return 'GROUP_PLAYERS_ADDED'; }
   static get ERROR_ADDING_PLAYERS() { return 'GROUP_ERROR_ADDING_PLAYERS'; }
+  static get RESET_ADD_PLAYERS() { return 'GROUP_RESET_ADD_PLAYERS'; }
+  static get BACK() { return 'GROUP_BACK'; }
+  static get REMOVE_PLAYER() { return 'GROUP_REMOVE_PLAYER'; }
+  static get CANCEL_REMOVE_PLAYER() { return 'GROUP_CANCEL_REMOVE_PLAYER'; }
+  static get MAKE_PLAYER_ADMIN() { return 'GROUP_MAKE_PLAYER_ADMIN'; }
+  static get CANCEL_MAKE_PLAYER_ADMIN() { return 'GROUP_CANCEL_MAKE_PLAYER_ADMIN'; }
+  static get REMOVING_PLAYER() { return 'GROUP_REMOVING_PLAYER'; }
+  static get PLAYER_REMOVED() { return 'GROUP_PLAYER_REMOVED'; }
+  static get ERROR_REMOVING_PLAYER() { return 'GROUP_ERROR_REMOVING_PLAYER'; }
+  static get MAKING_PLAYER_ADMIN() { return 'GROUP_MAKING_PLAYER_ADMIN'; }
+  static get PLAYER_MADE_ADMIN() { return 'GROUP_PLAYER_MADE_ADMIN'; }
+  static get ERROR_MAKING_PLAYER_ADMIN() { return 'GROUP_ERROR_MAKING_PLAYER_ADMIN'; }
+  static get RESET_REMOVE_PLAYER() { return 'GROUP_RESET_REMOVE_PLAYER'; }
+  static get RESET_MAKE_PLAYER_ADMIN() { return 'GROUP_RESET_MAKE_PLAYER_ADMIN'; }
 }
