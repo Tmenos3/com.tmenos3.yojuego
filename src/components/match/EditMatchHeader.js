@@ -1,49 +1,33 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  Dimensions,
   View,
-  Dimensions
+  TouchableOpacity,
+  Text
 } from 'react-native';
-import MatchDetailActions from '../../actions/MatchDetailActions';
+import EditMatchActions from '../../actions/EditMatchActions';
 import NavigationActions from '../../actions/NavigationActions';
-import Styles from '../../constants/Styles';
 
-export default class MatchDetailHeader extends Component {
-  constructor(props) {
-    super(props);
-
-    this._edit = this._edit.bind(this);
-    this._back = this._back.bind(this);
-    this._renderDescription = this._renderDescription.bind(this);
-  }
-
+export default class EditMatchHeader extends Component {
   render() {
     return (
-      <View style={[Styles.HEADER_STYLE, styles.container]}>
-        {this._renderDescription()}
+      <View style={styles.container}>
+        <Text style={styles.matchName}>{'Edit ' + this.props.match.title}</Text>
         <View style={styles.buttons}>
-          <TouchableOpacity disabled={this.props.match.status === 'CANCELED'} onPress={this._edit} style={[styles.menuButton, { backgroundColor: this.props.match.status === 'CANCELED' ? 'gray' : '#33adff' }]}>
-            <Text style={styles.menuText}>Edit</Text>
+          <TouchableOpacity onPress={this._confirm} style={styles.menuButton}>
+            <Text style={styles.menuText}>Ok</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._back} style={styles.menuButton}>
-            <Text style={styles.menuText}>Atras</Text>
+            <Text style={styles.menuText}>Back</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 
-  _renderDescription() {
-    if (this.props.match)
-      return (<Text style={styles.matchName}>{'Partido: ' + this.props.match.title}</Text>);
-
-    return null;
-  }
-
-  _edit() {
-    MatchDetailActions.edit();
+  _confirm() {
+    EditMatchActions.confirm();
   }
 
   _back() {

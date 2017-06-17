@@ -206,6 +206,12 @@ export default class LocalService {
     });
   }
 
+  static getMatches() {
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.MATCHES
+    });
+  }
+
   static updateGroup(group) {
     return LocalService.getGroups()
       .then((groups) => {
@@ -215,12 +221,24 @@ export default class LocalService {
       });
   }
 
-  static savePlayerMatches(matches) {
+  static updateMatch(match) {
+    return LocalService.getMatches()
+      .then((matches) => {
+        let i = matches.findIndex((m) => { return m._id === match._id; });
+        matches[i] = match;
+        return LocalService.saveMatches(matches);
+      });
+  }
+
+  static saveMatches(matches) {
     return LocalService._getStorage().save({
       key: LocalServiceConstants.MATCHES,
       rawData: matches,
       expires: null
-    });
+    })
+      .then(() => {
+        return Promise.resolve(matches);
+      });
   }
 
   static saveMatchInvitations(matchInvitations) {

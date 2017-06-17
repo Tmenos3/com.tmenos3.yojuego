@@ -169,6 +169,17 @@ export default class ApiService {
 
     return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + id)
   }
+  static editMatch(id, title, date, fromTime, toTime, matchType, token) {
+    let form = {
+      title,
+      date,
+      fromTime,
+      toTime,
+      matchType
+    };
+
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/match/' + id)
+  }
 
   static deleteGroup(groupId, token) {
     return ApiService._fetch('delete', ApiService._getHeader(token), null, '/group/' + groupId)
@@ -194,6 +205,14 @@ export default class ApiService {
       playerId
     }
     return ApiService._fetch('post', ApiService._getHeader(token), form, '/group/' + groupId + '/makeadmin')
+  }
+
+  static exitMatch(matchId, token) {
+    return ApiService._fetch('post', ApiService._getHeader(token), null, '/match/' + matchId + '/exit')
+  }
+
+  static cancelMatch(matchId, token) {
+    return ApiService._fetch('post', ApiService._getHeader(token), null, '/match/' + matchId + '/cancel')
   }
 
   static _fetch(method, headers, body, url) {

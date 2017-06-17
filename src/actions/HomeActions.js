@@ -38,6 +38,12 @@ export default class HomeActions {
     });
   }
 
+  static matchDetailShown() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.MATCH_DETAIL_SHOWN
+    });
+  }
+
   static loadPlayerMatches() {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.LOADING_MATCHES
@@ -47,10 +53,12 @@ export default class HomeActions {
       .then((token) => {
         ApiService.getUpcomingPlayerMatches(token)
           .then((resp) => {
-            LocalService.savePlayerMatches(resp.resp);
+            return LocalService.saveMatches(resp.resp);
+          })
+          .then((matches) => {
             Dispatcher.handleViewAction({
               actionType: HomeConstants.MATCHES_LOADED,
-              payload: resp.resp
+              payload: matches
             });
           }, (cause) => {
             Dispatcher.handleViewAction({
@@ -123,6 +131,13 @@ export default class HomeActions {
             });
           });
       });
+  }
+
+  static loadMatches(matches) {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.MATCHES_LOADED,
+      payload: matches
+    });
   }
 
   static loadFriends() {

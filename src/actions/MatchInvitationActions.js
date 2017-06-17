@@ -11,7 +11,10 @@ export default class MatchInvitationActions {
       actionType: MatchInvitationConstants.ACCEPT_INTENT
     });
 
-    ApiService.acceptMatchInvitation(matchInvitation.match._id, LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.acceptMatchInvitation(matchInvitation.match._id, token);
+      })
       .then((resp) => {
         Dispatcher.handleViewAction({
           actionType: MatchInvitationConstants.ACCEPT_RESOLVED
@@ -43,7 +46,10 @@ export default class MatchInvitationActions {
       actionType: MatchInvitationConstants.REJECT_INTENT
     });
 
-    ApiService.rejectMatchInvitation(matchInvitation.match._id, LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        ApiService.rejectMatchInvitation(matchInvitation.match._id, token)
+      })
       .then((resp) => {
         Dispatcher.handleViewAction({
           actionType: MatchInvitationConstants.REJECT_RESOLVED
@@ -75,7 +81,10 @@ export default class MatchInvitationActions {
       actionType: MatchInvitationConstants.MARK_AS_READ_INTENT
     });
 
-    ApiService.markAsReadMatchInvitation(id, LocalService.getToken())
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.markAsReadMatchInvitation(id, token)
+      })
       .then((resp) => {
         Dispatcher.handleViewAction({
           actionType: MatchInvitationConstants.MARK_AS_READ_RESOLVED

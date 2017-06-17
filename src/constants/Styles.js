@@ -1,3 +1,4 @@
+import { Dimensions } from 'react-native';
 export default class Styles {
   static get MAIN_COLOR() { return 'rgb(0, 200, 0)'; }
   static get MAIN_BACKGROUND_COLOR() { return 'rgb(245, 245, 245)'; }

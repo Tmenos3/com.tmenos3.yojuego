@@ -219,6 +219,11 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
+    case HomeConstants.MATCH_DETAIL_SHOWN:
+      _showMatchDetail = false;
+      HomeStore.emitChange();
+      break;
+
     case HomeConstants.LOADING_MATCHES:
       _isLoadingMatches = true;
       _errorLoadingMatches = null;

@@ -39,6 +39,9 @@ export default class Body extends Component {
     this._renderDot = this._renderDot.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
     this._newMatch = this._newMatch.bind(this);
+    this._isCanceled = this._isCanceled.bind(this);
+    this._isConfirmed = this._isConfirmed.bind(this);
+    this._isExited = this._isExited.bind(this);
   }
 
   componentDidMount() {
@@ -89,6 +92,8 @@ export default class Body extends Component {
             <Text style={{ fontSize: 20 }}>{'Lugar: ' + rowData.location}</Text>
             <Text style={{ fontSize: 20 }}>{'Jugadores: ' + rowData.confirmedPlayers.length + ' / ' + (rowData.matchType * 2)}</Text>
             {this._isConfirmed(rowData)}
+            {this._isCanceled(rowData)}
+            {this._isExited(rowData)}
           </View>
         </TouchableOpacity>
       </View>
@@ -96,6 +101,10 @@ export default class Body extends Component {
   }
 
   _isConfirmed(match) {
+    if (match.status === 'CANCELED') return null;
+    let player = match.canceledPlayers.find((p) => { return p._id === this.props.player._id });
+    if (player) return null;
+
     for (let i = 0; i < match.confirmedPlayers.length; i++) {
       if (match.confirmedPlayers[i]._id === this.props.player._id)
         return (
@@ -105,8 +114,27 @@ export default class Body extends Component {
 
     return (
       <Text style={{ fontSize: 20, color: 'red' }}>{'Todavía no confirmaste.'}</Text>
-
     );
+  }
+
+  _isExited(match) {
+    if (match.status === 'CANCELED') return null;
+
+    for (let i = 0; i < match.canceledPlayers.length; i++) {
+      if (match.canceledPlayers[i]._id === this.props.player._id)
+        return (
+          <Text style={{ fontSize: 20, color: 'orange' }}>{'Te bajaste del partido.'}</Text>
+        );
+    }
+  }
+
+  _isCanceled(match) {
+    if (match.status === 'CANCELED')
+      return (
+        <Text style={{ fontSize: 20, color: 'blue' }}>{'Partido cancelado.'}</Text>
+      );
+
+    return null;
   }
 
   _rowPreseed(match) {
@@ -121,13 +149,15 @@ export default class Body extends Component {
       match: HomeStore.getMatch(),
       loadingMatches: HomeStore.isLoadingMatches(),
       errorLoadingMatches: HomeStore.getErrorLoadingMatches(),
-      showGroup: HomeStore.showGroup()
+      showGroup: HomeStore.showGroup(),
+      matches: this.state.matches.cloneWithRows(HomeStore.getMatches())
     }, () => {
       if (this.state.showCreateMatch) {
         NavigationActions.addRoute({
           id: RouteConstants.ROUTE_CREATE_MATCH,
         });
       } else if (this.state.showMatchDetail) {
+        HomeActions.matchDetailShown();
         NavigationActions.addRoute({
           id: RouteConstants.ROUTE_MATCH_DETAIL,
           data: this.state.match
@@ -143,14 +173,13 @@ export default class Body extends Component {
           id: RouteConstants.ROUTE_GROUP_DETAIL,
           data: HomeStore.getGroupId()
         });
-      } else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
+      } /*else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
         let matches = HomeStore.getMatches();
         if (matches)
           this.setState({ matches: this.state.matches.cloneWithRows(matches) });
-      }
+      }*/
     });
   }
-
 
   _renderLoading() {
     if (this.state.loadingMatches) {
