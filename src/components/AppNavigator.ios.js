@@ -22,6 +22,8 @@ import FriendshipRequest from './friendshipRequest/FriendshipRequest';
 import FriendList from './common/friendList/FriendList';
 import GroupDetail from './group/GroupDetail';
 import EditGroup from './group/EditGroup';
+import EditMatch from './match/EditMatch';
+import FriendAndGroupList from './common/friendAndGroupList/FriendAndGroupList';
 
 let _navigator;
 
@@ -117,7 +119,7 @@ export default class AppNavigator extends Component {
         );
       case RouteConstants.ROUTE_MATCH_DETAIL:
         return (
-          <MatchDetail match={route.data}/>
+          <MatchDetail match={route.data} />
         );
       case RouteConstants.ROUTE_CREATE_MATCH:
         return (
@@ -153,12 +155,22 @@ export default class AppNavigator extends Component {
 
       case RouteConstants.ROUTE_GROUP_DETAIL:
         return (
-          <GroupDetail groupId={route.data}/>
+          <GroupDetail groupId={route.data} />
         );
 
       case RouteConstants.ROUTE_EDIT_GROUP:
         return (
           <EditGroup group={route.data} />
+        );
+
+      case RouteConstants.ROUTE_EDIT_MATCH:
+        return (
+          <EditMatch match={route.data} />
+        );
+
+      case RouteConstants.ROUTE_FRIEND_AND_GROUP_LIST:
+        return (
+          <FriendList friends={route.data.friends} groups={route.data.groups} onBack={route.data.onBack} onConfirm={route.data.onConfirm} />
         );
     }
   }

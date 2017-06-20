@@ -24,10 +24,13 @@ export default class CreateMatchActions {
 
     LocalService.getToken()
       .then((token) => {
-        return ApiService.createMatch(title, date, fromTime, toTime, location, matchType, friends.map(friend => { return friend.friendId }), token)
+        let list = Array.from(new Set(friends)); //removes duplicates
+        return ApiService.createMatch(title, date, fromTime, toTime, location, matchType, list, token)
       })
       .then((resp) => {
-        //save match in local service
+        return LocalService.saveNewMatch(resp.resp);
+      })
+      .then((resp) => {
         Dispatcher.handleViewAction({
           actionType: CreateMatchConstants.MATCH_SAVED
         });
@@ -45,7 +48,20 @@ export default class CreateMatchActions {
       });;
   }
 
-  static loadFriends() {
+  static loadFriendsAndGroups() {
+    CreateMatchActions._loadFriends();
+    CreateMatchActions._loadGroups();
+  }
+
+  static matchesUpdated() {
+    Dispatcher.handleViewAction({
+      actionType: CreateMatchConstants.CLEAN_CREATE_MATCH
+    });
+
+    HomeActions.loadPlayerMatches();
+  }
+
+  static _loadFriends() {
     Dispatcher.handleViewAction({
       actionType: CreateMatchConstants.LOADING_FRIENDS
     });
@@ -55,14 +71,6 @@ export default class CreateMatchActions {
         Dispatcher.handleViewAction({
           actionType: CreateMatchConstants.FRIENDS_LOADED,
           payload: friends
-        });
-      }, (cause) => {
-        Dispatcher.handleViewAction({
-          actionType: CreateMatchConstants.ERROR_LOADING_FRIENDS,
-          payload: {
-            code: cause.code,
-            message: cause.message
-          }
         });
       })
       .catch(error => {
@@ -76,11 +84,26 @@ export default class CreateMatchActions {
       });
   }
 
-  static matchesUpdated() {
+  static _loadGroups() {
     Dispatcher.handleViewAction({
-      actionType: CreateMatchConstants.CLEAN_CREATE_MATCH
+      actionType: CreateMatchConstants.LOADING_GROUPS
     });
 
-    HomeActions.loadPlayerMatches();
+    LocalService.getGroups()
+      .then((groups) => {
+        Dispatcher.handleViewAction({
+          actionType: CreateMatchConstants.GROUPS_LOADED,
+          payload: groups
+        });
+      })
+      .catch(error => {
+        Dispatcher.handleViewAction({
+          actionType: CreateMatchConstants.ERROR_LOADING_GROUPS,
+          payload: {
+            code: error.code,
+            message: error.message
+          }
+        });
+      });
   }
 }

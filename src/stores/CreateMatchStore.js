@@ -6,8 +6,11 @@ import AppConstants from '../constants/AppConstants';
 
 const CHANGE_EVENT = 'change';
 let _friends = [];
+let _groups = [];
 let _isGettingFriends = false;
+let _isGettingGroups = false;
 let _errorGettingFriends = null;
+let _errorGettingGroups = null;
 let _isNewMatchConfirmed = false;
 let _isSavingMatch = false;
 let _errorSavingMatch = null;
@@ -30,12 +33,24 @@ let CreateMatchStore = assign({}, EventEmitter.prototype, {
     return _friends;
   },
 
+  getGroups() {
+    return _groups;
+  },
+
   isGettingFriends() {
     return _isGettingFriends;
   },
 
+  isGettingGroups() {
+    return _isGettingGroups;
+  },
+
   getErrorGettingFriends() {
     return _errorGettingFriends;
+  },
+
+  getErrorGettingGroups() {
+    return _errorGettingGroups;
   },
 
   isNewMatchConfirmed() {
@@ -88,6 +103,24 @@ CreateMatchStore.dispatchToken = AppDispatcher.register((action) => {
       CreateMatchStore.emitChange();
       break;
 
+    case CreateMatchConstants.GROUPS_LOADED:
+      _isGettingGroups = false;
+      _errorGettingGroups = null;
+      _groups = action.payload;
+      CreateMatchStore.emitChange();
+      break;
+
+    case CreateMatchConstants.LOADING_GROUPS:
+      _isGettingGroups = true;
+      CreateMatchStore.emitChange();
+      break;
+
+    case CreateMatchConstants.ERROR_LOADING_GROUPS:
+      _isGettingGroups = false;
+      _errorGettingGroups = action.payload.message;
+      CreateMatchStore.emitChange();
+      break;
+
     case CreateMatchConstants.MATCH_SAVED:
       _isSavingMatch = false;
       _errorSavingMatch = null;
@@ -115,8 +148,11 @@ CreateMatchStore.dispatchToken = AppDispatcher.register((action) => {
     case CreateMatchConstants.CLEAN_CREATE_MATCH:
     case AppConstants.RESET_APP:
       _friends = [];
+      _groups = [];
       _isGettingFriends = false;
+      _isGettingGroups = false;
       _errorGettingFriends = null;
+      _errorGettingGroups = null;
       _isNewMatchConfirmed = false;
       _isSavingMatch = false;
       _errorSavingMatch = null;

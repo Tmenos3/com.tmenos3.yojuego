@@ -21,7 +21,7 @@ export default class CreateMatchBody extends Component {
 
     this._selectFriends = this._selectFriends.bind(this);
     this._onStoreChange = this._onStoreChange.bind(this);
-    this._renderLoadingFriends = this._renderLoadingFriends.bind(this);
+    this._renderLoadingFriendsAndGroups = this._renderLoadingFriendsAndGroups.bind(this);
     this._selectingFriendsBack = this._selectingFriendsBack.bind(this);
     this._selectingFriendsConfirm = this._selectingFriendsConfirm.bind(this);
     this._processConfirmation = this._processConfirmation.bind(this);
@@ -34,6 +34,7 @@ export default class CreateMatchBody extends Component {
       hourTo: '',
       location: '',
       friends: [],
+      groups: [],
       descriptionRequired: '',
       dateRequired: '',
       hourFromRequired: '',
@@ -41,7 +42,9 @@ export default class CreateMatchBody extends Component {
       locationRequired: '',
       matchTypeRequired: '',
       isGettingFriends: false,
+      isGettingGroups: false,
       errorGettingFriends: null,
+      errorGettingGroups: null,
       isNewMatchConfirmed: false,
       isSavingMatch: false,
       errorSavingMatch: null,
@@ -51,7 +54,7 @@ export default class CreateMatchBody extends Component {
 
   componentDidMount() {
     CreateMatchStore.addChangeListener(this._onStoreChange);
-    CreateMatchActions.loadFriends();
+    CreateMatchActions.loadFriendsAndGroups();
   }
 
   componentWillUnmount() {
@@ -75,7 +78,7 @@ export default class CreateMatchBody extends Component {
         </Picker>
         <TouchableOpacity style={styles.button} onPress={this._selectFriends}>
           <Text style={styles.buttonText}>{'Invitar Jugadores'}</Text>
-          {this._renderLoadingFriends()}
+          {this._renderLoadingFriendsAndGroups()}
         </TouchableOpacity>
       </View>
     );
@@ -84,7 +87,9 @@ export default class CreateMatchBody extends Component {
   _onStoreChange() {
     this.setState({
       isGettingFriends: CreateMatchStore.isGettingFriends(),
+      isGettingGroups: CreateMatchStore.isGettingGroups(),
       errorGettingFriends: CreateMatchStore.getErrorGettingFriends(),
+      errorGettingGroups: CreateMatchStore.getErrorGettingGroups(),
       isNewMatchConfirmed: CreateMatchStore.isNewMatchConfirmed(),
       isSavingMatch: CreateMatchStore.isSavingMatch(),
       errorSavingMatch: CreateMatchStore.getErrorSavingMatch(),
@@ -119,17 +124,21 @@ export default class CreateMatchBody extends Component {
       locationRequired,
       matchTypeRequired
     }, () => {
-      if (!descriptionRequired && !dateRequired && !hourFromRequired && !hourToRequired && !locationRequired && !matchTypeRequired)
-        CreateMatchActions.createMatch(this.state.description, this.state.date, this.state.hourFrom, this.state.hourTo, this.state.location, this.state.matchType, this.state.friends)
+      if (!descriptionRequired && !dateRequired && !hourFromRequired && !hourToRequired && !locationRequired && !matchTypeRequired) {
+        let friends = [].concat.apply([], this.state.groups.map((g) => { return g.players.map(p => { return p._id; }); })).concat(this.state.friends.map((f) => { return f.friendId }));
+
+        CreateMatchActions.createMatch(this.state.description, this.state.date, this.state.hourFrom, this.state.hourTo, this.state.location, this.state.matchType, friends)
+      }
     });
   }
 
   _selectFriends() {
-    if (!this.state.isGettingFriends && !this.state.errorGettingFriends) {
+    if (!this.state.isGettingFriends && !this.state.isGettingGroups && !this.state.errorGettingFriends && !this.state.errorGettingGroups) {
       NavigationActions.addRoute({
-        id: RouteConstants.ROUTE_FRIEND_LIST,
+        id: RouteConstants.ROUTE_FRIEND_AND_GROUP_LIST,
         data: {
           friends: CreateMatchStore.getFriends(),
+          groups: CreateMatchStore.getGroups(),
           onBack: this._selectingFriendsBack,
           onConfirm: this._selectingFriendsConfirm
         }
@@ -141,14 +150,14 @@ export default class CreateMatchBody extends Component {
     NavigationActions.back();
   }
 
-  _selectingFriendsConfirm(friendList) {
-    this.setState({ friends: friendList }, () => {
+  _selectingFriendsConfirm(friendList, groupList) {
+    this.setState({ friends: friendList, groups: groupList }, () => {
       NavigationActions.back();
     });
   }
 
-  _renderLoadingFriends() {
-    if (this.state.isGettingFriends) {
+  _renderLoadingFriendsAndGroups() {
+    if (this.state.isGettingFriends || this.state.isGettingGroups) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />

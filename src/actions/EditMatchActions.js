@@ -51,7 +51,7 @@ export default class EditMatchActions {
           actionType: EditMatchConstants.ERROR_SAVING_MATCH,
           payload: error.message
         });
-      });;
+      });
   }
 
   static matchUpdated() {

@@ -18,6 +18,13 @@ let _cancelMatch = false;
 let _cancelingMatch = false;
 let _errorCancelingMatch = null;
 let _matchCanceled = false;
+let _friends = [];
+let _groups = [];
+let _loadingGroups = false;
+let _loadingFriends = false;
+let _errorLoadingGroups = null;
+let _errorLoadingFriends = null;
+let _matchSaved = false;
 
 let MatchDetailStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -78,6 +85,38 @@ let MatchDetailStore = assign({}, EventEmitter.prototype, {
 
   matchCanceled() {
     return _matchCanceled;
+  },
+
+  getFriends() {
+    return _friends;
+  },
+
+  isLoadingFriends() {
+    return _loadingFriends;
+  },
+
+  getErrorLoadingFriends() {
+    return _errorLoadingFriends;
+  },
+
+  getGroups() {
+    return _groups;
+  },
+
+  isLoadingGroups() {
+    return _loadingGroups;
+  },
+
+  getErrorLoadingGroups() {
+    return _errorLoadingGroups;
+  },
+
+  matchSaved() {
+    let ret = _matchSaved;
+    if (_matchSaved)
+      _matchSaved = false;
+
+    return ret;
   },
 });
 
@@ -196,8 +235,47 @@ MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
       MatchDetailStore.emitChange();
       break;
 
-    case EditMatchConstants.MATCH_SAVED:
+    case MatchDetailConstants.LOADING_FRIENDS:
+      _loadingFriends = true;
+      _errorLoadingFriends = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.FRIENDS_LOADED:
+      _friends = action.payload.friends;
+      _loadingFriends = false;
+      _errorLoadingFriends = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.ERROR_LOADING_FRIENDS:
+      _loadingFriends = false;
+      _errorLoadingFriends = action.payload.message;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.LOADING_GROUPS:
+      _loadingGroups = true;
+      _errorLoadingGroups = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.GROUPS_LOADED:
+      _groups = action.payload.groups;
+      _loadingGroups = false;
+      _errorLoadingGroups = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.ERROR_LOADING_GROUPS:
+      _loadingGroups = false;
+      _errorLoadingGroups = action.payload.message;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.MATCH_SAVED:
       _match = action.payload.match;
+      _matchSaved = true;
       MatchDetailStore.emitChange();
       break;
 
@@ -214,6 +292,13 @@ MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
       _cancelingMatch = false;
       _errorCancelingMatch = null;
       _matchCanceled = false;
+      _friends = [];
+      _groups = [];
+      _loadingGroups = false;
+      _loadingFriends = false;
+      _errorLoadingGroups = null;
+      _errorLoadingFriends = null;
+      _matchSaved = false;
       break;
 
     default:

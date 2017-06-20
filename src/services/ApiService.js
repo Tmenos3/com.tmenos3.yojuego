@@ -215,6 +215,13 @@ export default class ApiService {
     return ApiService._fetch('post', ApiService._getHeader(token), null, '/match/' + matchId + '/cancel')
   }
 
+  static invitePlayersToMatch(matchId, players, token){
+    let form = {
+      players
+    }
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/match/' + matchId + '/invite')
+  }
+
   static _fetch(method, headers, body, url) {
     let fetchBody;
     if (body)

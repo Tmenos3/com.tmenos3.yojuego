@@ -259,4 +259,19 @@ export default class LocalService {
         return LocalService.saveGroups(groups);
       });
   }
+
+  static saveNewMatch(newMatch) {
+    return LocalService.getMatches()
+      .then(ret => {
+        let matches = ret || [];
+        matches.push(newMatch);
+
+        return LocalService.saveMatches(matches);
+      }).catch(err => {
+        switch (err.name) {
+          case 'NotFoundError':
+            return LocalService.saveMatches([newMatch]);
+        }
+      });
+  }
 };

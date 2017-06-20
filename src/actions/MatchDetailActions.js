@@ -128,4 +128,94 @@ export default class MatchDetailActions {
         });
       });
   }
+
+  static loadFriendsAndGroups() {
+    MatchDetailActions.loadFriends();
+    MatchDetailActions.loadGroups();
+  }
+
+  static loadFriends() {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.LOADING_FRIENDS
+    });
+
+    LocalService.getFriends()
+      .then((friends) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.FRIENDS_LOADED,
+          payload: {
+            friends
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.ERROR_LOADING_FRIENDS,
+          payload: {
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static loadGroups() {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.LOADING_GROUPS
+    });
+
+    LocalService.getGroups()
+      .then((groups) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.GROUPS_LOADED,
+          payload: {
+            groups
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.ERROR_LOADING_GROUPS,
+          payload: {
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static invite(match, friends, groups) {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.SAVING_MATCH
+    });
+
+    let matchSaved = null;
+    LocalService.getToken()
+      .then((token) => {
+        let players = [].concat.apply([], groups.map((g) => { return g.players.map(p => { return p._id; }); })).concat(friends.map((f) => { return f.friendId }));
+        let list = Array.from(new Set(players)); //removes duplicates
+        return ApiService.invitePlayersToMatch(match._id, list, token);
+      })
+      .then((resp) => {
+        matchSaved = resp.resp;
+        return LocalService.updateMatch(resp.resp);
+      })
+      .then((matches) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.MATCH_SAVED,
+          payload: {
+            match: matchSaved
+          }
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.ERROR_SAVING_MATCH,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.ERROR_SAVING_MATCH,
+          payload: error.message
+        });
+      });
+  }
 };

@@ -37,6 +37,7 @@ export default class MatchDetailBody extends Component {
       errorCancelingMatch: null,
       matchExited: false,
       matchCanceled: false,
+      matchSaved: false
     }
 
     this._renderDetail = this._renderDetail.bind(this);
@@ -50,11 +51,15 @@ export default class MatchDetailBody extends Component {
     this._confirmCancelMatch = this._confirmCancelMatch.bind(this);
     this._confirmExitMatch = this._confirmExitMatch.bind(this);
     this._resetAndBack = this._resetAndBack.bind(this);
+    this._invite = this._invite.bind(this);
+    this._selectingFriendsBack = this._selectingFriendsBack.bind(this);
+    this._selectingFriendsConfirm = this._selectingFriendsConfirm.bind(this);
   }
 
   componentDidMount() {
     MatchDetailStore.addChangeListener(this._onStoreChange);
     MatchDetailActions.setMatch(this.state.match);
+    MatchDetailActions.loadFriendsAndGroups();
   }
 
   componentWillUnmount() {
@@ -66,7 +71,7 @@ export default class MatchDetailBody extends Component {
       <Swiper showsButtons={false}>
         {this._renderDetail()}
         <ChatRoom matchId={this.state.match._id} />
-        <PlayersList confirmedPlayers={this.state.match.confirmedPlayers} pendingPlayers={this.state.match.pendingPlayers} />
+        <PlayersList invite={this._invite} confirmedPlayers={this.state.match.confirmedPlayers} pendingPlayers={this.state.match.pendingPlayers} />
       </Swiper>
     );
   }
@@ -83,6 +88,11 @@ export default class MatchDetailBody extends Component {
       errorCancelingMatch: MatchDetailStore.getErrorCancelingMatch(),
       matchExited: MatchDetailStore.matchExited(),
       matchCanceled: MatchDetailStore.matchCanceled(),
+      isLoadingFriends: MatchDetailStore.isLoadingFriends(),
+      isLoadingGroups: MatchDetailStore.isLoadingGroups(),
+      errorLoadingFriends: MatchDetailStore.getErrorLoadingFriends(),
+      errorLoadingGroups: MatchDetailStore.getErrorLoadingGroups(),
+      matchSaved: MatchDetailStore.matchSaved(),
     }, () => {
       // if (GroupStore.backPressed()) {
       //   if (!this._handleBack())
@@ -101,14 +111,9 @@ export default class MatchDetailBody extends Component {
         this.setState({ errorCancelingMatch: 'Partido cancelado.' }, this._resetAndBack);
       } else if (this.state.matchExited) {
         this.setState({ errorExitingMatch: 'Te bajaste del partido.' }, this._resetAndBack);
-      } /*else if (this.state.playersAdded) {
-          this.setState({ errorAddingPlayers: 'Amigos agregados.' }, () => {
-            GroupActions.resetAddPlayers();
-            setTimeout(() => {
-              this.setState({ errorAddingPlayers: null });
-            }, 1500);
-          });
-        } else if (this.state.playerRemoved) {
+      } else if (this.state.matchSaved) {
+        NavigationActions.back();
+      } /*else if (this.state.playerRemoved) {
           this.setState({ errorRemovingPlayer: 'Amigo eliminado.', showPlayerOptions: false }, () => {
             GroupActions.resetRemovePlayer();
             setTimeout(() => {
@@ -218,6 +223,27 @@ export default class MatchDetailBody extends Component {
 
   _cancelExitMatch() {
     MatchDetailActions.cancelExitMatch();
+  }
+
+  _invite() {
+    if (!this.state.isLoadingFriends && !this.state.isLoadingGroups && !this.state.errorLoadingFriends && !this.state.errorLoadingGroups)
+      NavigationActions.addRoute({
+        id: RouteConstants.ROUTE_FRIEND_AND_GROUP_LIST,
+        data: {
+          friends: MatchDetailStore.getFriends(),
+          groups: MatchDetailStore.getGroups(),
+          onBack: this._selectingFriendsBack,
+          onConfirm: this._selectingFriendsConfirm
+        }
+      });
+  }
+
+  _selectingFriendsBack() {
+    NavigationActions.back();
+  }
+
+  _selectingFriendsConfirm(friendList, groupList) {
+    MatchDetailActions.invite(this.state.match, friendList, groupList);
   }
 }
 

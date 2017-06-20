@@ -25,6 +25,7 @@ import Account from './account/Account';
 import GroupDetail from './group/GroupDetail';
 import EditGroup from './group/EditGroup';
 import EditMatch from './match/EditMatch';
+import FriendAndGroupList from './common/friendAndGroupList/FriendAndGroupList';
 
 let _navigator;
 
@@ -186,6 +187,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_EDIT_MATCH:
         return (
           <EditMatch match={route.data} />
+        );
+
+      case RouteConstants.ROUTE_FRIEND_AND_GROUP_LIST:
+        return (
+          <FriendAndGroupList friends={route.data.friends} groups={route.data.groups} onBack={route.data.onBack} onConfirm={route.data.onConfirm} />
         );
     }
   }

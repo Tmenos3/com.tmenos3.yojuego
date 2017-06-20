@@ -44,7 +44,7 @@ export default class PlayersList extends Component {
           style={styles.confirmedView}
           enableEmptySections={true}
         />
-        <TouchableOpacity style={styles.inviteBtn} onPress={this._newMatch}>
+        <TouchableOpacity style={styles.inviteBtn} onPress={this.props.invite}>
           <Text style={styles.buttonText}>Invitar</Text>
         </TouchableOpacity>
       </View>
