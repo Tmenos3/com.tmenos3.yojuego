@@ -47,7 +47,7 @@ export default class MatchDetailHeader extends Component {
   }
 
   _back() {
-    NavigationActions.back();
+    MatchDetailActions.back();
   }
 }
 

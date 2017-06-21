@@ -10,8 +10,8 @@ export default class FriendDetail extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <FriendDetailHeader />
-        <FriendDetailBody />
+        <FriendDetailHeader friend={this.props.friend} />
+        <FriendDetailBody friend={this.props.friend} />
       </View>
     );
   }

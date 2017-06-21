@@ -5,7 +5,6 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
   ActivityIndicator,
   Image,

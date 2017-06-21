@@ -4,6 +4,12 @@ import MatchDetailConstants from '../constants/MatchDetailConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 
 export default class MatchDetailActions {
+  static back() {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.BACK
+    });
+  }
+
   static confirm() {
     Dispatcher.handleViewAction({
       actionType: MatchDetailConstants.MATCH_DETAIL_CONFIRM_INTENT
@@ -215,6 +221,53 @@ export default class MatchDetailActions {
         Dispatcher.handleViewAction({
           actionType: MatchDetailConstants.ERROR_SAVING_MATCH,
           payload: error.message
+        });
+      });
+  }
+
+  static removePlayer(player) {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.REMOVE_PLAYER,
+      payload: {
+        player
+      }
+    });
+  }
+
+  static cancelRemovePlayer() {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.CANCEL_REMOVE_PLAYER
+    });
+  }
+
+  static removePlayerConfirmed(matchId, playerId) {
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.REMOVING_PLAYER
+    });
+
+    let match = null;
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.removePlayerFromGroup(matchId, playerId, token);
+      })
+      .then((resp) => {
+        match = resp.resp;
+        return LocalService.updateMatch(match);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.PLAYER_REMOVED,
+          payload: {
+            match
+          }
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.ERROR_REMOVING_PLAYER,
+          payload: {
+            message: error.message
+          }
         });
       });
   }

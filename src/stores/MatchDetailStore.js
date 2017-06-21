@@ -25,6 +25,12 @@ let _loadingFriends = false;
 let _errorLoadingGroups = null;
 let _errorLoadingFriends = null;
 let _matchSaved = false;
+let _back = false;
+let _removePlayer = false;
+let _removingPlayer = false;
+let _errorRemovingPlayer = null;
+let _playerRemoved = false;
+let _playerToRemove = null;
 
 let MatchDetailStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -118,10 +124,40 @@ let MatchDetailStore = assign({}, EventEmitter.prototype, {
 
     return ret;
   },
+
+  backPressed() {
+    let ret = _back;
+    _back = false;
+    return ret;
+  },
+
+  removePlayer() {
+    return _removePlayer;
+  },
+
+  isRemovingPlayer() {
+    return _removingPlayer;
+  },
+
+  getErrorRemovingPlayer() {
+    return _errorRemovingPlayer;
+  },
+
+  playerRemoved() {
+    return _playerRemoved;
+  },
+
+  playerToRemove() {
+    return _playerToRemove;
+  },
 });
 
 MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
   switch (action.actionType) {
+    case MatchDetailConstants.BACK:
+      _back = true;
+      MatchDetailStore.emitChange();
+      break;
     case MatchDetailConstants.SET_MATCH:
       _match = action.payload.match;
       MatchDetailStore.emitChange();
@@ -279,6 +315,58 @@ MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
       MatchDetailStore.emitChange();
       break;
 
+    case MatchDetailConstants.REMOVE_PLAYER:
+      _removePlayer = true;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      _playerToRemove = action.payload.player;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.CANCEL_REMOVE_PLAYER:
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      _playerToRemove = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.REMOVING_PLAYER:
+      _removePlayer = false;
+      _removingPlayer = true;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      _playerToRemove = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.PLAYER_REMOVED:
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = true;
+      _match = action.payload.match;
+      _playerToRemove = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.ERROR_REMOVING_PLAYER:
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = action.payload.message;
+      _playerRemoved = false;
+      _playerToRemove = null;
+      MatchDetailStore.emitChange();
+      break;
+
+    case MatchDetailConstants.RESET_REMOVE_PLAYER:
+      _playerRemoved = false;
+      _playerToRemove = null;
+      MatchDetailStore.emitChange();
+      break;
+
     case AppConstants.RESET_APP:
       _savingMatch = false;
       _errorSavingMatch = null;
@@ -299,6 +387,12 @@ MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
       _errorLoadingGroups = null;
       _errorLoadingFriends = null;
       _matchSaved = false;
+      _back = false;
+      _removePlayer = false;
+      _removingPlayer = false;
+      _errorRemovingPlayer = null;
+      _playerRemoved = false;
+      _playerToRemove = null;
       break;
 
     default:

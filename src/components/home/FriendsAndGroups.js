@@ -15,14 +15,17 @@ import HomeStore from '../../stores/HomeStore';
 import RouteConstants from '../../constants/RouteConstants';
 import Styles from '../../constants/Styles';
 
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
 export default class FriendsAndGroups extends Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
-      friends: ds.cloneWithRows([]),
-      groups: ds.cloneWithRows([]),
+      dsFriends: ds.cloneWithRows([]),
+      dsGroups: ds.cloneWithRows([]),
+      friends: [],
+      groups: [],
       showFriendOrGroup: 'F',
       isLoadingPlayerFriends: false,
       errorLoadingPlayerFriends: null,
@@ -76,11 +79,11 @@ export default class FriendsAndGroups extends Component {
             {this._renderLoading(this.state.isLoadingPlayerFriends)}
             {this._renderErrorMessage(this.state.errorLoadingPlayerFriends)}
             <ListView
-              dataSource={this.state.friends}
+              dataSource={this.state.dsFriends}
               renderRow={this._renderRowFriend}
               style={styles.listView}
               enableEmptySections={true}
-              />
+            />
             <TouchableOpacity style={styles.buttonFloat} onPress={this._newFriend}>
               <Text style={styles.buttonText}>+F</Text>
             </TouchableOpacity>
@@ -92,11 +95,11 @@ export default class FriendsAndGroups extends Component {
             {this._renderLoading(this.state.isLoadingPlayerGroups)}
             {this._renderErrorMessage(this.state.errorLoadingPlayerGroups)}
             <ListView
-              dataSource={this.state.groups}
+              dataSource={this.state.dsGroups}
               renderRow={this._renderRowGroup}
               style={styles.listView}
               enableEmptySections={true}
-              />
+            />
             <TouchableOpacity style={styles.buttonFloat} onPress={this._newGroup}>
               <Text style={styles.buttonText}>+G</Text>
             </TouchableOpacity>
@@ -169,7 +172,10 @@ export default class FriendsAndGroups extends Component {
   }
 
   _rowFriendPreseed(friendId) {
-    HomeActions.showFriend(friendId);
+    let friend = this.state.friends.find((f) => {
+      return f._id === friendId;
+    });
+    HomeActions.showFriend(friend);
   }
 
   _rowGroupPreseed(groupId) {
@@ -182,17 +188,15 @@ export default class FriendsAndGroups extends Component {
       errorLoadingFriends: HomeStore.getErrorLoadingFriends(),
       isLoadingGroups: HomeStore.isLoadingGroups(),
       errorLoadingGroups: HomeStore.getErrorLoadingGroups(),
+      friends: HomeStore.getFriends(),
+      groups: HomeStore.getGroups()
     }, () => {
       if (!this.state.isLoadingFriends && !this.state.errorLoadingFriends) {
-        let friends = HomeStore.getFriends();
-        if (friends)
-          this.setState({ friends: this.state.friends.cloneWithRows(friends) });
+        this.setState({ dsFriends: ds.cloneWithRows(this.state.friends) });
       }
 
       if (!this.state.isLoadingGroups && !this.state.errorLoadingGroups) {
-        let groups = HomeStore.getGroups();
-        if (groups)
-          this.setState({ groups: this.state.groups.cloneWithRows(groups) });
+        this.setState({ dsGroups: ds.cloneWithRows(this.state.groups) });
       }
     });
   }
@@ -260,7 +264,7 @@ export default class FriendsAndGroups extends Component {
         marginTop: 3,
         marginBottom: 3,
       }}
-        />
+      />
     );
   }
 }

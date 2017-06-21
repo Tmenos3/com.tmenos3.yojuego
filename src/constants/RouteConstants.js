@@ -22,6 +22,7 @@ export default class RouteConstants {
   static get ROUTE_MATCH_INVITATION() { return 'ROUTE_MATCH_INVITATION'; }
   static get ROUTE_ACCOUNT() { return 'ROUTE_ACCOUNT'; }
   static get ROUTE_GROUP_DETAIL() { return 'ROUTE_GROUP_DETAIL'; }
+  static get ROUTE_FRIEND_DETAIL() { return 'ROUTE_FRIEND_DETAIL'; }
   static get ROUTE_EDIT_GROUP() { return 'ROUTE_EDIT_GROUP'; }
   static get ROUTE_EDIT_MATCH() { return 'ROUTE_EDIT_MATCH'; }
 }

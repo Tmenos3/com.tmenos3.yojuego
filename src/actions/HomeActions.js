@@ -38,6 +38,12 @@ export default class HomeActions {
     });
   }
 
+  static friendDetailShown() {
+    Dispatcher.handleViewAction({
+      actionType: HomeConstants.FRIEND_DETAIL_SHOWN
+    });
+  }
+
   static matchDetailShown() {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.MATCH_DETAIL_SHOWN
@@ -213,10 +219,12 @@ export default class HomeActions {
       });
   }
 
-  static showFriend(friendId) {
+  static showFriend(friend) {
     Dispatcher.handleViewAction({
       actionType: HomeConstants.SHOW_FRIEND,
-      payload: friendId
+      payload: {
+        friend
+      }
     });
   }
 

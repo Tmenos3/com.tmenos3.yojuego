@@ -1,4 +1,5 @@
 export default class MatchDetailConstants {
+  static get BACK() { return 'MATCH_DETAIL_BACK'; }
   static get MATCH_DETAIL_CONFIRM_INTENT() { return 'MATCH_DETAIL_CONFIRM_INTENT'; }
   static get MATCH_DETAIL_CONFIRM_RESOLVED() { return 'MATCH_DETAIL_CONFIRM_RESOLVED'; }
   static get MATCH_DETAIL_CONFIRM_REJECTED() { return 'MATCH_DETAIL_CONFIRM_REJECTED'; }
@@ -23,4 +24,10 @@ export default class MatchDetailConstants {
   static get FRIENDS_LOADED() { return 'MATCH_DETAIL_FRIENDS_LOADED'; }
   static get ERROR_LOADING_FRIENDS() { return 'MATCH_DETAIL_ERROR_LOADING_FRIENDS'; }
   static get MATCH_SAVED() { return 'MATCH_DETAIL_MATCH_SAVED' }
+  static get REMOVE_PLAYER() { return 'GROUP_REMOVE_PLAYER'; }
+  static get CANCEL_REMOVE_PLAYER() { return 'GROUP_CANCEL_REMOVE_PLAYER'; }
+  static get REMOVING_PLAYER() { return 'GROUP_REMOVING_PLAYER'; }
+  static get PLAYER_REMOVED() { return 'GROUP_PLAYER_REMOVED'; }
+  static get ERROR_REMOVING_PLAYER() { return 'GROUP_ERROR_REMOVING_PLAYER'; }
+  static get RESET_REMOVE_PLAYER() { return 'GROUP_RESET_REMOVE_PLAYER'; }
 }

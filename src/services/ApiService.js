@@ -185,6 +185,10 @@ export default class ApiService {
     return ApiService._fetch('delete', ApiService._getHeader(token), null, '/group/' + groupId)
   }
 
+  static deleteFriend(friendId, token) {
+    return ApiService._fetch('delete', ApiService._getHeader(token), null, '/friendship/' + friendId)
+  }
+
   static exitGroup(groupId, token) {
     return ApiService._fetch('post', ApiService._getHeader(token), null, '/group/' + groupId + '/exit')
   }
@@ -215,11 +219,15 @@ export default class ApiService {
     return ApiService._fetch('post', ApiService._getHeader(token), null, '/match/' + matchId + '/cancel')
   }
 
-  static invitePlayersToMatch(matchId, players, token){
+  static invitePlayersToMatch(matchId, players, token) {
     let form = {
       players
     }
     return ApiService._fetch('post', ApiService._getHeader(token), form, '/match/' + matchId + '/invite')
+  }
+
+  static removePlayerFromGroup(matchId, playerId, token) {
+    return ApiService._fetch('delete', ApiService._getHeader(token), null, '/match/' + matchId + '/player/' + playerId)
   }
 
   static _fetch(method, headers, body, url) {

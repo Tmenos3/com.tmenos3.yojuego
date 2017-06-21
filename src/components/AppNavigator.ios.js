@@ -21,6 +21,7 @@ import NewGroup from './group/NewGroup';
 import FriendshipRequest from './friendshipRequest/FriendshipRequest';
 import FriendList from './common/friendList/FriendList';
 import GroupDetail from './group/GroupDetail';
+import FriendDetail from './friend/FriendDetail';
 import EditGroup from './group/EditGroup';
 import EditMatch from './match/EditMatch';
 import FriendAndGroupList from './common/friendAndGroupList/FriendAndGroupList';
@@ -156,6 +157,11 @@ export default class AppNavigator extends Component {
       case RouteConstants.ROUTE_GROUP_DETAIL:
         return (
           <GroupDetail groupId={route.data} />
+        );
+
+      case RouteConstants.ROUTE_FRIEND_DETAIL:
+        return (
+          <FriendDetail friend={route.data} />
         );
 
       case RouteConstants.ROUTE_EDIT_GROUP:

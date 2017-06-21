@@ -21,7 +21,7 @@ let _loadingGroups = false;
 let _errorLoadingGroups = null;
 let _groups = [];
 let _showFriend = false;
-let _friendId = null;
+let _friend = null;
 let _showGroup = false;
 let _groupId = null;
 let _loadingFriendshipRequest = false;
@@ -108,8 +108,8 @@ let HomeStore = assign({}, EventEmitter.prototype, {
     return _showFriend;
   },
 
-  getFriendId() {
-    return _friendId;
+  getFriend() {
+    return _friend;
   },
 
   showGroup() {
@@ -245,7 +245,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
 
     case HomeConstants.SHOW_FRIEND:
       _showFriend = true;
-      _friendId = action.payload;
+      _friend = action.payload.friend;
       HomeStore.emitChange();
       break;
 
@@ -382,6 +382,11 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
+    case HomeConstants.GROUP_FRIEND_SHOWN:
+      _showFriend = false;
+      HomeStore.emitChange();
+      break;
+
     case CreateMatchConstants.CLEAN_CREATE_MATCH:
       _showCreateMatch = false;
       break;
@@ -411,7 +416,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       _errorLoadingGroups = null;
       _groups = [];
       _showFriend = false;
-      _friendId = null;
+      _friend = null;
       _showGroup = false;
       _groupId = null;
       _loadingFriendshipRequest = false;

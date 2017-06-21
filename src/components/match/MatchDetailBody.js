@@ -37,7 +37,12 @@ export default class MatchDetailBody extends Component {
       errorCancelingMatch: null,
       matchExited: false,
       matchCanceled: false,
-      matchSaved: false
+      matchSaved: false,
+      playerToRemove: null,
+      isRemovingPlayer: false,
+      errorRemovingPlayer: null,
+      playerRemoved: false,
+      showPlayerOptions: false
     }
 
     this._renderDetail = this._renderDetail.bind(this);
@@ -54,6 +59,11 @@ export default class MatchDetailBody extends Component {
     this._invite = this._invite.bind(this);
     this._selectingFriendsBack = this._selectingFriendsBack.bind(this);
     this._selectingFriendsConfirm = this._selectingFriendsConfirm.bind(this);
+    this._renderRemovePlayerConfirmationModal = this._renderRemovePlayerConfirmationModal.bind(this);
+    this._confirmRemovePlayer = this._confirmRemovePlayer.bind(this);
+    this._cancelRemovePlayer = this._cancelRemovePlayer.bind(this);
+    this._removePlayer = this._removePlayer.bind(this);
+    this._playerListBack = this._playerListBack.bind(this);
   }
 
   componentDidMount() {
@@ -68,11 +78,20 @@ export default class MatchDetailBody extends Component {
 
   render() {
     return (
-      <Swiper showsButtons={false}>
-        {this._renderDetail()}
-        <ChatRoom matchId={this.state.match._id} />
-        <PlayersList invite={this._invite} confirmedPlayers={this.state.match.confirmedPlayers} pendingPlayers={this.state.match.pendingPlayers} />
-      </Swiper>
+      <View>
+        <Swiper showsButtons={false}>
+          {this._renderDetail()}
+          <ChatRoom matchId={this.state.match._id} />
+          <PlayersList
+            invite={this._invite}
+            confirmedPlayers={this.state.match.confirmedPlayers}
+            pendingPlayers={this.state.match.pendingPlayers}
+            removePlayer={this._removePlayer}
+            onBackPressed={this._playerListBack}
+            showPlayerOptions={this.state.showPlayerOptions} />
+        </Swiper>
+        {this._renderRemovePlayerConfirmationModal()}
+      </View>
     );
   }
 
@@ -93,42 +112,37 @@ export default class MatchDetailBody extends Component {
       errorLoadingFriends: MatchDetailStore.getErrorLoadingFriends(),
       errorLoadingGroups: MatchDetailStore.getErrorLoadingGroups(),
       matchSaved: MatchDetailStore.matchSaved(),
+      removePlayer: MatchDetailStore.removePlayer(),
+      isRemovingPlayer: MatchDetailStore.isRemovingPlayer(),
+      playerToRemove: MatchDetailStore.playerToRemove(),
+      errorRemovingPlayer: MatchDetailStore.getErrorRemovingPlayer(),
+      playerRemoved: MatchDetailStore.playerRemoved(),
     }, () => {
-      // if (GroupStore.backPressed()) {
-      //   if (!this._handleBack())
-      //     NavigationActions.back();
-      // } else {
-      // if (this.state.group)
-      //   this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
-
-      if (this.state.editMatch) {
-        MatchDetailActions.editShown();
-        NavigationActions.addRoute({
-          id: RouteConstants.ROUTE_EDIT_MATCH,
-          data: this.state.match
-        });
-      } else if (this.state.matchCanceled) {
-        this.setState({ errorCancelingMatch: 'Partido cancelado.' }, this._resetAndBack);
-      } else if (this.state.matchExited) {
-        this.setState({ errorExitingMatch: 'Te bajaste del partido.' }, this._resetAndBack);
-      } else if (this.state.matchSaved) {
+      let b = MatchDetailStore.backPressed();
+      if (b) {
         NavigationActions.back();
-      } /*else if (this.state.playerRemoved) {
-          this.setState({ errorRemovingPlayer: 'Amigo eliminado.', showPlayerOptions: false }, () => {
-            GroupActions.resetRemovePlayer();
-            setTimeout(() => {
-              this.setState({ errorRemovingPlayer: null });
-            }, 1500);
+      } else {
+        if (this.state.editMatch) {
+          MatchDetailActions.editShown();
+          NavigationActions.addRoute({
+            id: RouteConstants.ROUTE_EDIT_MATCH,
+            data: this.state.match
           });
-        } else if (this.state.playerMadeAdmin) {
-          this.setState({ errorMakingPlayerAdmin: 'Amigo admin.', showPlayerOptions: false }, () => {
-            GroupActions.resetMakePlayerAdmin();
+        } else if (this.state.matchCanceled) {
+          this.setState({ errorCancelingMatch: 'Partido cancelado.' }, this._resetAndBack);
+        } else if (this.state.matchExited) {
+          this.setState({ errorExitingMatch: 'Te bajaste del partido.' }, this._resetAndBack);
+        } else if (this.state.matchSaved) {
+          NavigationActions.back();
+        } else if (this.state.playerRemoved) {
+          this.setState({ errorRemovingPlayer: 'Amigo eliminado.', showPlayerOptions: true }, () => {
+            MatchDetailActions.resetRemovePlayer();
             setTimeout(() => {
-              this.setState({ errorMakingPlayerAdmin: null });
+              this.setState({ errorRemovingPlayer: null, showPlayerOptions: false });
             }, 1500);
           });
         }
-      }*/
+      }
     });
   }
 
@@ -244,6 +258,36 @@ export default class MatchDetailBody extends Component {
 
   _selectingFriendsConfirm(friendList, groupList) {
     MatchDetailActions.invite(this.state.match, friendList, groupList);
+  }
+
+  _renderRemovePlayerConfirmationModal() {
+    if (this.state.removePlayer) {
+      return (
+        <ModalMessage
+          text={'Eliminar amigo del grupo ' + this.state.playerToRemove.email}
+          confirm={this._confirmRemovePlayer}
+          cancel={this._cancelRemovePlayer}
+        />
+      )
+    }
+
+    return null;
+  }
+
+  _removePlayer(player) {
+    MatchDetailActions.removePlayer(player);
+  }
+
+  _confirmRemovePlayer() {
+    MatchDetailActions.removePlayerConfirmed(this.state.match._id, this.state.playerToRemove._id);
+  }
+
+  _cancelRemovePlayer() {
+    MatchDetailActions.cancelRemovePlayer();
+  }
+
+  _playerListBack() {
+    NavigationActions.back();
   }
 }
 

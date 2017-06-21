@@ -11,25 +11,25 @@ import {
 import FriendActions from '../../actions/FriendActions';
 import NavigationActions from '../../actions/NavigationActions';
 import FriendStore from '../../stores/FriendStore';
-import RouteConstants from '../../constants/RouteConstants';
 
 export default class FriendDetailBody extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoadingFriend: false,
-      errorLoadingFriend: null,
+      idDeletingFriend: false,
+      errorDeletingFriend: null,
+      friendDeleted: false
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
     this._renderLoading = this._renderLoading.bind(this);
     this._delete = this._delete.bind(this);
+    this._renderError = this._renderError.bind(this);
   }
 
   componentDidMount() {
     FriendStore.addChangeListener(this._onStoreChange);
-    FriendActions.loadFriend(this.props.friendId);
   }
 
   componentWillUnmount() {
@@ -40,7 +40,8 @@ export default class FriendDetailBody extends Component {
     return (
       <View style={styles.container}>
         {this._renderLoading()}
-        <Text style={styles.text}>Amigo</Text>
+        {this._renderError(this.state.errorDeletingFriend)}
+        <Text style={styles.text}>{this.props.friend.email}</Text>
         <TouchableOpacity style={styles.deleteButton} onPress={this._delete}>
           <Text style={styles.text}>Eliminar Amigo</Text>
         </TouchableOpacity>
@@ -50,13 +51,23 @@ export default class FriendDetailBody extends Component {
 
   _onStoreChange() {
     this.setState({
-      isLoadingFriend: FriendStore.isLoadingFriend(),
-      errorLoadingFriend: FriendStore.getErrorLoadingFriend(),
+      isDeletingFriend: FriendStore.isDeletingFriend(),
+      errorDeletingFriend: FriendStore.getErrorDeletingFriend(),
+      friendDeleted: FriendStore.friendDeleted()
+    }, () => {
+      if (this.state.friendDeleted) {
+        this.setState({ errorDeletingFriend: 'Amigo eliminado.' }, () => {
+          setTimeout(() => {
+            FriendActions.resetFriendDetail();
+            NavigationActions.back();
+          }, 1500);
+        });
+      }
     });
   }
 
   _renderLoading() {
-    if (this.state.isLoadingFriend) {
+    if (this.state.isDeletingFriend) {
       return (
         <View style={styles.loading}>
           <ActivityIndicator animating={true} size='large' />
@@ -80,7 +91,7 @@ export default class FriendDetailBody extends Component {
   }
 
   _delete() {
-    FriendActions.deleteFriend(this.props.friendId);
+    FriendActions.deleteFriend(this.props.friend._id);
   }
 }
 

@@ -150,6 +150,7 @@ export default class Body extends Component {
       loadingMatches: HomeStore.isLoadingMatches(),
       errorLoadingMatches: HomeStore.getErrorLoadingMatches(),
       showGroup: HomeStore.showGroup(),
+      showFriend: HomeStore.showFriend(),
       matches: this.state.matches.cloneWithRows(HomeStore.getMatches())
     }, () => {
       if (this.state.showCreateMatch) {
@@ -167,17 +168,19 @@ export default class Body extends Component {
           id: RouteConstants.ROUTE_ACCOUNT,
           data: HomeStore.getPlayer()
         });
+      } else if (this.state.showFriend) {
+        HomeActions.friendDetailShown();
+        NavigationActions.addRoute({
+          id: RouteConstants.ROUTE_FRIEND_DETAIL,
+          data: HomeStore.getFriend()
+        });
       } else if (this.state.showGroup) {
         HomeActions.groupDetailShown();
         NavigationActions.addRoute({
           id: RouteConstants.ROUTE_GROUP_DETAIL,
           data: HomeStore.getGroupId()
         });
-      } /*else if (!this.state.loadingMatches && !this.state.errorLoadingMatches) {
-        let matches = HomeStore.getMatches();
-        if (matches)
-          this.setState({ matches: this.state.matches.cloneWithRows(matches) });
-      }*/
+      }
     });
   }
 
