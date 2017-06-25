@@ -260,6 +260,17 @@ export default class LocalService {
       });
   }
 
+  static deleteFriend(id) {
+    return LocalService.getFriends()
+      .then((friends) => {
+        let i = friends.findIndex(f => { return f._id === id; });
+        if (i > -1)
+          friends.splice(i, 1);
+
+        return LocalService.saveFriends(friends);
+      });
+  }
+
   static saveNewMatch(newMatch) {
     return LocalService.getMatches()
       .then(ret => {
@@ -272,6 +283,13 @@ export default class LocalService {
           case 'NotFoundError':
             return LocalService.saveMatches([newMatch]);
         }
+      });
+  }
+
+  static getGroup(groupId) {
+    return LocalService.getGroups()
+      .then(groups => {
+        return Promise.resolve(groups.find(g => { return g._id === groupId }));
       });
   }
 };

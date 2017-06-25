@@ -13,6 +13,7 @@ let _errorLoadingFriends = null;
 let _isDeletingFriend = false;
 let _friendDeleted = false;
 let _errorDeletingFriend = null;
+let _deleteFriend = false;
 
 let FriendStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -37,6 +38,10 @@ let FriendStore = assign({}, EventEmitter.prototype, {
 
   isNewFriendConfirmed() {
     return _newFriendConfirmed;
+  },
+
+  deleteFriend() {
+    return _deleteFriend;
   },
 
   isDeletingFriend() {
@@ -80,7 +85,24 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
       FriendStore.emitChange();
       break;
 
+    case FriendConstants.DELETE_FRIEND:
+      _deleteFriend = true;
+      _isDeletingFriend = false;
+      _friendDeleted = false;
+      _errorDeletingFriend = null;
+      FriendStore.emitChange();
+      break;
+
+    case FriendConstants.CANCEL_DELETE_FRIEND:
+      _deleteFriend = false;
+      _isDeletingFriend = false;
+      _friendDeleted = false;
+      _errorDeletingFriend = null;
+      FriendStore.emitChange();
+      break;
+
     case FriendConstants.DELETING_FRIEND:
+      _deleteFriend = false;
       _isDeletingFriend = true;
       _friendDeleted = false;
       _errorDeletingFriend = null;
@@ -88,6 +110,7 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
       break;
 
     case FriendConstants.FRIEND_DELETED:
+      _deleteFriend = false;
       _isDeletingFriend = false;
       _friendDeleted = true;
       _errorDeletingFriend = null;
@@ -95,6 +118,7 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
       break;
 
     case FriendConstants.ERROR_DELETING_FRIEND:
+      _deleteFriend = false;
       _isDeletingFriend = false;
       _friendDeleted = false;
       _errorDeletingFriend = action.payload.message;
@@ -111,6 +135,7 @@ FriendStore.dispatchToken = AppDispatcher.register((action) => {
       _isDeletingFriend = false;
       _friendDeleted = false;
       _errorDeletingFriend = null;
+      _deleteFriend = false;
       break;
 
     default:

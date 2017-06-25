@@ -382,7 +382,7 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
       HomeStore.emitChange();
       break;
 
-    case HomeConstants.GROUP_FRIEND_SHOWN:
+    case HomeConstants.FRIEND_DETAIL_SHOWN:
       _showFriend = false;
       HomeStore.emitChange();
       break;

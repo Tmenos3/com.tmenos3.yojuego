@@ -5,34 +5,6 @@ import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
 
 export default class FriendActions {
-  static deleteFriend(friendId) {
-    Dispatcher.handleViewAction({
-      actionType: FriendConstants.DELETING_FRIEND
-    });
-
-    LocalService.getToken()
-      .then((token) => {
-        return ApiService.deleteFriend(friendId, token);
-      })
-      .then((resp) => {
-        return LocalService.deleteFriend(friendId);
-      })
-      .then(() => {
-        Dispatcher.handleViewAction({
-          actionType: FriendConstants.FRIEND_DELETED
-        });
-      })
-      .catch((error) => {
-        Dispatcher.handleViewAction({
-          actionType: FriendConstants.ERROR_DELETING_FRIEND,
-          payload: {
-            code: error.code,
-            message: error.message
-          }
-        });
-      });
-  }
-
   static newFriendConfirmed() {
     Dispatcher.handleViewAction({
       actionType: FriendConstants.NEW_FRIEND_CONFIRMED
@@ -85,4 +57,45 @@ export default class FriendActions {
     });
   }
 
+  static deleteFriend() {
+    Dispatcher.handleViewAction({
+      actionType: FriendConstants.DELETE_FRIEND
+    });
+  }
+
+  static cancelDeleteFriend() {
+    Dispatcher.handleViewAction({
+      actionType: FriendConstants.CANCEL_DELETE_FRIEND
+    });
+  }
+
+  static deleteConfirmed(friendId) {
+    Dispatcher.handleViewAction({
+      actionType: FriendConstants.DELETING_FRIEND
+    });
+
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.deleteFriend(friendId, token);
+      })
+      .then((resp) => {
+        return LocalService.deleteFriend(friendId);
+      })
+      .then((friends) => {
+        Dispatcher.handleViewAction({
+          actionType: FriendConstants.FRIEND_DELETED
+        });
+
+        HomeActions.loadFriends(friends);
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: FriendConstants.ERROR_DELETING_FRIEND,
+          payload: {
+            code: error.code,
+            message: error.message
+          }
+        });
+      });
+  }
 }

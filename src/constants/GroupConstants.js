@@ -32,4 +32,8 @@ export default class GroupConstants {
   static get ERROR_MAKING_PLAYER_ADMIN() { return 'GROUP_ERROR_MAKING_PLAYER_ADMIN'; }
   static get RESET_REMOVE_PLAYER() { return 'GROUP_RESET_REMOVE_PLAYER'; }
   static get RESET_MAKE_PLAYER_ADMIN() { return 'GROUP_RESET_MAKE_PLAYER_ADMIN'; }
+  static get NEW_MESSAGE_RECEIVED() { return 'GROUP_NEW_MESSAGE_RECEIVED'; }
+  static get SENDING_MESSAGE() { return 'GROUP_SENDING_MESSAGE'; }
+  static get MESSAGE_SENT() { return 'GROUP_MESSAGE_SENT'; }
+  static get ERROR_SENDING_MESSAGE() { return 'GROUP_ERROR_SENDING_MESSAGE'; }
 }

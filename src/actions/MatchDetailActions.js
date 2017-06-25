@@ -271,4 +271,34 @@ export default class MatchDetailActions {
         });
       });
   }
+
+  static openWebSocket() {
+    LocalService.getToken()
+      .then(token => {
+        ApiService.openWebSocketForMatch(token)
+          .then(ws => {
+            ws.onopen = MatchDetailActions._onopen;
+            ws.onmessage = MatchDetailActions._onmessage;
+            ws.onerror = MatchDetailActions._onerror;
+            ws.onclose = MatchDetailActions._onclose;
+          });
+      });
+  }
+
+  static _onopen() {
+    //ws.send('something'); // send a message
+    console.log('connection opened');
+  }
+
+  static _onmessage(e) {
+    console.log(e.data);
+  }
+
+  static _onerror(e) {
+    console.log(e.message);
+  }
+
+  static _onclose(e) {
+    console.log(e.code, e.reason);
+  }
 };

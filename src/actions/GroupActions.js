@@ -30,6 +30,7 @@ export default class GroupActions {
             group
           }
         });
+        GroupActions.openWebSocket(groupId);
       })
       .catch((error) => {
         Dispatcher.handleViewAction({
@@ -288,5 +289,60 @@ export default class GroupActions {
     Dispatcher.handleViewAction({
       actionType: GroupConstants.RESET_MAKE_PLAYER_ADMIN
     });
+  }
+
+  static sendMessageToGroup(groupId, message) {
+    Dispatcher.handleViewAction({
+      actionType: GroupConstants.SENDING_MESSAGE
+    });
+
+    let messageSent = null;
+    LocalService.getToken()
+      .then(token => {
+        return ApiService.sendMessageToGroup(groupId, message, token);
+      })
+      .then(resp => {
+        messageSent = resp.resp;
+        return LocalService.getGroup(groupId);
+      })
+      .then(group => {
+        group.messages.push(messageSent);
+        return LocalService.updateGroup(group);
+      })
+      .then(resp => {
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.MESSAGE_SENT
+        });
+      });
+  }
+
+  static openWebSocket(groupId) {
+    LocalService.getToken()
+      .then(token => {
+        ApiService.openWebSocketForGroup(token, groupId)
+          .then(ws => {
+            ws.onopen = GroupActions._onopen;
+            ws.onmessage = GroupActions._onmessage;
+            ws.onerror = GroupActions._onerror;
+            ws.onclose = GroupActions._onclose;
+          });
+      });
+  }
+
+  static _onopen() {
+    //ws.send('something'); // send a message
+    console.log('connection opened');
+  }
+
+  static _onmessage(e) {
+    console.log(e.data);
+  }
+
+  static _onerror(e) {
+    console.log(e.message);
+  }
+
+  static _onclose(e) {
+    console.log(e.code, e.reason);
   }
 }
