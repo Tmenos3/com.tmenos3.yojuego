@@ -35,6 +35,7 @@ export default class LoginActions {
             player: newSession.player
           }
         });
+        AppActions.openWebSocket();
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: LoginConstants.LOGIN_FAILED,

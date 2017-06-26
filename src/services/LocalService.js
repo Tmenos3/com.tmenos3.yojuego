@@ -217,7 +217,10 @@ export default class LocalService {
       .then((groups) => {
         let i = groups.findIndex((g) => { return g._id === group._id; });
         groups[i] = group;
-        return LocalService.saveGroups(groups);
+        return LocalService.saveGroups(groups)
+      })
+      .then(() => {
+        return Promise.resolve(group);
       });
   }
 

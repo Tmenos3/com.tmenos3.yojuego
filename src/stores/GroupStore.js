@@ -392,6 +392,10 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
       _playerMadeAdmin = false;
       GroupStore.emitChange();
 
+    case GroupConstants.MESSAGE_SENT:
+      _group = action.payload.group;
+      GroupStore.emitChange();
+
     case GroupConstants.RESET:
     case AppConstants.RESET_APP:
       _isLoadingGroup = false;

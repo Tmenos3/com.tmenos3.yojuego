@@ -2,6 +2,8 @@ import AppConstants from '../constants/AppConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
+import GroupActions from './GroupActions';
+import MatchDetailActions from './MatchDetailActions';
 
 export default class AppActions {
   static initializeApp() {
@@ -53,12 +55,45 @@ export default class AppActions {
       });
   }
 
+  static openWebSocket() {
+    LocalService.getToken()
+      .then(token => {
+        ApiService.openWebSocket(token, AppActions._onopen, AppActions._onmessage, AppActions._onerror, AppActions._onclose);
+      });
+  }
+
   static _callLogin() {
     setTimeout(() => {
       Dispatcher.handleViewAction({
         actionType: AppConstants.APP_READY
       });
     }, 3000);
+  }
+
+  static _onopen() {
+    //ws.send('something'); // send a message
+    console.log('connection opened');
+  }
+
+  static _onmessage(e) {
+    console.log(e.data);
+    let msg = JSON.parse(e.data);
+    switch (msg.type) {
+      case 'GROUP':
+        GroupActions.messageReceived(msg.groupId, msg.message);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  static _onerror(e) {
+    console.log(e.message);
+  }
+
+  static _onclose(e) {
+    console.log(e.code, e.reason);
   }
 
   static _callHome(player) {
@@ -68,5 +103,7 @@ export default class AppActions {
         payload: player
       });
     }, 3000);
+
+    AppActions.openWebSocket();
   }
 }

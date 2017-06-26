@@ -1,8 +1,7 @@
 const BASEURL = 'http://192.168.0.4:8089';
 const WSURL = 'ws://192.168.0.4:8092';
 
-let wsGroup = null;
-let wsMatch = null;
+let ws = null;
 
 export default class ApiService {
   static login(email, password) {
@@ -235,25 +234,21 @@ export default class ApiService {
     return ApiService._fetch('delete', ApiService._getHeader(token), null, '/match/' + matchId + '/player/' + playerId)
   }
 
-  static openWebSocketForGroup(token, groupId) {
-    return ApiService._openWebSocket('/' + token + '/group/' + groupId)
+  static openWebSocket(token, onopen, onmessage, onerror, onclose) {
+    return ApiService._openWebSocket('/' + token)
       .then(ws => {
-        wsGroup = ws;
-        return Promise.resolve(wsGroup);
-      });
-  }
-
-  static openWebSocketForMatch(token, matchId) {
-    return ApiService._openWebSocket('/' + token + '/match/' + matchId)
-      .then(ws => {
-        wsMatch = ws;
-        return Promise.resolve(wsGroup);
+        ws = ws;
+        ws.onopen = onopen;
+        ws.onmessage = onmessage;
+        ws.onerror = onerror;
+        ws.onclose = onclose;
+        return Promise.resolve(ws);
       });
   }
 
   static sendMessageToGroup(groupId, message, token) {
     let form = { message }
-    return ApiService._fetch('put', ApiService._getHeader(token), null, '/group/' + groupId + '/message')
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/group/' + groupId + '/message')
   }
 
   static sendCommentToMatch(matchId, comment, token) {

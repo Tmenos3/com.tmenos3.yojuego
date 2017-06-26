@@ -30,7 +30,6 @@ export default class GroupActions {
             group
           }
         });
-        GroupActions.openWebSocket(groupId);
       })
       .catch((error) => {
         Dispatcher.handleViewAction({
@@ -302,47 +301,34 @@ export default class GroupActions {
         return ApiService.sendMessageToGroup(groupId, message, token);
       })
       .then(resp => {
-        messageSent = resp.resp;
-        return LocalService.getGroup(groupId);
+        Dispatcher.handleViewAction({
+          actionType: GroupConstants.MESSAGE_SENT,
+          payload: {
+            group: resp
+          }
+        });
       })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  static messageReceived(groupId, message) {
+    LocalService.getGroup(groupId)
       .then(group => {
-        group.messages.push(messageSent);
+        group.messages.push(message);
         return LocalService.updateGroup(group);
       })
       .then(resp => {
         Dispatcher.handleViewAction({
-          actionType: GroupConstants.MESSAGE_SENT
+          actionType: GroupConstants.NEW_MESSAGE_RECEIVED,
+          payload: {
+            group: resp
+          }
         });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-  }
-
-  static openWebSocket(groupId) {
-    LocalService.getToken()
-      .then(token => {
-        ApiService.openWebSocketForGroup(token, groupId)
-          .then(ws => {
-            ws.onopen = GroupActions._onopen;
-            ws.onmessage = GroupActions._onmessage;
-            ws.onerror = GroupActions._onerror;
-            ws.onclose = GroupActions._onclose;
-          });
-      });
-  }
-
-  static _onopen() {
-    //ws.send('something'); // send a message
-    console.log('connection opened');
-  }
-
-  static _onmessage(e) {
-    console.log(e.data);
-  }
-
-  static _onerror(e) {
-    console.log(e.message);
-  }
-
-  static _onclose(e) {
-    console.log(e.code, e.reason);
   }
 }

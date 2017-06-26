@@ -8,9 +8,11 @@ import {
   View,
   ActivityIndicator,
   Image,
-  BackAndroid
+  BackAndroid,
+  TextInput
 } from 'react-native';
 import ModalMessage from '../common/ModalMessage';
+import Swiper from 'react-native-swiper';
 import GroupActions from '../../actions/GroupActions';
 import NavigationActions from '../../actions/NavigationActions';
 import GroupStore from '../../stores/GroupStore';
@@ -38,6 +40,7 @@ export default class GroupDetailBody extends Component {
       errorMakingAdminPlayer: null,
       group: null,
       dsFriends: ds.cloneWithRows([]),
+      dsMessages: ds.cloneWithRows([]),
       deleteGroup: false,
       removePlayer: false,
       makeAdminPlayer: false,
@@ -47,7 +50,8 @@ export default class GroupDetailBody extends Component {
       playerRemoved: false,
       playersAdded: false,
       playerMadeAdmin: false,
-      showPlayerOptions: false
+      showPlayerOptions: false,
+      messageToSend: null
     }
 
     this._onStoreChange = this._onStoreChange.bind(this);
@@ -79,6 +83,10 @@ export default class GroupDetailBody extends Component {
     this._renderMakeAdminPlayerConfirmationModal = this._renderMakeAdminPlayerConfirmationModal.bind(this);
     this._cancelRemovePlayer = this._cancelRemovePlayer.bind(this);
     this._cancelMakeAdminPlayer = this._cancelMakeAdminPlayer.bind(this);
+    this._renderChat = this._renderChat.bind(this);
+    this._onMessageTextChanged = this._onMessageTextChanged.bind(this);
+    this._renderRowMessage = this._renderRowMessage.bind(this);
+    this._sendMessage = this._sendMessage.bind(this);
   }
 
   componentDidMount() {
@@ -94,32 +102,35 @@ export default class GroupDetailBody extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        {this._renderLoading()}
-        {this._renderError(this.state.errorLoadingGroup)}
-        {this._renderError(this.state.errorDeletingGroup)}
-        {this._renderError(this.state.errorExitingGroup)}
-        {this._renderError(this.state.errorAddingPlayers)}
-        {this._renderError(this.state.errorRemovingPlayer)}
-        {this._renderError(this.state.errorMakingAdminPlayer)}
-        {this._renderGroupInfo()}
-        <View style={styles.options}>
-          <TouchableOpacity style={[styles.option, { backgroundColor: 'blue' }]} onPress={this._selectFriends}>
-            <Text style={styles.text}>{'Agegar amigos'}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.option, { backgroundColor: 'green' }]} onPress={this._exit}>
-            <Text style={styles.text}>Salir del Grupo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.option, { backgroundColor: 'red' }]} onPress={this._delete}>
-            <Text style={styles.text}>Eliminar Grupo</Text>
-          </TouchableOpacity>
+      <Swiper showsButtons={false} showsPagination={true}>
+        <View style={styles.container}>
+          {this._renderLoading()}
+          {this._renderError(this.state.errorLoadingGroup)}
+          {this._renderError(this.state.errorDeletingGroup)}
+          {this._renderError(this.state.errorExitingGroup)}
+          {this._renderError(this.state.errorAddingPlayers)}
+          {this._renderError(this.state.errorRemovingPlayer)}
+          {this._renderError(this.state.errorMakingAdminPlayer)}
+          {this._renderGroupInfo()}
+          <View style={styles.options}>
+            <TouchableOpacity style={[styles.option, { backgroundColor: 'blue' }]} onPress={this._selectFriends}>
+              <Text style={styles.text}>{'Agegar amigos'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.option, { backgroundColor: 'green' }]} onPress={this._exit}>
+              <Text style={styles.text}>Salir del Grupo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.option, { backgroundColor: 'red' }]} onPress={this._delete}>
+              <Text style={styles.text}>Eliminar Grupo</Text>
+            </TouchableOpacity>
+          </View>
+          {this._renderDeleteGroupConfirmationModal()}
+          {this._renderExitGroupConfirmationModal()}
+          {this._renderRemovePlayerConfirmationModal()}
+          {this._renderMakeAdminPlayerConfirmationModal()}
+          {this._renderPlayerOptions()}
         </View>
-        {this._renderDeleteGroupConfirmationModal()}
-        {this._renderExitGroupConfirmationModal()}
-        {this._renderRemovePlayerConfirmationModal()}
-        {this._renderMakeAdminPlayerConfirmationModal()}
-        {this._renderPlayerOptions()}
-      </View>
+        {this._renderChat()}
+      </Swiper>
     );
   }
 
@@ -169,7 +180,10 @@ export default class GroupDetailBody extends Component {
           NavigationActions.back();
       } else {
         if (this.state.group)
-          this.setState({ dsFriends: ds.cloneWithRows(this.state.group.players) });
+          this.setState({
+            dsFriends: ds.cloneWithRows(this.state.group.players),
+            dsMessages: ds.cloneWithRows(this.state.group.messages)
+          });
 
         if (this.state.editGroup) {
           let groupToEdit = GroupStore.getGroupToEdit();
@@ -475,11 +489,64 @@ export default class GroupDetailBody extends Component {
   _cancelMakeAdminPlayer() {
     GroupActions.cancelMakeAdminPlayer();
   }
+
+  _renderChat() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.room}>
+          <ListView
+            dataSource={this.state.dsMessages}
+            renderRow={this._renderRowMessage}
+            style={styles.listView}
+            enableEmptySections={true}
+          />
+        </View>
+        <View style={styles.messageContainer}>
+          <TextInput
+            placeholder={"Escribir..."}
+            style={styles.messageInput}
+            onChangeText={this._onMessageTextChanged}
+            value={this.state.messageToSend}
+            underlineColorAndroid={'transparent'}
+          />
+          <TouchableOpacity style={styles.sendBtn} onPress={this._sendMessage}>
+            <Text style={{ fontSize: 40 }}>>></Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  _onMessageTextChanged(text) {
+    this.setState({
+      messageToSend: text
+    });
+  }
+
+  _renderRowMessage(rowData) {
+    try {
+      return (
+        <View
+          key={rowData.id}
+          delayLongPress={400}
+          style={styles.message}>
+          <Text>{rowData.text}</Text>
+        </View>
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+
+  _sendMessage() {
+    GroupActions.sendMessageToGroup(this.props.groupId, this.state.messageToSend);
+    this.setState({ messageToSend: null });
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: Dimensions.get('window').height - 80,
     backgroundColor: '#d9d9d9',
     alignItems: 'center'
   },
@@ -550,4 +617,35 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold'
   },
+  room: {
+    flexDirection: 'column',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height - 160,
+    backgroundColor: 'orange'
+  },
+  messageContainer: {
+    flexDirection: 'row',
+    height: 80,
+    width: Dimensions.get('window').width,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  messageInput: {
+    flex: 1,
+    backgroundColor: 'white',
+    marginLeft: 5,
+    marginRight: 5,
+    fontSize: 25
+  },
+  sendBtn: {
+    width: 65,
+    height: 65,
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 40,
+    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
