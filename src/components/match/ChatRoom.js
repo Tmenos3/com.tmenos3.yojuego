@@ -10,30 +10,43 @@ import {
 } from 'react-native';
 import Styles from '../../constants/Styles';
 
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
 export default class ChatRoom extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      message: ''
+      match: this.props.match,
+      dsComments: this.props.dsComments,
+      commentToSend: ''
     }
+
+    this._sendComment = this._sendComment.bind(this);
+    this._renderRowComment = this._renderRowComment.bind(this);
+    this._onCommentTextChanged = this._onCommentTextChanged.bind(this);
   }
 
   render() {
     return (
       <View style={[Styles.MAIN_CONTAINER, styles.container]}>
         <View style={styles.chat}>
+          <ListView
+            dataSource={this.state.dsComments}
+            renderRow={this._renderRowComment}
+            style={styles.confirmedView}
+            enableEmptySections={true}
+          />
         </View>
         <View style={styles.message}>
           <TextInput
-            placeholder={"Escribí un mensaje"}
+            placeholder={"Escribir..."}
             style={styles.input}
-            onChangeText={(text) => { this.setState({ message: text }) }}
-            text={this.state.message}
+            onChangeText={this._onCommentTextChanged}
+            value={this.state.commentToSend}
             underlineColorAndroid={'transparent'}
-            placeholderTextColor={'gray'}
           />
-          <TouchableOpacity style={styles.send} onPress={this._sendMessage}>
+          <TouchableOpacity style={styles.send} onPress={this._sendComment}>
             <Text style={styles.text}>{'Enviar'}</Text>
           </TouchableOpacity>
         </View>
@@ -41,8 +54,29 @@ export default class ChatRoom extends Component {
     );
   }
 
-  _sendMessage() {
+  _sendComment() {
+    this.props.sendComment(this.state.commentToSend);
+    this.setState({ commentToSend: '' });
+  }
 
+  _renderRowComment(rowData) {
+    try {
+      return (
+        <View
+          key={rowData.id}
+          style={styles.message}>
+          <Text>{rowData.text}</Text>
+        </View>
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+
+  _onCommentTextChanged(text) {
+    this.setState({
+      commentToSend: text
+    });
   }
 }
 

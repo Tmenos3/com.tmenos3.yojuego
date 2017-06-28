@@ -23,12 +23,15 @@ import Swiper from 'react-native-swiper';
 import Styles from '../../constants/Styles';
 import ModalMessage from '../common/ModalMessage';
 
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
 export default class MatchDetailBody extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       match: this.props.match,
+      dsComments: ds.cloneWithRows(this.props.match.comments),
       cancelMatch: false,
       exitMatch: false,
       isExitingMatch: false,
@@ -42,7 +45,8 @@ export default class MatchDetailBody extends Component {
       isRemovingPlayer: false,
       errorRemovingPlayer: null,
       playerRemoved: false,
-      showPlayerOptions: false
+      showPlayerOptions: false,
+      commentToSend: ''
     }
 
     this._renderDetail = this._renderDetail.bind(this);
@@ -64,6 +68,10 @@ export default class MatchDetailBody extends Component {
     this._cancelRemovePlayer = this._cancelRemovePlayer.bind(this);
     this._removePlayer = this._removePlayer.bind(this);
     this._playerListBack = this._playerListBack.bind(this);
+    this._sendComment = this._sendComment.bind(this);
+    this._renderChat = this._renderChat.bind(this);
+    this._renderRowComment = this._renderRowComment.bind(this);
+    this._onCommentTextChanged = this._onCommentTextChanged.bind(this);
   }
 
   componentDidMount() {
@@ -81,7 +89,7 @@ export default class MatchDetailBody extends Component {
       <View>
         <Swiper showsButtons={false}>
           {this._renderDetail()}
-          <ChatRoom matchId={this.state.match._id} />
+          {this._renderChat()}
           <PlayersList
             invite={this._invite}
             confirmedPlayers={this.state.match.confirmedPlayers}
@@ -122,6 +130,9 @@ export default class MatchDetailBody extends Component {
       if (b) {
         NavigationActions.back();
       } else {
+        if (this.state.match)
+          this.setState({ dsComments: ds.cloneWithRows(this.state.match.comments) });
+
         if (this.state.editMatch) {
           MatchDetailActions.editShown();
           NavigationActions.addRoute({
@@ -143,6 +154,58 @@ export default class MatchDetailBody extends Component {
           });
         }
       }
+    });
+  }
+
+  _renderChat() {
+    return (
+      <View style={[Styles.MAIN_CONTAINER, styles.chatContainer]}>
+        <View style={styles.chat}>
+          <ListView
+            dataSource={this.state.dsComments}
+            renderRow={this._renderRowComment}
+            style={styles.confirmedView}
+            enableEmptySections={true}
+          />
+        </View>
+        <View style={styles.chatComment}>
+          <TextInput
+            placeholder={"Escribir..."}
+            style={styles.chatInput}
+            onChangeText={this._onCommentTextChanged}
+            value={this.state.commentToSend}
+            underlineColorAndroid={'transparent'}
+          />
+          <TouchableOpacity style={styles.send} onPress={this._sendComment}>
+            <Text style={styles.text}>{'Enviar'}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  _sendComment() {
+    MatchDetailActions.sendComment(this.state.commentToSend, this.state.match._id);
+    this.setState({ commentToSend: '' });
+  }
+
+  _renderRowComment(rowData) {
+    try {
+      return (
+        <View
+          key={rowData.id}
+          style={styles.chatComment}>
+          <Text>{rowData.text}</Text>
+        </View>
+      );
+    } catch (error) {
+      return null;
+    }
+  }
+
+  _onCommentTextChanged(text) {
+    this.setState({
+      commentToSend: text
     });
   }
 
@@ -434,4 +497,40 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10
   },
+  chatContainer: {
+    alignItems: 'center'
+  },
+  chat: {
+    backgroundColor: 'white',
+    width: Dimensions.get('window').width * 0.95,
+    borderRadius: 10,
+    height: Dimensions.get('window').height * 0.71,
+    marginTop: 10
+  },
+  chatComment: {
+    backgroundColor: 'white',
+    width: Dimensions.get('window').width * 0.95,
+    height: 60,
+    bottom: 0,
+    borderRadius: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  chatInput: {
+    width: Dimensions.get('window').width * 0.94,
+    flex: 1,
+    fontSize: 20,
+    color: 'black'
+  },
+  send: {
+    width: 55,
+    height: 55,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

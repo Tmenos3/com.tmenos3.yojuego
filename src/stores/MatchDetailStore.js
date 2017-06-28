@@ -367,6 +367,11 @@ MatchDetailStore.dispatchToken = AppDispatcher.register((action) => {
       MatchDetailStore.emitChange();
       break;
 
+    case MatchDetailConstants.NEW_COMMENT_RECEIVED:
+      _match = action.payload.match;
+      MatchDetailStore.emitChange();
+      break;
+
     case AppConstants.RESET_APP:
       _savingMatch = false;
       _errorSavingMatch = null;

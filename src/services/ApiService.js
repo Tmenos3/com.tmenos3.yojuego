@@ -251,9 +251,9 @@ export default class ApiService {
     return ApiService._fetch('put', ApiService._getHeader(token), form, '/group/' + groupId + '/message')
   }
 
-  static sendCommentToMatch(matchId, comment, token) {
+  static sendCommentToMatch(comment, matchId, token) {
     let form = { comment }
-    return ApiService._fetch('put', ApiService._getHeader(token), null, '/match/' + matchId + '/comment')
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/match/' + matchId + '/comment')
   }
 
   static _fetch(method, headers, body, url) {

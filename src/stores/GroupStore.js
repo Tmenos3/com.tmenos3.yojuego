@@ -391,10 +391,12 @@ GroupStore.dispatchToken = AppDispatcher.register((action) => {
     case GroupConstants.RESET_REMOVE_PLAYER:
       _playerMadeAdmin = false;
       GroupStore.emitChange();
+      break;
 
-    case GroupConstants.MESSAGE_SENT:
+    case GroupConstants.NEW_MESSAGE_RECEIVED:
       _group = action.payload.group;
       GroupStore.emitChange();
+      break;
 
     case GroupConstants.RESET:
     case AppConstants.RESET_APP:

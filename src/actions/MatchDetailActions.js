@@ -272,33 +272,46 @@ export default class MatchDetailActions {
       });
   }
 
-  static openWebSocket() {
+  static sendComment(comment, matchId){
+    Dispatcher.handleViewAction({
+      actionType: MatchDetailConstants.SENDING_COMMENT
+    });
+
     LocalService.getToken()
-      .then(token => {
-        ApiService.openWebSocketForMatch(token)
-          .then(ws => {
-            ws.onopen = MatchDetailActions._onopen;
-            ws.onmessage = MatchDetailActions._onmessage;
-            ws.onerror = MatchDetailActions._onerror;
-            ws.onclose = MatchDetailActions._onclose;
-          });
+      .then((token) => {
+        return ApiService.sendCommentToMatch(comment, matchId, token);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.COMMENT_SENT
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.ERROR_SENDING_COMMENT,
+          payload: {
+            message: error.message
+          }
+        });
       });
   }
 
-  static _onopen() {
-    //ws.send('something'); // send a message
-    console.log('connection opened');
-  }
-
-  static _onmessage(e) {
-    console.log(e.data);
-  }
-
-  static _onerror(e) {
-    console.log(e.message);
-  }
-
-  static _onclose(e) {
-    console.log(e.code, e.reason);
+  static commentReceived(matchId, comment) {
+    LocalService.getMatch(matchId)
+      .then(match => {
+        match.comments.push(comment);
+        return LocalService.updateMatch(match);
+      })
+      .then(resp => {
+        Dispatcher.handleViewAction({
+          actionType: MatchDetailConstants.NEW_COMMENT_RECEIVED,
+          payload: {
+            match: resp
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 };

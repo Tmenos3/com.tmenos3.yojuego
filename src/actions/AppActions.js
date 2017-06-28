@@ -83,6 +83,10 @@ export default class AppActions {
         GroupActions.messageReceived(msg.groupId, msg.message);
         break;
 
+      case 'MATCH':
+        MatchDetailActions.commentReceived(msg.matchId, msg.comment);
+        break;
+
       default:
         break;
     }
