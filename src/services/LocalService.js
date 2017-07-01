@@ -230,6 +230,9 @@ export default class LocalService {
         let i = matches.findIndex((m) => { return m._id === match._id; });
         matches[i] = match;
         return LocalService.saveMatches(matches);
+      })
+      .then(() => {
+        return Promise.resolve(match);
       });
   }
 
@@ -293,6 +296,13 @@ export default class LocalService {
     return LocalService.getGroups()
       .then(groups => {
         return Promise.resolve(groups.find(g => { return g._id === groupId }));
+      });
+  }
+
+  static getMatch(matchId) {
+    return LocalService.getMatches()
+      .then(matches => {
+        return Promise.resolve(matches.find(m => { return m._id === matchId }));
       });
   }
 };

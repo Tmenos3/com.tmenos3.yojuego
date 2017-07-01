@@ -302,10 +302,7 @@ export default class GroupActions {
       })
       .then(resp => {
         Dispatcher.handleViewAction({
-          actionType: GroupConstants.MESSAGE_SENT,
-          payload: {
-            group: resp
-          }
+          actionType: GroupConstants.MESSAGE_SENT
         });
       })
       .catch((error) => {
