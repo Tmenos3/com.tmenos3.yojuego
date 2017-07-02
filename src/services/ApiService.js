@@ -1,5 +1,5 @@
-const BASEURL = 'http://192.168.0.12:8089';
-const WSURL = 'ws://192.168.0.12:8092';
+const BASEURL = 'http://192.168.0.4:8089';
+const WSURL = 'ws://192.168.0.4:8092';
 
 let ws = null;
 
@@ -75,7 +75,7 @@ export default class ApiService {
       "email": email
     };
 
-    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendship/create');
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/friendship');
   }
 
   static saveNewGroup(description, players, photo, token) {
@@ -97,27 +97,19 @@ export default class ApiService {
   }
 
   static getFriendshipRequest(token) {
-    return ApiService._fetch('get', ApiService._getHeader(token), null, '/notifications/friendshiprequest');
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/friendshiprequest');
   }
 
   static getMatchInvitations(token) {
-    return ApiService._fetch('get', ApiService._getHeader(token), null, '/notifications/matchinvitation');
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/matchinvitation');
   }
 
   static acceptFriendshipRequest(id, token) {
-    let form = {
-      "id": id
-    };
-
-    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendship/accept');
+    return ApiService._fetch('post', ApiService._getHeader(token), null, '/friendshiprequest/' + id + '/accept');
   }
 
   static rejectFriendshipRequest(id, token) {
-    let form = {
-      "id": id
-    };
-
-    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendship/reject');
+    return ApiService._fetch('post', ApiService._getHeader(token), null, '/friendshiprequest/' + id + '/reject');
   }
 
   static acceptMatchInvitation(id, token) {
@@ -133,11 +125,7 @@ export default class ApiService {
   }
 
   static markAsReadFriendshipRequest(id, token) {
-    let form = {
-      "id": id
-    };
-
-    return ApiService._fetch('post', ApiService._getHeader(token), form, '/notifications/friendshiprequest/markasread')
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/friendshiprequest/' + id + '/markasread')
   }
 
   static markAsReadMatchInvitation(id, token) {
@@ -254,6 +242,16 @@ export default class ApiService {
   static sendCommentToMatch(comment, matchId, token) {
     let form = { comment }
     return ApiService._fetch('put', ApiService._getHeader(token), form, '/match/' + matchId + '/comment')
+  }
+
+  static registerDevice(deviceId, type, token) {
+    let form = { deviceid: deviceId }
+    return ApiService._fetch('put', ApiService._getHeader(token), form, '/user/device/' + type)
+  }
+
+  static updateDevice(oldDeviceId, newDeviceId, type, token) {
+    let form = { olddeviceid: oldDeviceId, newdeviceid: newDeviceId }
+    return ApiService._fetch('post', ApiService._getHeader(token), form, '/user/device/' + type)
   }
 
   static _fetch(method, headers, body, url) {

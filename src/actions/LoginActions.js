@@ -36,6 +36,7 @@ export default class LoginActions {
           }
         });
         AppActions.openWebSocket();
+        AppActions.registerDevice();
       }, (cause) => {
         Dispatcher.handleViewAction({
           actionType: LoginConstants.LOGIN_FAILED,

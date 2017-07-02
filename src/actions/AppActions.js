@@ -4,8 +4,12 @@ import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
 import GroupActions from './GroupActions';
 import MatchDetailActions from './MatchDetailActions';
+import FCM, { FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType } from 'react-native-fcm';
 
-export default class AppActions {
+class AppActions {
+  static _refreshTokenListener = null;
+  static _notificationListener = null;
+
   static initializeApp() {
     Dispatcher.handleViewAction({
       actionType: AppConstants.INIT_APP
@@ -43,6 +47,11 @@ export default class AppActions {
     });
   }
 
+  static closeApp() {
+    AppActions._refreshTokenListener.remove();
+    AppActions._notificationListener.remove();
+  }
+
   static setToken(token) {
     return LocalService.saveToken(token)
       .then(() => {
@@ -60,6 +69,33 @@ export default class AppActions {
       .then(token => {
         ApiService.openWebSocket(token, AppActions._onopen, AppActions._onmessage, AppActions._onerror, AppActions._onclose);
       });
+  }
+
+  static registerDevice() {
+    FCM.getFCMToken()
+      .then(deviceId => {
+        return AppActions.refreshDeviceId(deviceId);
+      })
+  }
+
+  static refreshDeviceId(deviceId) {
+    LocalService.getSession()
+      .then(session => {
+        if (!session.deviceId) return ApiService.registerDevice(deviceId, 'ANDROID', session.token);
+        else if (session.deviceId !== deviceId) return ApiService.updateDevice(session.user._id, session.deviceId, deviceId, 'ANDROID', session.token);
+        else return Promise.resolve({ noChange: true });
+      })
+      .then(resp => {
+        if (!resp.noChange)
+          LocalService.updateDeviceId(deviceId);
+      })
+      .catch(error => {
+        console.log('Error registering device: ' + error);
+      });
+  }
+
+  static newNotificationReceived(notif) {
+    console.log('New notification: ' + JSON.stringify(notif));
   }
 
   static _callLogin() {
@@ -109,5 +145,11 @@ export default class AppActions {
     }, 3000);
 
     AppActions.openWebSocket();
+    AppActions.registerDevice();
   }
 }
+
+AppActions._refreshTokenListener = FCM.on(FCMEvent.RefreshToken, AppActions.refreshDeviceId);
+AppActions._notificationListener = FCM.on(FCMEvent.Notification, AppActions.newNotificationReceived);
+
+module.exports = AppActions;

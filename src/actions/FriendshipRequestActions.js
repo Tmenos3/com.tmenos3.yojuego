@@ -13,22 +13,14 @@ export default class FriendshipRequestActions {
 
     LocalService.getToken()
       .then((token) => {
-        ApiService.acceptFriendshipRequest(friendshipRequest.friendship._id, token)
-          .then((resp) => {
-            Dispatcher.handleViewAction({
-              actionType: FriendshipRequestConstants.ACCEPT_RESOLVED
-            });
-
-            FriendshipRequestActions.markAsRead(friendshipRequest._id);
-          })
-      }, (cause) => {
+        return ApiService.acceptFriendshipRequest(friendshipRequest._id, token);
+      })
+      .then((resp) => {
         Dispatcher.handleViewAction({
-          actionType: FriendshipRequestConstants.ACCEPT_FAILED,
-          payload: {
-            code: cause.code,
-            message: cause.message
-          }
+          actionType: FriendshipRequestConstants.ACCEPT_RESOLVED
         });
+
+        FriendshipRequestActions.markAsRead(friendshipRequest._id);
       })
       .catch(error => {
         Dispatcher.handleViewAction({
@@ -48,7 +40,7 @@ export default class FriendshipRequestActions {
 
     LocalService.getToken()
       .then((token) => {
-        return ApiService.rejectFriendshipRequest(friendshipRequest.friendship._id, token)
+        return ApiService.rejectFriendshipRequest(friendshipRequest._id, token)
           .then((resp) => {
             Dispatcher.handleViewAction({
               actionType: FriendshipRequestConstants.REJECT_RESOLVED

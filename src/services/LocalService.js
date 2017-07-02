@@ -33,6 +33,7 @@ export default class LocalService {
         token: session.token,
         user: session.user,
         player: session.player,
+        deviceId: session.deviceId,
         isFirstLogin: session.isFirstLogin,
         tourCompleted: session.tourCompleted
       },
@@ -169,6 +170,14 @@ export default class LocalService {
     return LocalService.getSession()
       .then((session) => {
         session.player = player;
+        return LocalService.saveSession(session);
+      });
+  }
+
+  static updateDeviceId(deviceId) {
+    return LocalService.getSession()
+      .then((session) => {
+        session.deviceId = deviceId;
         return LocalService.saveSession(session);
       });
   }
