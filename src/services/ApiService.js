@@ -96,8 +96,12 @@ export default class ApiService {
     return ApiService._fetch('get', ApiService._getHeader(token), null, '/group');
   }
 
-  static getFriendshipRequest(token) {
+  static getAllFriendshipRequest(token) {
     return ApiService._fetch('get', ApiService._getHeader(token), null, '/friendshiprequest');
+  }
+
+  static getFriendshipRequest(id, token) {
+    return ApiService._fetch('get', ApiService._getHeader(token), null, '/friendshiprequest/' + id);
   }
 
   static getMatchInvitations(token) {

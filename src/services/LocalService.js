@@ -314,4 +314,36 @@ export default class LocalService {
         return Promise.resolve(matches.find(m => { return m._id === matchId }));
       });
   }
+
+  static saveNewFriendshipRequest(friendshipRequest) {
+    return LocalService.getFriendshipRequests()
+      .then(ret => {
+        let friendshipRequests = ret || [];
+        friendshipRequests.push(friendshipRequest);
+
+        return LocalService.saveFriendshipRequests(friendshipRequests);
+      }).catch(err => {
+        switch (err.name) {
+          case 'NotFoundError':
+            return LocalService.saveFriendshipRequests([friendshipRequest]);
+        }
+      });
+  }
+
+  static getFriendshipRequests() {
+    return LocalService._getStorage().load({
+      key: LocalServiceConstants.FRIENDSHIP_REQUESTS
+    });
+  }
+
+  static saveFriendshipRequests(friendshipRequests) {
+    return LocalService._getStorage().save({
+      key: LocalServiceConstants.FRIENDSHIP_REQUESTS,
+      rawData: friendshipRequests,
+      expires: null
+    })
+      .then(() => {
+        return Promise.resolve(friendshipRequests);
+      });
+  }
 };

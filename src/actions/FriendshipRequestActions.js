@@ -2,8 +2,7 @@ import FriendshipRequestConstants from '../constants/FriendshipRequestConstants'
 import Dispatcher from '../dispatcher/Dispatcher';
 import ApiService from '../services/ApiService';
 import LocalService from '../services/LocalService';
-import HomeActions from '../actions/HomeActions';
-
+import HomeActions from './HomeActions';
 
 export default class FriendshipRequestActions {
   static accept(friendshipRequest) {
@@ -95,6 +94,45 @@ export default class FriendshipRequestActions {
       .catch(error => {
         Dispatcher.handleViewAction({
           actionType: FriendshipRequestConstants.MARK_AS_READ_FAILED,
+          payload: {
+            code: error.code,
+            message: error.message
+          }
+        });
+      });
+  }
+
+  static newRequestReceived(id) {
+    Dispatcher.handleViewAction({
+      actionType: FriendshipRequestConstants.GETTING_NEW_REQUEST
+    });
+
+    LocalService.getToken()
+      .then((token) => {
+        return ApiService.getFriendshipRequest(id, token);
+      })
+      .then((resp) => {
+        return LocalService.saveNewFriendshipRequest(resp.resp);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: FriendshipRequestConstants.NEW_REQUEST_GOT,
+          payload: {
+            friendshipRequests: resp
+          }
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: FriendshipRequestConstants.ERROR_GETTING_NEW_REQUEST,
+          payload: {
+            code: cause.code,
+            message: cause.message
+          }
+        });
+      })
+      .catch(error => {
+        Dispatcher.handleViewAction({
+          actionType: FriendshipRequestConstants.ERROR_GETTING_NEW_REQUEST,
           payload: {
             code: error.code,
             message: error.message

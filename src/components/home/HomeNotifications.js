@@ -16,11 +16,11 @@ import RouteConstants from '../../constants/RouteConstants';
 import FriendshipRequestRow from './FriendshipRequestRow';
 import MatchInvitationRow from './MatchInvitationRow';
 
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 export default class HomeNotifications extends Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       friendshipRequests: [],
       matchInvitations: [],
@@ -114,7 +114,7 @@ export default class HomeNotifications extends Component {
       }));
     }
 
-    this.setState({ notifications: this.state.notifications.cloneWithRows(ret) });
+    this.setState({ notifications: ds.cloneWithRows(ret) });
   }
 
   _renderRow(rowData) {

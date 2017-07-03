@@ -88,24 +88,27 @@ export default class HomeActions {
 
     LocalService.getToken()
       .then((token) => {
-        ApiService.getFriendshipRequest(token)
-          .then((resp) => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.FRIENDSHIP_REQUEST_LOADED,
-              payload: resp.resp
-            });
-          }, (cause) => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
-              payload: cause.message
-            });
-          })
-          .catch((error) => {
-            Dispatcher.handleViewAction({
-              actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
-              payload: error.message
-            });
-          });
+        return ApiService.getAllFriendshipRequest(token);
+      })
+      .then((resp) => {
+        return LocalService.saveFriendshipRequests(resp.resp);
+      })
+      .then((resp) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.FRIENDSHIP_REQUEST_LOADED,
+          payload: resp
+        });
+      }, (cause) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
+          payload: cause.message
+        });
+      })
+      .catch((error) => {
+        Dispatcher.handleViewAction({
+          actionType: HomeConstants.LOADING_FRIENDSHIP_REQUEST_FAILED,
+          payload: error.message
+        });
       });
   }
 

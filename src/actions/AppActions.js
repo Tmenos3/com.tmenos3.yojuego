@@ -1,9 +1,11 @@
 import AppConstants from '../constants/AppConstants';
+import NotificationConstants from '../constants/NotificationConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import LocalService from '../services/LocalService';
 import ApiService from '../services/ApiService';
 import GroupActions from './GroupActions';
 import MatchDetailActions from './MatchDetailActions';
+import FriendshipRequestActions from './FriendshipRequestActions';
 import FCM, { FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType } from 'react-native-fcm';
 
 class AppActions {
@@ -96,6 +98,14 @@ class AppActions {
 
   static newNotificationReceived(notif) {
     console.log('New notification: ' + JSON.stringify(notif));
+    switch (notif.type) {
+      case NotificationConstants.NEW_FRIENDSHIP_REQUEST:
+        FriendshipRequestActions.newRequestReceived(notif.id);
+        break;
+
+      default:
+        break;
+    }
   }
 
   static _callLogin() {

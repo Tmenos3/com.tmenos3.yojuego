@@ -5,6 +5,7 @@ import HomeConstants from '../constants/HomeConstants';
 import CreateMatchConstants from '../constants/CreateMatchConstants'
 import AccountConstants from '../constants/AccountConstants'
 import AppConstants from '../constants/AppConstants';
+import FriendshipRequestConstants from '../constants/FriendshipRequestConstants';
 
 const CHANGE_EVENT = 'change';
 let _showMenu = false;
@@ -398,6 +399,11 @@ HomeStore.dispatchToken = AppDispatcher.register((action) => {
     case AccountConstants.BACK:
       _showAccount = false;
       _showMenu = false;
+      HomeStore.emitChange();
+      break;
+
+    case FriendshipRequestConstants.NEW_REQUEST_GOT:
+      _friendshipRequests = action.payload.friendshipRequests;
       HomeStore.emitChange();
       break;
 
