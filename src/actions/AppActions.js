@@ -6,11 +6,11 @@ import ApiService from '../services/ApiService';
 import GroupActions from './GroupActions';
 import MatchDetailActions from './MatchDetailActions';
 import FriendshipRequestActions from './FriendshipRequestActions';
-import FCM, { FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType } from 'react-native-fcm';
+import FCM, { FCMEvent, NotificationType } from 'react-native-fcm';
 
-class AppActions {
-  static _refreshTokenListener = null;
-  static _notificationListener = null;
+export default class AppActions {
+  static _refreshTokenListener = FCM.on(FCMEvent.RefreshToken, AppActions.refreshDeviceId);;
+  static _notificationListener = FCM.on(FCMEvent.Notification, AppActions.newNotificationReceived);;
 
   static initializeApp() {
     Dispatcher.handleViewAction({
@@ -97,7 +97,40 @@ class AppActions {
   }
 
   static newNotificationReceived(notif) {
-    console.log('New notification: ' + JSON.stringify(notif));
+    if (notif.local_notification) AppActions._proccessLocalNotification(notif)
+    else AppActions._proccessRemoteNotification(notif);
+  }
+
+  static pushLocalNotification(notif) {
+    FCM.presentLocalNotification({
+      id: notif.id,                               // (optional for instant notification)
+      title: notif.title,                     // as FCM payload
+      body: notif.body,                    // as FCM payload (required)
+      sound: "default",                                   // as FCM payload
+      priority: "high",                                   // as FCM payload
+      click_action: "ACTION",                             // as FCM payload
+      badge: 10,                                          // as FCM payload IOS only, set 0 to clear badges
+      number: 10,                                         // Android only
+      ticker: "My Notification Ticker",                   // Android only
+      auto_cancel: true,                                  // Android only (default true)
+      large_icon: "ic_launcher",                           // Android only
+      icon: "ic_launcher",                                // as FCM payload, you can relace this with custom icon you put in mipmap
+      big_text: notif.bigText,                      // Android only
+      sub_text: notif.subtext,                      // Android only
+      color: "red",                                       // Android only
+      vibrate: 300,                                       // Android only default: 300, no vibration if you pass null
+      tag: 'some_tag',                                    // Android only
+      group: "group",                                     // Android only
+      data: {
+        type: notif.type,
+        data: notif.data
+      },
+      lights: true,                                       // Android only, LED blinking (default false)
+      show_in_foreground: false                            // notification when app is in foreground (local & remote)
+    });
+  }
+
+  static _proccessRemoteNotification(notif) {
     switch (notif.type) {
       case NotificationConstants.NEW_FRIENDSHIP_REQUEST:
         FriendshipRequestActions.newRequestReceived(notif.id);
@@ -106,6 +139,18 @@ class AppActions {
       default:
         break;
     }
+  }
+
+  static _proccessLocalNotification(notif) {
+    if (notif.opened_from_tray)
+      switch (notif.data.type) {
+        case NotificationConstants.NEW_FRIENDSHIP_REQUEST:
+          FriendshipRequestActions.show(notif.data.data);
+          break;
+
+        default:
+          break;
+      }
   }
 
   static _callLogin() {
@@ -159,7 +204,7 @@ class AppActions {
   }
 }
 
-AppActions._refreshTokenListener = FCM.on(FCMEvent.RefreshToken, AppActions.refreshDeviceId);
-AppActions._notificationListener = FCM.on(FCMEvent.Notification, AppActions.newNotificationReceived);
+// AppActions._refreshTokenListener = FCM.on(FCMEvent.RefreshToken, AppActions.refreshDeviceId);
+// AppActions._notificationListener = FCM.on(FCMEvent.Notification, AppActions.newNotificationReceived);
 
-module.exports = AppActions;
+// module.exports = AppActions;

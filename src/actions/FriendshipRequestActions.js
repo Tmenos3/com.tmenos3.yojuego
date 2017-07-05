@@ -1,10 +1,14 @@
 import FriendshipRequestConstants from '../constants/FriendshipRequestConstants';
+import NotificationConstants from '../constants/NotificationConstants';
 import Dispatcher from '../dispatcher/Dispatcher';
 import ApiService from '../services/ApiService';
 import LocalService from '../services/LocalService';
 import HomeActions from './HomeActions';
+import AppActions from './AppActions';
+import NavigationActions from '../actions/NavigationActions';
+import RouteConstants from '../constants/RouteConstants';
 
-export default class FriendshipRequestActions {
+class FriendshipRequestActions {
   static accept(friendshipRequest) {
     Dispatcher.handleViewAction({
       actionType: FriendshipRequestConstants.ACCEPT_INTENT
@@ -107,11 +111,13 @@ export default class FriendshipRequestActions {
       actionType: FriendshipRequestConstants.GETTING_NEW_REQUEST
     });
 
+    let friendshipRequest = null;
     LocalService.getToken()
       .then((token) => {
         return ApiService.getFriendshipRequest(id, token);
       })
       .then((resp) => {
+        friendshipRequest = resp.resp;
         return LocalService.saveNewFriendshipRequest(resp.resp);
       })
       .then((resp) => {
@@ -120,6 +126,17 @@ export default class FriendshipRequestActions {
           payload: {
             friendshipRequests: resp
           }
+        });
+
+        AppActions.pushLocalNotification({
+          id: id,
+          title: 'XXX Quiere ser tu amigo.',
+          body: 'XXX quiere ser tu amigo.',
+          subtext: 'Solicitud de Amistad',
+          bigText: 'Aca van todos los datos del flaco',
+          data: friendshipRequest,
+          type: NotificationConstants.NEW_FRIENDSHIP_REQUEST
+
         });
       }, (cause) => {
         Dispatcher.handleViewAction({
@@ -140,4 +157,13 @@ export default class FriendshipRequestActions {
         });
       });
   }
-};
+
+  static show(data) {
+    NavigationActions.addRoute({
+      id: RouteConstants.ROUTE_FRIENDSHIP_REQUEST,
+      data: data
+    });
+  }
+}
+
+module.exports = FriendshipRequestActions;
